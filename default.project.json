@@ -1,0 +1,118 @@
+{
+    "name": "color_fight",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "$path": "src/replicatedStorage",
+            "RemoteEvents": {
+                "$className": "Folder",
+                "UISEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "testEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "lotteryEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "shoppingEvent": {
+                    "$className": "RemoteEvent"
+                }
+            },
+            "RemoteFunctions": {
+                "$className": "Folder",
+                "ClientGetData": {
+                    "$className": "RemoteFunction"
+                }
+            }
+        },
+        "ServerScriptService": {
+            "$className": "ServerScriptService",
+            "$path": "src/serverScriptService"
+        },
+        "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "StarterPlayerScripts": {
+                "$className": "StarterPlayerScripts",
+                "$path": "src/startPlayer/playerScripts"
+            },
+            "StarterCharacterScripts": {
+                "$className": "StarterCharacterScripts",
+                "$path": "src/startPlayer/characterScripts"
+            }
+        },
+        "StarterGui": {
+            "$className": "StarterGui",
+            "hudScreen": {
+                "$className": "ScreenGui",
+                "bgFrame": {
+                    "$className": "Frame",
+                    "skillFrame": {
+                        "$className": "Frame"
+                    },
+                    "testToolsFrame": {
+                        "$className": "Frame"
+                    }
+                }
+            },
+            "pushScreen": {
+                "$className": "ScreenGui",
+                "bgFrame": {
+                    "$className": "Frame"
+                }
+            },
+            "loadingScreen": {
+                "$className": "ScreenGui"
+            },
+            "screens": {
+                "$className": "Folder"
+            }
+        },
+        "Workspace": {
+            "$properties": {
+                "FilteringEnabled": true
+            },
+            "Baseplate": {
+                "$className": "Part",
+                "$properties": {
+                    "Anchored": true,
+                    "Color": [
+                        0.38823,
+                        0.37254,
+                        0.38823
+                    ],
+                    "Locked": true,
+                    "Position": [
+                        0,
+                        -10,
+                        0
+                    ],
+                    "Size": [
+                        48,
+                        20,
+                        48
+                    ]
+                }
+            }
+        },
+        "Lighting": {
+            "$properties": {
+                "Ambient": [
+                    0,
+                    0,
+                    0
+                ],
+                "Brightness": 2,
+                "GlobalShadows": true,
+                "Outlines": false,
+                "Technology": "Voxel"
+            }
+        },
+        "SoundService": {
+            "$properties": {
+                "RespectFilteringEnabled": true
+            }
+        }
+    }
+}
