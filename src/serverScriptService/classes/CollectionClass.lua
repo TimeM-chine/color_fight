@@ -5,6 +5,8 @@
 ---- services ----
 local CS = game:GetService("CollectionService")
 
+
+---- main ----
 local CollectionClass = {}
 CollectionClass.__index = CollectionClass
 CollectionClass.tagName = nil
@@ -13,15 +15,18 @@ CollectionClass.removedSignal = nil
 CollectionClass.addedConnections = {}
 CollectionClass.removedConnections = {}
 
-function CollectionClass.new(tagName, cls)
+function CollectionClass.new(cls)
     local ins = setmetatable({}, CollectionClass)
-    ins.tagName = tagName
-    ins.addedSignal = CS:GetInstanceAddedSignal(tagName)
-    ins.removedSignal = CS:GetInstanceRemovedSignal(tagName)
+    ins.tagName = cls.tagName
+    ins.addedSignal = CS:GetInstanceAddedSignal(cls.tagName)
+    ins.removedSignal = CS:GetInstanceRemovedSignal(cls.tagName)
     ins.addedConnections = {}
     ins.removedConnections = {}
-    if cls then
+    
+    if cls.OnAdded then
         table.insert(ins.addedConnections, ins.addedSignal:Connect(cls.OnAdded))
+    end
+    if cls.OnRemoved then
         table.insert(ins.removedConnections, ins.removedSignal:Connect(cls.OnRemoved))
     end
 

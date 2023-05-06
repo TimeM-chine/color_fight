@@ -7,7 +7,7 @@ local ProfileService = require(game.ServerScriptService.libs.ProfileService)
 local DefaultValue = require(game.ReplicatedStorage.configs.DefaultValue)
 
 ---- remote functions ----
-local ClientGetData = game.ReplicatedStorage.remoteFunctions.ClientGetData
+local ClientGetData = game.ReplicatedStorage.RemoteFunctions.ClientGetData
 
 ----- variables -----
 local DEFAULT_DATA = DefaultValue

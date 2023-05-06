@@ -18,6 +18,9 @@
                 },
                 "shoppingEvent": {
                     "$className": "RemoteEvent"
+                },
+                "changeColorEvent": {
+                    "$className": "RemoteEvent"
                 }
             },
             "RemoteFunctions": {
@@ -89,12 +92,16 @@
                         0
                     ],
                     "Size": [
-                        48,
+                        480,
                         20,
-                        48
+                        480
                     ]
                 }
+            },
+            "walls":{
+                "$className":"Folder"
             }
+            
         },
         "Lighting": {
             "$properties": {
@@ -103,10 +110,13 @@
                     0,
                     0
                 ],
-                "Brightness": 2,
+                "Brightness": 1,
                 "GlobalShadows": true,
                 "Outlines": false,
-                "Technology": "Voxel"
+                "Technology": "Voxel",
+                "FogColor": [0, 0, 0],
+                "FogEnd": 200,
+                "FogStart":0
             }
         },
         "SoundService": {

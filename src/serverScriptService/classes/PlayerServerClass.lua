@@ -1,6 +1,9 @@
 -- ================================================================================
--- player cls --> server side
+-- player cls --> server side, universal player cls
 -- ================================================================================
+
+---- classes ----
+local GamePlayerClass = require(script.Parent.GamePlayerClass)
 
 ---- modules ----
 local DataMgr = require(game.ServerScriptService.modules.DataManager)
@@ -9,7 +12,7 @@ local DataMgr = require(game.ServerScriptService.modules.DataManager)
 local playerInsList = {}
 
 ---- main ----
-local PlayerServerClass = {}
+local PlayerServerClass = setmetatable({}, GamePlayerClass)
 PlayerServerClass.__index = PlayerServerClass
 PlayerServerClass.player = nil
 
@@ -21,6 +24,7 @@ function PlayerServerClass.new(player:Player)
     return playerIns
 end
 
+-- default: create instance
 function PlayerServerClass.GetIns(player, createIfNil)
     createIfNil = createIfNil or true
 
@@ -58,7 +62,7 @@ function PlayerServerClass:UpdatedOneData(key, num)
     self:SetOneData(key, oldValue + num)
 end
 
-function PlayerServerClass:FireClient(event:RemoteEvent, args)
+function PlayerServerClass:NotifyToClient(event:RemoteEvent, args)
     event:FireClient(self.player, args)
 end
 

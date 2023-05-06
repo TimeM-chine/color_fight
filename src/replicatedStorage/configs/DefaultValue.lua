@@ -1,6 +1,7 @@
 return {
     -- attributes
-    hp = 100,  -- 血量
+    hp = 1,  -- 血量
+    wins = 0, -- win 的数量
     walkSpeed = 16, -- 移速
     -- rewards
     onlineTime = 0, -- 在线时长
@@ -12,6 +13,7 @@ return {
     liked = false, -- 是否点赞
     likedReward = false, -- 是否领取了点赞奖励
     firstPlay = true, -- 是否第一次游玩
+    friendsInvitedNum = 0, -- 邀请好友数
     -- currency
     money = 0, -- 货币
 }
