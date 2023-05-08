@@ -11,6 +11,9 @@ local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 local keyCode = Enum.KeyCode
 
+---- events ----
+local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
+
 ---- services ----
 local PS = game:GetService("Players")
 local PhysicsService = game:GetService("PhysicsService")
@@ -31,4 +34,9 @@ end)
 KeyboardRecall.SetServerRecall(keyCode.Backspace, function(player)
     local pIns = PlayerServerClass.GetIns(player)
     pIns:SetColor(colorList[math.random(1, 7)])
+end)
+
+changeColorEvent.OnServerEvent:Connect(function(player, color)
+    local pIns = PlayerServerClass.GetIns(player)
+    pIns:SetColor(color)
 end)

@@ -2,12 +2,16 @@
 -- game player cls --> specific game player
 -- ================================================================================
 
+---- modules ----
+
+
 ---- enums ----
 local colorName = require(game.ReplicatedStorage.enums.colorEnum).ColorName
 local colorValue = require(game.ReplicatedStorage.enums.colorEnum).ColorValue
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 
 ---- services ----
+local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 
 ---- events ----
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
@@ -45,6 +49,8 @@ function GamePlayerClass:SetColor(color)
         character = self.player.CharacterAdded:Wait()
     end
 
+    character.colorString.Value = color
+
     local param = argsEnum.changeColorEvent
     param.color = color
     self:NotifyToClient(changeColorEvent, param)
@@ -53,6 +59,13 @@ function GamePlayerClass:SetColor(color)
 end
 
 
+function GamePlayerClass:InitPlayer()
+    local character = self.player.Character
+    if not character then
+        character = self.player.CharacterAdded:Wait()
+    end
+    CreateModule.CreateValue("StringValue", "colorString", "nil", character)
+end
 
 
 return GamePlayerClass

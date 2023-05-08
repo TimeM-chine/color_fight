@@ -20,6 +20,7 @@ function PlayerServerClass.new(player:Player)
     local playerIns = setmetatable({}, PlayerServerClass)
     playerIns.player = player
 
+    playerIns:InitPlayer()
     table.insert(playerInsList, playerIns)
     return playerIns
 end

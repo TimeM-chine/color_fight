@@ -1,10 +1,17 @@
 -- ================================================================================
--- door cls --> server side, when player touch, starting counting down and transport
+-- wall cls --> server side, control global color or something
 -- ================================================================================
 
+---- modules ----
+local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 
 ---- variables ----
 local wallInsList = {}
+
+---- enums ----
+local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
+local colorList = colorEnum.ColorList
+local colorValue = colorEnum.ColorValue
 
 
 local WallServerClass = {}
@@ -24,16 +31,23 @@ function WallServerClass.new(wall:Part)
 end
 
 function WallServerClass.OnRemoved(wall)
-
-    for key, _ in wallInsList[wall] do
-        wallInsList[wall][key] = nil
+    local wallIns = wallInsList[wall]
+    for key, _ in wallIns do
+        wallIns[key] = nil
+    end
+    if wallIns.touchCon then
+        wallIns.touchCon:Disconnect()
     end
     wallInsList[wall] = nil
 end
 
 function WallServerClass.OnAdded(wall:Part)
     local wallIns = WallServerClass.new(wall)
-    
+    local colorName = colorList[math.random(1, 7)]
+    wall.Color = colorValue[colorName]
+
+    CreateModule.CreateValue("StringValue", "colorString", colorName, wall)
+
     wallInsList[wall] = wallIns
 end
 

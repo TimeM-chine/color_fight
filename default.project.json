@@ -21,6 +21,15 @@
                 },
                 "changeColorEvent": {
                     "$className": "RemoteEvent"
+                },
+                "destroyEvent":{
+                    "$className":"RemoteEvent"
+                }
+            },
+            "BindableEvents":{
+                "$className":"Folder",
+                "notifyEvent":{
+                    "$className":"BindableEvent"
                 }
             },
             "RemoteFunctions": {
@@ -56,6 +65,18 @@
                     },
                     "testToolsFrame": {
                         "$className": "Frame"
+                    }
+                },
+                "notificationFrame": {
+                    "$className": "Frame",
+                    "top": {
+                        "$className": "TextLabel"
+                    },
+                    "middle": {
+                        "$className": "TextLabel"
+                    },
+                    "bottom": {
+                        "$className": "TextLabel"
                     }
                 }
             },
@@ -98,10 +119,15 @@
                     ]
                 }
             },
-            "walls":{
+            "walls": {
+                "$className": "Folder"
+            },
+            "colorDoors":{
+                "$className":"Folder"
+            },
+            "toolModels":{
                 "$className":"Folder"
             }
-            
         },
         "Lighting": {
             "$properties": {
@@ -114,9 +140,13 @@
                 "GlobalShadows": true,
                 "Outlines": false,
                 "Technology": "Voxel",
-                "FogColor": [0, 0, 0],
+                "FogColor": [
+                    0,
+                    0,
+                    0
+                ],
                 "FogEnd": 200,
-                "FogStart":0
+                "FogStart": 0
             }
         },
         "SoundService": {

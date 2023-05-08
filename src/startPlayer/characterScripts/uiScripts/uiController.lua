@@ -8,6 +8,8 @@ local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
 local pushScreenGui = PlayerGui.pushScreen
 local hudScreenGui = PlayerGui.hudScreen
+local notificationFrame = hudScreenGui.notificationFrame
+local noteCrt = {top=nil, middle=nil, bottom=nil}
 
 ---- main ----
 local controller = {}
@@ -65,6 +67,27 @@ function controller.CloseBySize(comp, args)
     comp:TweenSize(UDim2.new(0, 0, 0, 0), param.easingDir, param.easingStyle, param.tweenTime)
     task.wait(param.tweenTime)
     comp.Visible = false
+end
+
+-- set notification (top, middle, bottom)
+function controller.SetNotification(content, noteType)
+    noteType = noteType or "bottom"
+    local noteLabel = notificationFrame[noteType]
+    noteLabel.Visible = true
+    noteLabel.Text = content
+    if noteCrt[noteType] then
+        coroutine.close(noteCrt[noteType])
+    end
+    noteCrt[noteType] = coroutine.create(function()
+        task.wait(2)
+        for i=1, 20 do
+            noteLabel.TextTransparency = i/20
+            task.wait(0.05)
+        end
+        noteLabel.Visible = false
+        noteLabel.TextTransparency = 0
+    end)
+    coroutine.resume(noteCrt[noteType])
 end
 
 return controller

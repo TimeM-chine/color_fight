@@ -1,9 +1,12 @@
 local StarterGui = game:GetService("StarterGui")
 
 
+---- classes ----
+local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
+local ColorDoorClientClass = require(script.Parent.classes.ColorDoorClientClass)
+
 ---- modules ----
 local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
-local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -22,14 +25,16 @@ clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     local color = args.color
 
     for _, wall:Part in wallsFolder:GetChildren() do
-        if wall.colorString.Value == color then
-            wall.Material = Enum.Material.Neon
-            wall.CanCollide = false
-        end
 
+        -- handle with last color first
         if wall.colorString.Value == lastColor then
             wall.Material = Enum.Material.Plastic
             wall.CanCollide = true
+        end
+
+        if wall.colorString.Value == color then
+            wall.Material = Enum.Material.Neon
+            wall.CanCollide = false
         end
     end
 
@@ -38,5 +43,14 @@ end)
 
 
 KeyboardRecall.SetClientRecall(keyCode.Backspace)
+
+
+for _, colorDoor in workspace.colorDoors:GetChildren() do
+    ColorDoorClientClass.new(colorDoor)
+end
+
+RemoteEvents.destroyEvent.OnClientEvent:Connect(function(ins:Instance)
+    ins:Destroy()
+end)
 
 
