@@ -3,6 +3,12 @@ return {
     hp = 1,  -- 血量
     wins = 0, -- win 的数量
     walkSpeed = 16, -- 移速
+    shoe = {
+        false, false, false, false
+    }, -- 鞋子情况
+    career = {
+        false, false, false, false
+    }, -- 职业情况
     -- rewards
     onlineTime = 0, -- 在线时长
     dailyOnlineTime = 0,  -- 每日在线时长

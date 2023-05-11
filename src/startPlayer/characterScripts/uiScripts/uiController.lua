@@ -8,7 +8,8 @@ local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
 local pushScreenGui = PlayerGui.pushScreen
 local hudScreenGui = PlayerGui.hudScreen
-local notificationFrame = hudScreenGui.notificationFrame
+local notificationScreen = PlayerGui.notificationScreen
+local notificationFrame = notificationScreen.notificationFrame
 local noteCrt = {top=nil, middle=nil, bottom=nil}
 
 ---- main ----
@@ -27,7 +28,15 @@ function controller.PushScreen(screenName)
         return
     end
 
-    screenIns:Clone().Parent = pushScreenGui.bgFrame
+    local frame = screenIns:Clone()
+    local frameClass = script.Parent:FindFirstChild(screenName.."Class")
+    if frameClass then
+        local cls = require(frameClass)
+        cls.new(frame)
+    else
+        warn(`There is no screen class named {screenName.."Class"}`)
+    end
+    frame.Parent = pushScreenGui.bgFrame
     hudScreenGui.Enabled = false
     pushScreenGui.Enabled = true
 
@@ -79,13 +88,13 @@ function controller.SetNotification(content, noteType)
         coroutine.close(noteCrt[noteType])
     end
     noteCrt[noteType] = coroutine.create(function()
+        noteLabel.TextTransparency = 0
         task.wait(2)
         for i=1, 20 do
             noteLabel.TextTransparency = i/20
             task.wait(0.05)
         end
         noteLabel.Visible = false
-        noteLabel.TextTransparency = 0
     end)
     coroutine.resume(noteCrt[noteType])
 end

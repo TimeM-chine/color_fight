@@ -24,6 +24,9 @@
                 },
                 "destroyEvent":{
                     "$className":"RemoteEvent"
+                },
+                "hideToolEvent":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents":{
@@ -43,6 +46,11 @@
             "$className": "ServerScriptService",
             "$path": "src/serverScriptService"
         },
+        "ServerStorage":{
+            "$className":"ServerStorage",
+            "$path":"src/serverStorage",
+            "monster":{"$className":"Model"}
+        },
         "StarterPlayer": {
             "$className": "StarterPlayer",
             "StarterPlayerScripts": {
@@ -60,13 +68,22 @@
                 "$className": "ScreenGui",
                 "bgFrame": {
                     "$className": "Frame",
-                    "skillFrame": {
-                        "$className": "Frame"
-                    },
-                    "testToolsFrame": {
-                        "$className": "Frame"
-                    }
-                },
+                    "shopBtn":{"$className":"TextButton"},
+                    "skillBtn":{"$className":"ImageButton"},
+                    "hpLabel":{"$className":"TextLabel"}
+                }
+            },
+            "pushScreen": {
+                "$className": "ScreenGui",
+                "bgFrame": {
+                    "$className": "Frame"
+                }
+            },
+            "loadingScreen": {
+                "$className": "ScreenGui"
+            },
+            "notificationScreen":{
+                "$className":"ScreenGui",
                 "notificationFrame": {
                     "$className": "Frame",
                     "top": {
@@ -79,15 +96,6 @@
                         "$className": "TextLabel"
                     }
                 }
-            },
-            "pushScreen": {
-                "$className": "ScreenGui",
-                "bgFrame": {
-                    "$className": "Frame"
-                }
-            },
-            "loadingScreen": {
-                "$className": "ScreenGui"
             },
             "screens": {
                 "$className": "Folder"
@@ -127,6 +135,9 @@
             },
             "toolModels":{
                 "$className":"Folder"
+            },
+            "pathPoints":{
+                "$className":"Folder"
             }
         },
         "Lighting": {
@@ -145,7 +156,7 @@
                     0,
                     0
                 ],
-                "FogEnd": 200,
+                "FogEnd": 1000,
                 "FogStart": 0
             }
         },

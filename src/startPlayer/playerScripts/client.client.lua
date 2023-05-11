@@ -28,7 +28,7 @@ clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
 
         -- handle with last color first
         if wall.colorString.Value == lastColor then
-            wall.Material = Enum.Material.Plastic
+            wall.Material = Enum.Material.Glass
             wall.CanCollide = true
         end
 

@@ -27,7 +27,7 @@ PhysicsService:CollisionGroupSetCollidable("player", "player", false)
 
 PS.PlayerAdded:Connect(function(player)
     local pIns = PlayerServerClass.GetIns(player)
-    pIns:SetCollisionGroup("player")
+    -- pIns:SetCollisionGroup("player")
 end)
 
 

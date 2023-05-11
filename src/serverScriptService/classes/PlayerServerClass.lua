@@ -19,8 +19,9 @@ PlayerServerClass.player = nil
 function PlayerServerClass.new(player:Player)
     local playerIns = setmetatable({}, PlayerServerClass)
     playerIns.player = player
-
-    playerIns:InitPlayer()
+    player.CharacterAdded:Connect(function(character)
+        playerIns:InitPlayer()
+    end)
     table.insert(playerInsList, playerIns)
     return playerIns
 end

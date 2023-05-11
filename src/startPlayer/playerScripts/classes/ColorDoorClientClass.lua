@@ -30,6 +30,10 @@ function ColorDoorClientClass.new(door)
         self:Clicked()
     end)
 
+    localPlayer.CharacterAdded:Connect(function(character)
+        self:SetVisible(true)
+    end)
+
     return self
 end
 
@@ -39,7 +43,8 @@ function ColorDoorClientClass:Clicked()
         self.door.SurfaceGui.TextLabel.Text = self.remainClick
         self.door.Transparency = (self.totalClick - self.remainClick)/self.totalClick
         if self.remainClick <= 0 then
-            self.door:Destroy()
+            -- self.door:Destroy()
+            self:SetVisible(false)
             changeColorEvent:FireServer("empty")
         end
 
@@ -52,6 +57,19 @@ function ColorDoorClientClass:Clicked()
 
 end
 
+
+function ColorDoorClientClass:SetVisible(flag)
+    if flag then
+        self.door.Transparency = 0
+        self.door.ClickDetector.MaxActivationDistance = 3
+        self.door.SurfaceGui.TextLabel.Text = "5"
+    else
+        self.door.Transparency = 1
+        self.door.ClickDetector.MaxActivationDistance = 3
+        self.door.SurfaceGui.TextLabel.Text = ""
+    end
+    self.door.CanCollide = flag
+end
 
 function ColorDoorClientClass:CheckCondition()
     local color = localPlayer.Character.colorString.Value

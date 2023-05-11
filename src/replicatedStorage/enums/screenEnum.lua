@@ -1,0 +1,3 @@
+return {
+    shopFrame = "shopFrame"
+}

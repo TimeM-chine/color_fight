@@ -29,12 +29,9 @@ function GamePlayerClass:SetCollisionGroup(groupName)
             Part.CollisionGroup = groupName
         end
     end
-    
+
     local character = self.player.Character
-    if not character then
-        character = self.player.CharacterAdded:Wait()
-    end
-    -- character.ChildAdded:Connect(ChangeGroup)
+    task.wait(3)
     for _, Object in pairs(character:GetChildren()) do
         ChangeGroup(Object)
     end
@@ -61,10 +58,18 @@ end
 
 function GamePlayerClass:InitPlayer()
     local character = self.player.Character
-    if not character then
-        character = self.player.CharacterAdded:Wait()
-    end
+    self:SetCollisionGroup("player")
+    -- if not character then
+    --     character = self.player.CharacterAdded:Wait()
+    -- end
+    character.Humanoid.MaxHealth = 1
+    character.Humanoid.Health = 1
     CreateModule.CreateValue("StringValue", "colorString", "nil", character)
+    CreateModule.CreateValue("BoolValue", "isHiding", false, character)
+
+    local param = argsEnum.changeColorEvent
+    param.color = "empty"
+    self:NotifyToClient(changeColorEvent, param)
 end
 
 

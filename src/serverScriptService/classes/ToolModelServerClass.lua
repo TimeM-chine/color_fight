@@ -17,7 +17,7 @@ local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 
 ---- events -----
-local destroyEvent = game.ReplicatedStorage.RemoteEvents.destroyEvent
+local hideToolEvent = game.ReplicatedStorage.RemoteEvents.hideToolEvent
 
 
 local ToolModelServerClass = {}
@@ -34,7 +34,8 @@ function ToolModelServerClass.new(toolM:Part)
     self.interactCon = ppt.Triggered:Connect(function(playerWhoTriggered)
         local playerIns = PlayerServerClass.GetIns(playerWhoTriggered)
         playerIns:SetColor(self.toolModel.colorString.Value)
-        destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
+        hideToolEvent:FireClient(playerWhoTriggered, self.toolModel)
+        -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
     end)
 	return self
 end

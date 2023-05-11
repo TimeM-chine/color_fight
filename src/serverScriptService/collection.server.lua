@@ -20,8 +20,6 @@ local colorValue = colorEnum.ColorValue
 
 
 
-
-
 CollectionCls.new(WallServerClass)
 CollectionCls.new(ToolModelServerClass)
 
@@ -57,3 +55,15 @@ for i=1, 7 do
     toolModel.Color = colorValue[colorName]
     CreateModule.CreateValue("StringValue", "colorString", colorName, toolModel)
 end
+
+
+---- monsters ----
+-- local monster = game.ServerStorage.monster
+-- local part = workspace.pathPoints:FindFirstChild("Part1")
+
+-- monster:MoveTo(part.CFrame.Position)
+
+-- monster.Parent = workspace
+
+-- local aiScript = game.ServerStorage.monsterAi
+-- aiScript:Clone().Parent = monster
