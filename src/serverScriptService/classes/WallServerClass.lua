@@ -9,6 +9,7 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 ---- variables ----
 local wallInsList = {}
 local PlayerService = game.Players
+local colorCheck = {}
 
 ---- enums ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
@@ -83,13 +84,35 @@ end
 
 function WallServerClass.OnAdded(wall:Part)
     local wallIns = WallServerClass.new(wall)
-    local colorName = colorList[math.random(1, 7)]
+    local colorListCopy = table.clone(colorList)
+
+    for i=-1, 1, 2 do
+        local neighborColor = colorCheck[wall.CFrame.Position + Vector3.new(15*i, 0, 0)]
+        if neighborColor then
+            local ind = table.find(colorListCopy, neighborColor)
+            table.remove(colorListCopy, ind)
+        end
+    end
+
+    for j = -1,1,2 do
+        local neighborColor = colorCheck[wall.CFrame.Position + Vector3.new(0, 0, 15*j)]
+        if neighborColor then
+            local ind = table.find(colorListCopy, neighborColor)
+            table.remove(colorListCopy, ind)
+        end
+    end
+
+
+    local colorName = colorListCopy[math.random(1, #colorListCopy)]
     wall.Color = colorValue[colorName]
 
     CreateModule.CreateValue("StringValue", "colorString", colorName, wall)
 
     wallInsList[wall] = wallIns
+    colorCheck[wall.CFrame.Position] = colorName
 end
+
+
 
 
 return WallServerClass

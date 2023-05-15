@@ -9,6 +9,8 @@
 local colorName = require(game.ReplicatedStorage.enums.colorEnum).ColorName
 local colorValue = require(game.ReplicatedStorage.enums.colorEnum).ColorValue
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+local universalEnum = require(game.ReplicatedStorage.universalEnum)
 
 ---- services ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)

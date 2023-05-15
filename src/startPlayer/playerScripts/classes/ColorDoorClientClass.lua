@@ -61,11 +61,11 @@ end
 function ColorDoorClientClass:SetVisible(flag)
     if flag then
         self.door.Transparency = 0
-        self.door.ClickDetector.MaxActivationDistance = 3
+        self.door.ClickDetector.MaxActivationDistance = 30
         self.door.SurfaceGui.TextLabel.Text = "5"
     else
         self.door.Transparency = 1
-        self.door.ClickDetector.MaxActivationDistance = 3
+        self.door.ClickDetector.MaxActivationDistance = 0
         self.door.SurfaceGui.TextLabel.Text = ""
     end
     self.door.CanCollide = flag

@@ -32,7 +32,7 @@ local function GetNextPoint()
 
     if (myHRP.CFrame.Position - lastPointPart.CFrame.Position).Magnitude <= 3 then
         local lastInd = string.match(lastPointPart.Name, "Part(%d+)")
-        return pointsFolder:FindFirstChild("Part"..(lastInd % 11 + 1))
+        return pointsFolder:FindFirstChild("Part"..(lastInd % 19 + 1))
     end
 
     return lastPointPart

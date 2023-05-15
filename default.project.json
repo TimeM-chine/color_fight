@@ -22,17 +22,20 @@
                 "changeColorEvent": {
                     "$className": "RemoteEvent"
                 },
-                "destroyEvent":{
-                    "$className":"RemoteEvent"
+                "destroyEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "hideToolEvent":{
-                    "$className":"RemoteEvent"
+                "GAEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "hideToolEvent": {
+                    "$className": "RemoteEvent"
                 }
             },
-            "BindableEvents":{
-                "$className":"Folder",
-                "notifyEvent":{
-                    "$className":"BindableEvent"
+            "BindableEvents": {
+                "$className": "Folder",
+                "notifyEvent": {
+                    "$className": "BindableEvent"
                 }
             },
             "RemoteFunctions": {
@@ -46,10 +49,12 @@
             "$className": "ServerScriptService",
             "$path": "src/serverScriptService"
         },
-        "ServerStorage":{
-            "$className":"ServerStorage",
-            "$path":"src/serverStorage",
-            "monster":{"$className":"Model"}
+        "ServerStorage": {
+            "$className": "ServerStorage",
+            "$path": "src/serverStorage",
+            "monster": {
+                "$className": "Model"
+            }
         },
         "StarterPlayer": {
             "$className": "StarterPlayer",
@@ -68,9 +73,15 @@
                 "$className": "ScreenGui",
                 "bgFrame": {
                     "$className": "Frame",
-                    "shopBtn":{"$className":"TextButton"},
-                    "skillBtn":{"$className":"ImageButton"},
-                    "hpLabel":{"$className":"TextLabel"}
+                    "shopBtn": {
+                        "$className": "TextButton"
+                    },
+                    "skillBtn": {
+                        "$className": "ImageButton"
+                    },
+                    "hpLabel": {
+                        "$className": "TextLabel"
+                    }
                 }
             },
             "pushScreen": {
@@ -82,8 +93,8 @@
             "loadingScreen": {
                 "$className": "ScreenGui"
             },
-            "notificationScreen":{
-                "$className":"ScreenGui",
+            "notificationScreen": {
+                "$className": "ScreenGui",
                 "notificationFrame": {
                     "$className": "Frame",
                     "top": {
@@ -105,39 +116,17 @@
             "$properties": {
                 "FilteringEnabled": true
             },
-            "Baseplate": {
-                "$className": "Part",
-                "$properties": {
-                    "Anchored": true,
-                    "Color": [
-                        0.38823,
-                        0.37254,
-                        0.38823
-                    ],
-                    "Locked": true,
-                    "Position": [
-                        0,
-                        -10,
-                        0
-                    ],
-                    "Size": [
-                        480,
-                        20,
-                        480
-                    ]
-                }
-            },
             "walls": {
                 "$className": "Folder"
             },
-            "colorDoors":{
-                "$className":"Folder"
+            "colorDoors": {
+                "$className": "Folder"
             },
-            "toolModels":{
-                "$className":"Folder"
+            "toolModels": {
+                "$className": "Folder"
             },
-            "pathPoints":{
-                "$className":"Folder"
+            "pathPoints": {
+                "$className": "Folder"
             }
         },
         "Lighting": {

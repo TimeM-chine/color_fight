@@ -26,7 +26,10 @@ CollectionCls.new(ToolModelServerClass)
 ---- random wall color ----
 local wallsFolder = workspace.walls
 
-for _, wall:Part in wallsFolder:GetChildren() do
+for _, wall:Part in wallsFolder:GetDescendants() do
+    if wall:IsA("Folder") then
+        continue
+    end
     CS:AddTag(wall, WallServerClass.tagName)
 end
 
@@ -61,7 +64,7 @@ end
 -- local monster = game.ServerStorage.monster
 -- local part = workspace.pathPoints:FindFirstChild("Part1")
 
--- monster:MoveTo(part.CFrame.Position)
+-- monster:PivotTo(part.CFrame)
 
 -- monster.Parent = workspace
 

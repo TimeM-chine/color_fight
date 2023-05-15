@@ -24,6 +24,6 @@ end)
 
 
 shopBtn.MouseButton1Click:Connect(function()
-    uiController.PushScreen(screenEnum.shopFrame)
+    uiController.PushScreen(screenEnum.careerShopFrame)
 end)
 

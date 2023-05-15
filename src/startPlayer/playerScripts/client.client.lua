@@ -24,8 +24,11 @@ local lastColor = nil
 clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     local color = args.color
 
-    for _, wall:Part in wallsFolder:GetChildren() do
+    for _, wall:Part in wallsFolder:GetDescendants() do
 
+        if (not wall:IsA("Part")) or (wall.Name ~= "Part") then
+            continue
+        end
         -- handle with last color first
         if wall.colorString.Value == lastColor then
             wall.Material = Enum.Material.Glass
