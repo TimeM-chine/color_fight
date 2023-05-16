@@ -2,6 +2,7 @@
 ---- classes ----
 local WallServerClass = require(game.ServerScriptService.classes.WallServerClass)
 local CollectionCls = require(game.ServerScriptService.classes.CollectionClass)
+local BucketModelServerClass = require(game.ServerScriptService.classes.BucketModelServerClass)
 local ToolModelServerClass = require(game.ServerScriptService.classes.ToolModelServerClass)
 
 ---- services ----
@@ -18,9 +19,8 @@ local colorValue = colorEnum.ColorValue
 
 ---- variables ----
 
-
-
 CollectionCls.new(WallServerClass)
+CollectionCls.new(BucketModelServerClass)
 CollectionCls.new(ToolModelServerClass)
 
 ---- random wall color ----
@@ -33,32 +33,26 @@ for _, wall:Part in wallsFolder:GetDescendants() do
     CS:AddTag(wall, WallServerClass.tagName)
 end
 
+---- bucket models ----
+local bucketModelsFolder = workspace.bucketModels
+
+for _, bucket in bucketModelsFolder:GetChildren() do
+    CS:AddTag(bucket, BucketModelServerClass.tagName)
+end
 
 ---- tool models ----
 local toolModelsFolder = workspace.toolModels
-local modelTab = toolModelsFolder:GetChildren()
 
-for i=1, 7 do
-    local colorName = colorList[i]
-    local toolModel = modelTab[i]
-    toolModel.Color = colorValue[colorName]
-    CreateModule.CreateValue("StringValue", "colorString", colorName, toolModel)
-
+for _, toolModel in toolModelsFolder:GetChildren() do
     CS:AddTag(toolModel, ToolModelServerClass.tagName)
 end
 
 
----- doors -----
-local doorsFolder = workspace.colorDoors
-local doorTable = doorsFolder:GetChildren()
-
-for i=1, 7 do
-    local colorName = colorList[i]
-    local toolModel = doorTable[i]
-    toolModel.Color = colorValue[colorName]
-    CreateModule.CreateValue("StringValue", "colorString", colorName, toolModel)
+---- color doors # only color, clients will handle logic ----
+local colorDoors = workspace.colorDoors:GetChildren()
+for _, door in colorDoors do
+    door.Color = colorValue[door.colorString.Value]
 end
-
 
 ---- monsters ----
 -- local monster = game.ServerStorage.monster

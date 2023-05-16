@@ -1,3 +1,4 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 ---- modules ----
 local SystemClass = require(game.ServerScriptService.classes.ServerSystemClass)
@@ -10,9 +11,11 @@ local colorName = colorEnum.ColorName
 local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 local keyCode = Enum.KeyCode
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 
 ---- events ----
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
+local getLoginRewardEvent = game.ReplicatedStorage.RemoteEvents.getLoginRewardEvent
 
 ---- services ----
 local PS = game:GetService("Players")
@@ -39,4 +42,11 @@ end)
 changeColorEvent.OnServerEvent:Connect(function(player, color)
     local pIns = PlayerServerClass.GetIns(player)
     pIns:SetColor(color)
+end)
+
+getLoginRewardEvent.OnServerEvent:Connect(function(player, day)
+    local loginState = PlayerServerClass.GetIns(player):GetOneData(dataKey.loginState)
+    loginState[day] = true
+    -- todo 发放奖励
+    
 end)

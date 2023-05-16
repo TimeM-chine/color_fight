@@ -9,7 +9,7 @@ local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerC
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 
 ---- variables ----
-local toolModelInsList = {}
+local bucketModelInsList = {}
 
 ---- enums ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
@@ -17,31 +17,31 @@ local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 
 ---- events -----
-local hideToolEvent = game.ReplicatedStorage.RemoteEvents.hideToolEvent
+local hideBucketEvent = game.ReplicatedStorage.RemoteEvents.hideBucketEvent
 
 
-local ToolModelServerClass = {}
-ToolModelServerClass.__index = ToolModelServerClass
-ToolModelServerClass.tagName = "ToolModel"
-ToolModelServerClass.toolModel = nil
-ToolModelServerClass.interactCon  = nil
+local BucketModelServerClass = {}
+BucketModelServerClass.__index = BucketModelServerClass
+BucketModelServerClass.tagName = "BucketModel"
+BucketModelServerClass.toolModel = nil
+BucketModelServerClass.interactCon  = nil
 
-function ToolModelServerClass.new(toolM:Part)
-	local self = setmetatable({}, ToolModelServerClass)
+function BucketModelServerClass.new(toolM:Part)
+	local self = setmetatable({}, BucketModelServerClass)
 	self.toolModel = toolM
 
     local ppt:ProximityPrompt = toolM.ProximityPrompt
     self.interactCon = ppt.Triggered:Connect(function(playerWhoTriggered)
         local playerIns = PlayerServerClass.GetIns(playerWhoTriggered)
-        playerIns:AddItem(self.toolModel.Name)
-        hideToolEvent:FireClient(playerWhoTriggered, self.toolModel)
+        playerIns:SetColor(self.toolModel.colorString.Value)
+        hideBucketEvent:FireClient(playerWhoTriggered, self.toolModel)
         -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
     end)
 	return self
 end
 
-function ToolModelServerClass.OnRemoved(toolM)
-    local toolMIns = toolModelInsList[toolM]
+function BucketModelServerClass.OnRemoved(toolM)
+    local toolMIns = bucketModelInsList[toolM]
     for key, _ in toolMIns do
         toolMIns[key] = nil
     end
@@ -50,14 +50,14 @@ function ToolModelServerClass.OnRemoved(toolM)
         toolMIns.interactCon:Disconnect()
     end
 
-    toolModelInsList[toolM] = nil
+    bucketModelInsList[toolM] = nil
 end
 
-function ToolModelServerClass.OnAdded(toolModel:Part)
-    local toolM = ToolModelServerClass.new(toolModel)
+function BucketModelServerClass.OnAdded(toolModel:Part)
+    local toolM = BucketModelServerClass.new(toolModel)
 
-    toolModelInsList[toolM] = toolM
+    bucketModelInsList[toolM] = toolM
 end
 
 
-return ToolModelServerClass
+return BucketModelServerClass

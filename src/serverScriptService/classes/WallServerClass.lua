@@ -61,6 +61,7 @@ function WallServerClass.new(wall:Part)
         -- print("parts", parts)
         if #parts == 0 then
             character.isHiding.Value = false
+            self.playerDebounce[player] = false
         end
     end)
 

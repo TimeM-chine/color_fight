@@ -8,6 +8,7 @@ local remoteEvents = game.ReplicatedStorage.RemoteEvents
 
 ---- variables ----
 local toolModelsFolder = workspace.toolModels
+local bucketModelsFolder = workspace.bucketModels
 
 ---- modules ----
 local uiController = require(script.Parent.uiScripts.uiController)
@@ -18,16 +19,31 @@ local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
 for _, toolModel in toolModelsFolder:GetChildren() do
     toolModel.ProximityPrompt.Enabled = true
     toolModel.CanCollide = true
-    toolModel.Transparency = 0
+    for _, child in toolModel:GetChildren() do
+        if child:IsA("BasePart") then
+            child.Transparency = 0
+        end
+    end
 end
 
--- KeyboardRecall.SetClientRecall(Enum.KeyCode.Space, function()
---     local t = {"top", "middle", "bottom"}
---     uiController.SetNotification("wuhu yeah babe", t[math.random(1, 3)])
--- end)
-
+for _, bucketPart:Part in bucketModelsFolder:GetChildren() do
+    bucketPart.ProximityPrompt.Enabled = true
+    bucketPart.CanCollide = true
+    bucketPart.Transparency = 0
+end
 
 remoteEvents.hideToolEvent.OnClientEvent:Connect(function(toolModel:Part)
+    for _, child in toolModel:GetDescendants() do
+        if child:IsA("BasePart") then
+            child.Transparency = 1
+        end
+    end
+    toolModel.ProximityPrompt.Enabled = false
+    toolModel.CanCollide = false
+end)
+
+
+remoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
     toolModel.Transparency = 1
     toolModel.ProximityPrompt.Enabled = false
     toolModel.CanCollide = false

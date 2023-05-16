@@ -24,6 +24,7 @@ local GamePlayerClass = {}
 GamePlayerClass.__index = GamePlayerClass
 GamePlayerClass.color = nil
 GamePlayerClass.skill = nil
+GamePlayerClass.paintCan = nil
 
 function GamePlayerClass:SetCollisionGroup(groupName)
     local function ChangeGroup(Part)
@@ -47,8 +48,14 @@ function GamePlayerClass:SetColor(color)
     if not character then
         character = self.player.CharacterAdded:Wait()
     end
+    character:WaitForChild("colorString").Value = color
 
-    character.colorString.Value = color
+    if color == "empty" then
+        self.paintCan.fluid.Transparency = 1
+    else
+        self.paintCan.fluid.Color = colorValue[color]
+        self.paintCan.fluid.Transparency = 0
+    end
 
     local param = argsEnum.changeColorEvent
     param.color = color
@@ -61,9 +68,11 @@ end
 function GamePlayerClass:InitPlayer()
     local character = self.player.Character
     self:SetCollisionGroup("player")
-    -- if not character then
-    --     character = self.player.CharacterAdded:Wait()
-    -- end
+
+    local paintCan = game.ServerStorage.paintCan:Clone()
+    paintCan.Parent = character
+    self.paintCan = paintCan
+
     character.Humanoid.MaxHealth = 1
     character.Humanoid.Health = 1
     CreateModule.CreateValue("StringValue", "colorString", "nil", character)
@@ -74,5 +83,10 @@ function GamePlayerClass:InitPlayer()
     self:NotifyToClient(changeColorEvent, param)
 end
 
+function GamePlayerClass:OnChatted(message, recipient)
+    if message == "/reset data" then
+        self:ResetPlayerData()
+    end
+end
 
 return GamePlayerClass

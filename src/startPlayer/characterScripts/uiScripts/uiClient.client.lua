@@ -6,6 +6,7 @@
 local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
 local shopBtn = PlayerGui.hudScreen.bgFrame.shopBtn
+local loginBtn = PlayerGui.hudScreen.bgFrame.loginBtn
 
 ---- events ----
 local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
@@ -22,6 +23,10 @@ notifyEvent.Event:Connect(function(msg, noteType)
     uiController.SetNotification(msg, noteType)
 end)
 
+
+loginBtn.MouseButton1Click:Connect(function()
+    uiController.PushScreen(screenEnum.loginRewardsFrame)
+end)
 
 shopBtn.MouseButton1Click:Connect(function()
     uiController.PushScreen(screenEnum.careerShopFrame)

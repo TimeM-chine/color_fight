@@ -48,9 +48,6 @@ function ColorDoorClientClass:Clicked()
             changeColorEvent:FireServer("empty")
         end
 
-        if #doorFolder:GetChildren() == 0 then
-            notifyEvent:Fire("You Win!")
-        end
     else
         notifyEvent:Fire("not right color")
     end

@@ -22,6 +22,9 @@ function PlayerServerClass.new(player:Player)
     player.CharacterAdded:Connect(function(character)
         playerIns:InitPlayer()
     end)
+    player.Chatted:Connect(function(message, recipient)
+        playerIns:OnChatted(message, recipient)
+    end)
     table.insert(playerInsList, playerIns)
     return playerIns
 end
@@ -59,6 +62,15 @@ function PlayerServerClass:SetOneData(key, value)
     return DataMgr:SetPlayerOneData(self.player, key, value)
 end
 
+function PlayerServerClass:ResetPlayerData()
+    return DataMgr:ResetPlayerData(self.player)
+end
+
+function PlayerServerClass:ResetPlayerOneData(key)
+    return DataMgr:ResetPlayerOneData(self.player, key)
+end
+
+
 function PlayerServerClass:UpdatedOneData(key, num)
     local oldValue = self:GetOneData(key)
     self:SetOneData(key, oldValue + num)
@@ -69,7 +81,8 @@ function PlayerServerClass:NotifyToClient(event:RemoteEvent, args)
 end
 
 function PlayerServerClass:AddItem(itemId, itemNum)
-    
+    local tool = game.ServerStorage.tools:FindFirstChild(itemId):Clone()
+    tool.Parent = self.player.Character
 end
 
 return PlayerServerClass
