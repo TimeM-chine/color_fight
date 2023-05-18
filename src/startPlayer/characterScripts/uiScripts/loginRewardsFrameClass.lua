@@ -83,7 +83,7 @@ end
 function loginRewardsFrameClass:ReSign(day)
     self.modalFrame.Visible = true
     -- todo check text
-    self.modalFrame.inner.textFrame.TextLabel.Text = "test"
+    self.modalFrame.inner.textFrame.TextLabel.Text = "Sure to resign? Needs 20 wins."
     -- if confirm, check player data
     local confirmBtn:ImageButton = self.modalFrame.inner.confirmBtn
     local cancelBtn:ImageButton = self.modalFrame.inner.cancelBtn

@@ -3,6 +3,7 @@
 -- ================================================================================
 
 ---- enum ----
+local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 
 ---- services ----
 
@@ -25,7 +26,6 @@ ColorDoorClientClass.remainClick = ColorDoorClientClass.totalClick
 function ColorDoorClientClass.new(door)
     local self = setmetatable({}, ColorDoorClientClass)
     self.door = door
-
     self.door.ClickDetector.MouseClick:Connect(function()
         self:Clicked()
     end)
@@ -44,6 +44,13 @@ function ColorDoorClientClass:Clicked()
         self.door.Transparency = (self.totalClick - self.remainClick)/self.totalClick
         if self.remainClick <= 0 then
             -- self.door:Destroy()
+            if self.door.colorString.Value == colorEnum.ColorName.blue then
+                self.door.brother.Value.Transparency = 1
+                self.door.brother.Value.ClickDetector.MaxActivationDistance = 0
+                self.door.brother.Value.SurfaceGui.TextLabel.Text = ""
+                self.door.brother.Value.CanCollide = false
+            end
+            
             self:SetVisible(false)
             changeColorEvent:FireServer("empty")
         end
@@ -60,6 +67,7 @@ function ColorDoorClientClass:SetVisible(flag)
         self.door.Transparency = 0
         self.door.ClickDetector.MaxActivationDistance = 30
         self.door.SurfaceGui.TextLabel.Text = "5"
+        self.remainClick = self.totalClick
     else
         self.door.Transparency = 1
         self.door.ClickDetector.MaxActivationDistance = 0

@@ -18,6 +18,9 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 ---- events ----
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
 
+---- animations ----
+local crawAnim = game.ServerStorage.animations.craw
+local gunPosAnim = game.ServerStorage.animations.gunPos
 
 
 local GamePlayerClass = {}
@@ -34,7 +37,7 @@ function GamePlayerClass:SetCollisionGroup(groupName)
     end
 
     local character = self.player.Character
-    task.wait(3)
+    -- task.wait(3)
     for _, Object in pairs(character:GetChildren()) do
         ChangeGroup(Object)
     end
@@ -73,20 +76,49 @@ function GamePlayerClass:InitPlayer()
     paintCan.Parent = character
     self.paintCan = paintCan
 
-    character.Humanoid.MaxHealth = 1
-    character.Humanoid.Health = 1
+    character.Humanoid.MaxHealth = 999
+    character.Humanoid.Health = 999
     CreateModule.CreateValue("StringValue", "colorString", "nil", character)
     CreateModule.CreateValue("BoolValue", "isHiding", false, character)
 
     local param = argsEnum.changeColorEvent
     param.color = "empty"
     self:NotifyToClient(changeColorEvent, param)
+
+    -- local animator:Animator = character.Humanoid:WaitForChild("Animator")
+    -- -- local crawTrack = animator:LoadAnimation(crawAnim)
+    -- local gunTrack = animator:LoadAnimation(gunPosAnim)
+    -- gunTrack:Play()
 end
 
 function GamePlayerClass:OnChatted(message, recipient)
     if message == "/reset data" then
         self:ResetPlayerData()
+    elseif string.match(message, "/tool (.+)") then
+        local name = string.match(message, "/tool (.+)")
+        local tool = game.ServerStorage.tools:FindFirstChild(name)
+        if tool then
+            self:EquipFakeTool(name)
+        else
+            warn(`There is no tool named {name}.`)
+        end
     end
+end
+
+function GamePlayerClass:EquipFakeTool(name)
+    local tool:Model = game.ServerStorage.tools:FindFirstChild(name)
+    if tool then
+        tool = tool:Clone()
+    else
+        warn(`There is no tool named {name}`)
+    end
+    tool:PivotTo(self.player.Character.RightHand.CFrame)
+    local weld = Instance.new("WeldConstraint")
+    weld.Part0 = tool.Handle
+    weld.Part1 = self.player.Character.RightHand
+    weld.Parent = tool.Handle
+    tool.Parent = self.player.Character
+
 end
 
 return GamePlayerClass

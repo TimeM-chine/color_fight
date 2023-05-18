@@ -81,8 +81,7 @@ function PlayerServerClass:NotifyToClient(event:RemoteEvent, args)
 end
 
 function PlayerServerClass:AddItem(itemId, itemNum)
-    local tool = game.ServerStorage.tools:FindFirstChild(itemId):Clone()
-    tool.Parent = self.player.Character
+    
 end
 
 return PlayerServerClass

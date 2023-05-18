@@ -49,18 +49,20 @@ end
 
 
 ---- color doors # only color, clients will handle logic ----
-local colorDoors = workspace.colorDoors:GetChildren()
+local colorDoors = workspace.colorDoors:GetDescendants()
 for _, door in colorDoors do
-    door.Color = colorValue[door.colorString.Value]
+    if door:IsA("Part") then
+        door.Color = colorValue[door.colorString.Value]
+    end
 end
 
 ---- monsters ----
--- local monster = game.ServerStorage.monster
--- local part = workspace.pathPoints:FindFirstChild("Part1")
+local monster = game.ServerStorage.monster
+local part = workspace.pathPoints:FindFirstChild("Part1")
 
--- monster:PivotTo(part.CFrame)
+monster:PivotTo(part.CFrame)
 
--- monster.Parent = workspace
+monster.Parent = workspace
 
--- local aiScript = game.ServerStorage.monsterAi
--- aiScript:Clone().Parent = monster
+local aiScript = game.ServerStorage.monsterAi
+aiScript:Clone().Parent = monster

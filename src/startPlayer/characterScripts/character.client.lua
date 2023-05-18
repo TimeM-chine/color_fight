@@ -14,8 +14,6 @@ local bucketModelsFolder = workspace.bucketModels
 local uiController = require(script.Parent.uiScripts.uiController)
 local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
 
-
-
 for _, toolModel in toolModelsFolder:GetChildren() do
     toolModel.ProximityPrompt.Enabled = true
     toolModel.CanCollide = true
@@ -32,21 +30,4 @@ for _, bucketPart:Part in bucketModelsFolder:GetChildren() do
     bucketPart.Transparency = 0
 end
 
-remoteEvents.hideToolEvent.OnClientEvent:Connect(function(toolModel:Part)
-    for _, child in toolModel:GetDescendants() do
-        if child:IsA("BasePart") then
-            child.Transparency = 1
-        end
-    end
-    toolModel.ProximityPrompt.Enabled = false
-    toolModel.CanCollide = false
-end)
-
-
-remoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
-    toolModel.Transparency = 1
-    toolModel.ProximityPrompt.Enabled = false
-    toolModel.CanCollide = false
-end)
-
--- game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32

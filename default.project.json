@@ -31,8 +31,15 @@
                 "hideToolEvent": {
                     "$className": "RemoteEvent"
                 },
-                "hideBucketEvent":{"$className":"RemoteEvent"},
-                "getLoginRewardEvent":{"$className":"RemoteEvent"}
+                "hideBucketEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "hideToolDoorEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "getLoginRewardEvent": {
+                    "$className": "RemoteEvent"
+                }
             },
             "BindableEvents": {
                 "$className": "Folder",
@@ -57,7 +64,15 @@
             "monster": {
                 "$className": "Model"
             },
-            "tools":{"$className":"Folder"}
+            "tools": {
+                "$className": "Folder"
+            },
+            "paintCan": {
+                "$className": "Accessory"
+            },
+            "animations":{
+                "$className":"Folder"
+            }
         },
         "StarterPlayer": {
             "$className": "StarterPlayer",
@@ -82,7 +97,9 @@
                     "skillBtn": {
                         "$className": "ImageButton"
                     },
-                    "loginBtn":{"$className":"TextButton"},
+                    "loginBtn": {
+                        "$className": "TextButton"
+                    },
                     "hpLabel": {
                         "$className": "TextLabel"
                     }
@@ -129,12 +146,27 @@
             "toolModels": {
                 "$className": "Folder"
             },
-            "bucketModels":{"$className":"Folder"},
+            "bucketModels": {
+                "$className": "Folder"
+            },
             "pathPoints": {
                 "$className": "Folder"
             },
-            "toolDoors":{"$className":"Folder"},
-            "safeAreas":{"$className":"Folder"}
+            "toolDoors": {
+                "$className": "Folder"
+            },
+            "safeAreas": {
+                "$className": "Folder"
+            },
+            "airLands": {
+                "$className": "Folder"
+            },
+            "others": {
+                "$className": "Folder"
+            },
+            "pallets": {
+                "$className": "Folder"
+            }
         },
         "Lighting": {
             "$properties": {

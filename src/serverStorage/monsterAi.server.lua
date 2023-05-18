@@ -12,8 +12,13 @@ local pointsFolder = workspace.pathPoints
 local myHRP = agent:WaitForChild("HumanoidRootPart")
 local myH = agent:WaitForChild("Humanoid")
 local cor = nil
+local walkAnim = agent.Animation
+local animator:Animator = myH.Animator
+local aniTrack = animator:LoadAnimation(walkAnim)
+local playerTargetTime = {}
 
 ---- main ----
+aniTrack:Play()
 
 local pathParam = table.clone(argsEnum.CreatePath)
 pathParam.AgentCanClimb = false
@@ -53,7 +58,7 @@ function SetLastHurtPlayer(player)
     lastHurtPlayer = player
 
     cor = coroutine.create(function()
-        task.wait(5)
+        task.wait(8)
         lastHurtPlayer = nil
     end)
     coroutine.resume(cor)
@@ -72,7 +77,7 @@ local function GetNearestCharacterAndDist()
 
         local playerDis = (player.Character.PrimaryPart.Position - fromPosition).Magnitude
 		if playerDis < dist then
-            if playerDis <= 10 then
+            if playerDis <= 15 then
                 HurtPlayer(player)
             end
 			character, dist = player.Character, playerDis
@@ -85,6 +90,17 @@ end
 local function GetNextTarget()
     local character, dist = GetNearestCharacterAndDist()
     if character and character.HumanoidRootPart and dist <= 150 then
+        local player = game.Players:GetPlayerFromCharacter(character)
+        if playerTargetTime[player] then
+            playerTargetTime[player] += 1
+        else
+            playerTargetTime[player] = 1
+        end
+        -- print(playerTargetTime[player])
+        if playerTargetTime[player] >= 20 then
+            SetLastHurtPlayer(player)
+            playerTargetTime[player] = 0
+        end
         return character.HumanoidRootPart
     end
 
@@ -106,9 +122,9 @@ path.Visualize = true
 while task.wait(0.5) do
     local nextTarget = GetNextTarget()
     -- print("next target", nextTarget)
-    if nextTarget ~= target then
-        path:Run(nextTarget)
-    end
+
+    path:Run(nextTarget)
+    
 end
 
 

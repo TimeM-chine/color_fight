@@ -33,7 +33,7 @@ function ToolModelServerClass.new(toolM:Part)
     local ppt:ProximityPrompt = toolM.ProximityPrompt
     self.interactCon = ppt.Triggered:Connect(function(playerWhoTriggered)
         local playerIns = PlayerServerClass.GetIns(playerWhoTriggered)
-        playerIns:AddItem(self.toolModel.Name)
+        playerIns:EquipFakeTool(self.toolModel.Name)
         hideToolEvent:FireClient(playerWhoTriggered, self.toolModel)
         -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
     end)
