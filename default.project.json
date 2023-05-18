@@ -39,12 +39,27 @@
                 },
                 "getLoginRewardEvent": {
                     "$className": "RemoteEvent"
+                },
+                "addHealthEvent":{
+                    "$className":"RemoteEvent"
+                },
+                "serverNotifyEvent":{
+                    "$className":"RemoteEvent"
+                },
+                "teleportEvent":{
+                    "$className":"RemoteEvent"
+                },
+                "playerHideSkill":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
                 "$className": "Folder",
                 "notifyEvent": {
                     "$className": "BindableEvent"
+                },
+                "perTipEvent":{
+                    "$className":"BindableEvent"
                 }
             },
             "RemoteFunctions": {
@@ -72,6 +87,9 @@
             },
             "animations":{
                 "$className":"Folder"
+            },
+            "monsters":{
+                "$className":"Folder"
             }
         },
         "StarterPlayer": {
@@ -91,18 +109,8 @@
                 "$className": "ScreenGui",
                 "bgFrame": {
                     "$className": "Frame",
-                    "shopBtn": {
-                        "$className": "TextButton"
-                    },
-                    "skillBtn": {
-                        "$className": "ImageButton"
-                    },
-                    "loginBtn": {
-                        "$className": "TextButton"
-                    },
-                    "hpLabel": {
-                        "$className": "TextLabel"
-                    }
+                    "inLobby":{"$className":"Frame"},
+                    "inGame":{"$className":"Frame"}
                 }
             },
             "pushScreen": {
@@ -126,11 +134,17 @@
                     },
                     "bottom": {
                         "$className": "TextLabel"
+                    },
+                    "persistentTip": {
+                        "$className": "TextLabel"
                     }
                 }
             },
             "screens": {
                 "$className": "Folder"
+            },
+            "units":{
+                "$className":"Folder"
             }
         },
         "Workspace": {
@@ -138,7 +152,7 @@
                 "FilteringEnabled": true
             },
             "walls": {
-                "$className": "Folder"
+                "$className": "Model"
             },
             "colorDoors": {
                 "$className": "Folder"
@@ -159,13 +173,16 @@
                 "$className": "Folder"
             },
             "airLands": {
-                "$className": "Folder"
+                "$className": "Model"
             },
             "others": {
                 "$className": "Folder"
             },
             "pallets": {
                 "$className": "Folder"
+            },
+            "heartSeller":{
+                "$className":"Model"
             }
         },
         "Lighting": {

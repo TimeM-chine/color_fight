@@ -9,6 +9,7 @@ local remoteEvents = game.ReplicatedStorage.RemoteEvents
 ---- variables ----
 local toolModelsFolder = workspace.toolModels
 local bucketModelsFolder = workspace.bucketModels
+local LocalPlayer = game.Players.LocalPlayer
 
 ---- modules ----
 local uiController = require(script.Parent.uiScripts.uiController)
@@ -30,4 +31,12 @@ for _, bucketPart:Part in bucketModelsFolder:GetChildren() do
     bucketPart.Transparency = 0
 end
 
-game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
+-- LocalPlayer.Character.Humanoid.WalkSpeed = 16
+
+
+uiController.SetPersistentTip("Pick up the purple paint")
+local colorString:StringValue = LocalPlayer.Character:WaitForChild("colorString")
+colorString.Changed:Once(function(value)
+    uiController.SetPersistentTip("Find the door that requires purple paint")
+end)
+

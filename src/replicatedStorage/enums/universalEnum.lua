@@ -1,5 +1,7 @@
 local universalEnum = {}
 
+universalEnum.maxHealth = 6
+
 universalEnum.oneHour = 3600
 universalEnum.oneDay = universalEnum.oneHour * 24
 universalEnum.oneWeek = universalEnum.oneDay * 7

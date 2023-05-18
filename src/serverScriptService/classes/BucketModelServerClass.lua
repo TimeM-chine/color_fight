@@ -18,6 +18,7 @@ local colorValue = colorEnum.ColorValue
 
 ---- events -----
 local hideBucketEvent = game.ReplicatedStorage.RemoteEvents.hideBucketEvent
+local serverNotifyEvent = game.ReplicatedStorage.RemoteEvents.serverNotifyEvent
 
 
 local BucketModelServerClass = {}
@@ -36,6 +37,9 @@ function BucketModelServerClass.new(toolM:Part)
         playerIns:SetColor(self.toolModel.colorString.Value)
         hideBucketEvent:FireClient(playerWhoTriggered, self.toolModel)
         -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
+        if self.toolModel.colorString.Value == colorEnum.ColorName.white then
+            serverNotifyEvent:FireClient(playerWhoTriggered, "Return to the main city and unlock the next level", "bottom")
+        end
     end)
 	return self
 end

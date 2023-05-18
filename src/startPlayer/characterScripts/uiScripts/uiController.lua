@@ -99,4 +99,14 @@ function controller.SetNotification(content, noteType)
     coroutine.resume(noteCrt[noteType])
 end
 
+function controller.SetPersistentTip(tip)
+    local noteLabel = notificationFrame.persistentTip
+    noteLabel.Visible = tip ~= nil
+    if tip then
+        noteLabel.Text = tip
+    end
+
+end
+
+
 return controller

@@ -1,3 +1,4 @@
+local Workspace = game:GetService("Workspace")
 
 ---- classes ----
 local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
@@ -22,6 +23,8 @@ local lastColor = nil
 local palletNum = 0
 local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
+local nowLevel
+local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
 
 
 clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
@@ -84,8 +87,27 @@ RemoteEvents.hideToolDoorEvent.OnClientEvent:Connect(function(door)
         end
         door:PivotTo(door:GetPivot() - Vector3.new(0, 100, 0))
     end
+
+    if door.Name == "ladder" then
+        for _, part:Part in door.ladder:GetChildren() do
+			part.Transparency = 0
+			part.CanCollide = true
+		end
+    end
 end)
 
+
+RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
+    if ind > 0 then
+        hudBgFrame.inLobby.Visible = false
+        hudBgFrame.inGame.Visible = true
+
+        hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..ind]:GetChildren()
+    else
+        hudBgFrame.inLobby.Visible = true
+        hudBgFrame.inGame.Visible = false
+    end
+end)
 
 ---- init things ----
 for _, part in workspace.airLands:GetChildren() do
@@ -107,7 +129,15 @@ for _, pallet in workspace.pallets:GetDescendants() do
         pallet.plate.ProximityPrompt.Triggered:Connect(function(playerWhoTriggered)
             pallet:Destroy()
             palletNum += 1
-            PlayerGui.hudScreen.bgFrame.pallet.TextLabel.Text = palletNum.."/18"
+            hudBgFrame.inGame.pallet.TextLabel.Text = palletNum.."/18"
         end)
     end
 end
+
+-- workspace.SpawnLocation.CFrame = Workspace.level1SpawnPoint.CFrame
+-- LocalPlayer.CharacterAdded:Wait()
+
+task.wait(5)
+LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
+
+hudBgFrame.inLobby.Visible = true

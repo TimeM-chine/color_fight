@@ -1,6 +1,5 @@
 return {
-    careerShopFrame = "careerShopFrame",
-    shoeShopFrame = "shoeShopFrame",
+    shopFrame = "shopFrame",
     loginRewardsFrame = "loginRewardsFrame",
     onlineRewardsFrame = "onlineRewardsFrame"
 }

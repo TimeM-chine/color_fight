@@ -14,8 +14,10 @@ local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 
 ---- events ----
+local RemoteEvents = game.ReplicatedStorage.RemoteEvents
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
 local getLoginRewardEvent = game.ReplicatedStorage.RemoteEvents.getLoginRewardEvent
+local playerHideSkill = game.ReplicatedStorage.RemoteEvents.playerHideSkill
 
 ---- services ----
 local PS = game:GetService("Players")
@@ -49,4 +51,17 @@ getLoginRewardEvent.OnServerEvent:Connect(function(player, day)
     loginState[day] = true
     -- todo 发放奖励
     
+end)
+
+playerHideSkill.OnServerEvent:Connect(function(player)
+    local field = Instance.new("ForceField")
+    field.Parent = player.Character
+    task.wait(3)
+    field:Destroy()
+end)
+
+
+RemoteEvents.addHealthEvent.OnServerEvent:Connect(function(player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    playerIns:AddHealth()
 end)

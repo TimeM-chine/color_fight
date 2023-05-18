@@ -14,6 +14,7 @@ local doorFolder = workspace.colorDoors
 ---- events ----
 local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
+local perTipEvent = game.ReplicatedStorage.BindableEvents.perTipEvent
 
 ---- main ----
 local ColorDoorClientClass = {}
@@ -49,6 +50,9 @@ function ColorDoorClientClass:Clicked()
                 self.door.brother.Value.ClickDetector.MaxActivationDistance = 0
                 self.door.brother.Value.SurfaceGui.TextLabel.Text = ""
                 self.door.brother.Value.CanCollide = false
+            elseif self.door.colorString.Value == colorEnum.ColorName.purple then
+                perTipEvent:Fire()
+                notifyEvent:Fire("Now you can't hide behind the purple wall", "bottom")
             end
             
             self:SetVisible(false)

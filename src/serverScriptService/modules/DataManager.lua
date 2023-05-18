@@ -77,6 +77,9 @@ function DataManager:GetPlayerOneData(player, key)
 		return
 	end
 	local profile = DataManager:GetPlayerAllData(player)
+    if not profile then
+        return
+    end
 	assert(profile.Data[key], `Can't find key {key} in {player.Name}'s data`)
 	return profile.Data[key]
 end

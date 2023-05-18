@@ -29,41 +29,59 @@ function WallServerClass.new(wall:Part)
 	local self = setmetatable({}, WallServerClass)
 	self.wall = wall
 
-    self.touchCon = self.wall.Touched:Connect(function(otherPart)
-        local character = otherPart:FindFirstAncestorWhichIsA("Model")
-        if not character then return end
+    -- self.touchCon = self.wall.Touched:Connect(function(otherPart)
+    --     local character = otherPart:FindFirstAncestorWhichIsA("Model")
+    --     if not character then return end
 
-        local player = PlayerService:GetPlayerFromCharacter(character)
-        if not player then return end
-        if self.playerDebounce[player] then return end
+    --     local player = PlayerService:GetPlayerFromCharacter(character)
+    --     if not player then return end
+    --     if self.playerDebounce[player] then return end
 
-        self.playerDebounce[player] = true
+    --     self.playerDebounce[player] = true
 
-        if character.colorString.Value == wall.colorString.Value then
-            character.isHiding.Value = true
-        end
-    end)
+    --     if character.colorString.Value == wall.colorString.Value then
+    --         character.isHiding.Value = true
+    --         character.Highlight.Enabled = true
+    --     end
+    -- end)
 
-    self.touchEndCon = self.wall.TouchEnded:Connect(function(otherPart)
-        local character = otherPart:FindFirstAncestorWhichIsA("Model")
-        if not character then return end
+    -- self.touchEndCon = self.wall.TouchEnded:Connect(function(otherPart)
+    --     local character = otherPart:FindFirstAncestorWhichIsA("Model")
+    --     if not character then return end
 
-        local player = PlayerService:GetPlayerFromCharacter(character)
-        if not player then return end
-        -- if not self.playerDebounce[player] then return end
-        task.wait(0.2)
-        local param = OverlapParams.new()
-        param.FilterDescendantsInstances = character:GetChildren()
-        param.FilterType = Enum.RaycastFilterType.Include
-        local parts = workspace:GetPartBoundsInBox(
-            self.wall.CFrame, self.wall.Size, param
-        )
-        -- print("parts", parts)
-        if #parts == 0 then
-            character.isHiding.Value = false
-            self.playerDebounce[player] = false
-        end
-    end)
+    --     local player = PlayerService:GetPlayerFromCharacter(character)
+    --     if not player then return end
+    --     -- if not self.playerDebounce[player] then return end
+    --     if character.colorString.Value ~= wall.colorString.Value then
+    --         return
+    --     end
+    --     task.wait(0.2)
+        
+    --     local param = OverlapParams.new()
+    --     param.FilterDescendantsInstances = character:GetChildren()
+    --     param.FilterType = Enum.RaycastFilterType.Include
+    --     local parts = workspace:GetPartBoundsInBox(
+    --         self.wall.CFrame, self.wall.Size, param
+    --     )
+    --     -- print("parts", parts)
+
+    --     param = OverlapParams.new()
+    --     param.FilterDescendantsInstances = workspace.walls:GetDescendants()
+    --     param.FilterType = Enum.RaycastFilterType.Include
+    --     local cf, size = character:GetBoundingBox()
+    --     local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
+    --     -- print("playerContact", playerContact)
+    --     if #parts == 0 then
+    --         for _, conPart in playerContact do
+    --             if conPart.colorString.Value == character.colorString.Value then
+    --                 return
+    --             end
+    --         end
+    --         character.isHiding.Value = false
+    --         self.playerDebounce[player] = false
+    --         character.Highlight.Enabled = false
+    --     end
+    -- end)
 
 	return self
 end

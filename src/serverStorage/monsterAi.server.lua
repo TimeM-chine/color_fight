@@ -1,9 +1,11 @@
 
 ---- modules -----
 local SimplePath = require(game.ServerScriptService.modules.SimplePath)
+local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
 
 ---- enums ----
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 
 ---- variables ----
 local agent:Model = script.Parent
@@ -37,7 +39,7 @@ local function GetNextPoint()
 
     if (myHRP.CFrame.Position - lastPointPart.CFrame.Position).Magnitude <= 3 then
         local lastInd = string.match(lastPointPart.Name, "Part(%d+)")
-        return pointsFolder:FindFirstChild("Part"..(lastInd % 19 + 1))
+        return pointsFolder:FindFirstChild("Part"..(lastInd % 11 + 1))
     end
 
     return lastPointPart
@@ -47,6 +49,7 @@ function HurtPlayer(player)
     if not player.character.isHiding.Value then
         local human:Humanoid = player.character.Humanoid
         human:TakeDamage(1)
+        PlayerServerClass.GetIns(player):SetOneData(dataKey.hp, math.max(1, human.Health))
     end
     SetLastHurtPlayer(player)
 end

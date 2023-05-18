@@ -49,6 +49,24 @@ function emptyHandle(receipt, player)
 	return true
 end
 
+
+function AddHealth(receipt, player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    playerIns:AddHealth()
+end
+
+function BuyShoes(receipt, player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    local shoeList = playerIns:GetOneData(dataKey.shoe)
+    shoeList[1] = true
+end
+
+function BuyCareers(receipt, player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    local careerList = playerIns:GetOneData(dataKey.career)
+    careerList[1] = true
+end
+
 local productFunctions = {}
 productFunctions[productIdEnum.goods1] = emptyHandle
 

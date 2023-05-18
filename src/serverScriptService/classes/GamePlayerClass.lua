@@ -17,6 +17,7 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 
 ---- events ----
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
+local addHealthEvent = game.ReplicatedStorage.RemoteEvents.addHealthEvent
 
 ---- animations ----
 local crawAnim = game.ServerStorage.animations.craw
@@ -76,8 +77,15 @@ function GamePlayerClass:InitPlayer()
     paintCan.Parent = character
     self.paintCan = paintCan
 
-    character.Humanoid.MaxHealth = 999
-    character.Humanoid.Health = 999
+    character.Humanoid.MaxHealth = universalEnum.maxHealth
+    local hp = self:GetOneData(dataKey.hp)
+    while not hp do
+        hp = self:GetOneData(dataKey.hp)
+        print"wait"
+        task.wait(0.1)
+    end
+    character.Humanoid.Health = hp
+
     CreateModule.CreateValue("StringValue", "colorString", "nil", character)
     CreateModule.CreateValue("BoolValue", "isHiding", false, character)
 
@@ -85,10 +93,18 @@ function GamePlayerClass:InitPlayer()
     param.color = "empty"
     self:NotifyToClient(changeColorEvent, param)
 
-    -- local animator:Animator = character.Humanoid:WaitForChild("Animator")
-    -- -- local crawTrack = animator:LoadAnimation(crawAnim)
-    -- local gunTrack = animator:LoadAnimation(gunPosAnim)
-    -- gunTrack:Play()
+    local animator:Animator = character.Humanoid:WaitForChild("Animator")
+    -- local crawTrack = animator:LoadAnimation(crawAnim)
+    task.wait(1)
+    local gunTrack = animator:LoadAnimation(gunPosAnim)
+    gunTrack.Looped = true
+    gunTrack.Priority = Enum.AnimationPriority.Movement
+    gunTrack:Play()
+
+    local highlight = Instance.new("Highlight")
+    highlight.Enabled = false
+    highlight.Parent = self.player.Character
+
 end
 
 function GamePlayerClass:OnChatted(message, recipient)
@@ -119,6 +135,14 @@ function GamePlayerClass:EquipFakeTool(name)
     weld.Parent = tool.Handle
     tool.Parent = self.player.Character
 
+end
+
+function GamePlayerClass:AddHealth()
+    local nowDataHealth = self:GetOneData(dataKey.hp)
+    if nowDataHealth < 6 then
+        self.player.Character.Humanoid.Health = nowDataHealth + 1
+        self:SetOneData(dataKey.hp, math.min(nowDataHealth + 1, universalEnum.maxHealth))
+    end
 end
 
 return GamePlayerClass
