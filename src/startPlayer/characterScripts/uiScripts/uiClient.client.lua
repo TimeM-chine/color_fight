@@ -20,6 +20,7 @@ local inviteBtn = speedFrame.inviteBtn
 local friendNum = 0
 
 ---- events ----
+local RemoteEvents = game.ReplicatedStorage.RemoteEvents
 local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
 local perTipEvent = game.ReplicatedStorage.BindableEvents.perTipEvent
 local addHealthEvent = game.ReplicatedStorage.RemoteEvents.addHealthEvent
@@ -59,9 +60,9 @@ shopBtn.MouseButton1Click:Connect(function()
 end)
 
 buyHeartBtn.MouseButton1Click:Connect(function()
-    -- print("player buy heart")
-    -- addHealthEvent:FireServer()
-    MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
+    print("player buy heart")
+    addHealthEvent:FireServer()
+    -- MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
 end)
 
 hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
@@ -118,9 +119,11 @@ end)
 local function onPlayerAdded(player:Player)
 	if LocalPlayer:IsFriendsWith(player.UserId) then
         friendNum += 1
+        RemoteEvents.friendInEvent:FireServer(player.UserId)
     end
     friendFrame.TextLabel.Text = `friend num: {friendNum}`
     speedFrame.TextLabel.Text = `Speed buff: {math.min(15, friendNum*5)}%`
+    
 end
 
 for _, player in pairs(game.Players:GetPlayers()) do

@@ -1,4 +1,7 @@
 
+---- services ----
+local Debris = game:GetService"Debris"
+
 ---- variables ----
 local cd = 0
 local LocalPlayer = game.Players.LocalPlayer
@@ -15,24 +18,24 @@ local playerHideSkill = game.ReplicatedStorage.RemoteEvents.playerHideSkill
 local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 local chooseSkillEvent = game.ReplicatedStorage.RemoteEvents.chooseSkillEvent
 
+---- modules ----
+local playerModule = require(script.Parent.PlayerClientModule)
+
 ---- enums ----
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 
 local SkillModule = {}
 
-
 function SkillModule.UseSkill()
     if skillId == 0 then
         print("skill id is 0")
-        
         return
     end
     if cd > 0 then
         notifyEvent:Fire("Skill is in CD.")
     else
         local skFun = SkillModule["Sk"..skillId]
-        print("player use skill", skillId)
         SkillModule.IntoCd()
         skFun()
     end
@@ -76,37 +79,35 @@ function SkillModule.Sk2()
 end
 
 function SkillModule.Sk3()
-    LocalPlayer.Character.Humanoid.WalkSpeed = LocalPlayer.Character.Humanoid.WalkSpeed * 1.65
-    task.wait(3)
-    LocalPlayer.Character.Humanoid.WalkSpeed = universalEnum.normalSpeed
+    LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed() * 1.65
+    task.wait(10)
+    LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
 end
 
 function SkillModule.Sk4()
-    -- sight better
-    -- notifyEvent:Fire()
-    task.wait(3)
+    game.Lighting.Atmosphere.Density = 0.6
+    task.wait(20)
+    game.Lighting.Atmosphere.Density = 0.8
 end
 
 function SkillModule.Sk5()
     -- platte vision
     local ind = BindableFunctions.getLevelInd:Invoke()
-    local lightPlatte = {}
     for _, platte:Model in workspace.pallets["level"..ind]:GetChildren() do
         if platte:IsA("Model") then
             if platte.PrimaryPart.CFrame.Position.Y > -100 then
-                platte.Highlight.Enabled = true
-                table.insert(lightPlatte, platte)
+                local hl = Instance.new("Highlight")
+                hl.Parent = platte
+                Debris:AddItem(hl, 10)
             end
         end
-    end
-    task.wait(10)
-    for _, platte:Model in lightPlatte do
-        platte.Highlight.Enabled = false
     end
 end
 
 function runCd()
-    cd = 30
+    if cd == 0 then
+        cd = 45
+    end
     while cd >= 1 do
         -- print("cd", cd)
         cd -= 1
@@ -127,6 +128,10 @@ end
 
 function SkillModule.SetCd(num)
     cd = num
+end
+
+function SkillModule.GetCd()
+    return cd
 end
 
 

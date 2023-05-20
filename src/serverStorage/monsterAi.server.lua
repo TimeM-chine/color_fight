@@ -1,3 +1,7 @@
+local ServerStorage = game:GetService("ServerStorage")
+
+---- services ----
+local Debris = game:GetService"Debris"
 
 ---- modules -----
 local SimplePath = require(game.ServerScriptService.modules.SimplePath)
@@ -6,6 +10,7 @@ local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerC
 ---- enums ----
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 
 ---- variables ----
 local agent:Model = script.Parent
@@ -19,6 +24,7 @@ local walkAnim = agent.Animation
 local animator:Animator = myH.Animator
 local aniTrack = animator:LoadAnimation(walkAnim)
 local playerTargetTime = {}
+local footprint:Part = ServerStorage.footprint
 
 ---- main ----
 aniTrack:Play()
@@ -93,7 +99,7 @@ end
 
 local function GetNextTarget()
     local character, dist = GetNearestCharacterAndDist()
-    if character and character.HumanoidRootPart and dist <= 150 then
+    if character and character.HumanoidRootPart and dist <= 50 then
         local player = game.Players:GetPlayerFromCharacter(character)
         if playerTargetTime[player] then
             playerTargetTime[player] += 1
@@ -113,7 +119,7 @@ local function GetNextTarget()
 end
 
 
-path.Visualize = true
+-- path.Visualize = true
 
 -- path.Blocked:Connect(function(...)
 --     print("blocked", ...)
@@ -126,6 +132,14 @@ path.Visualize = true
 while task.wait(0.5) do
     local nextTarget = GetNextTarget()
     -- print(`{agent.Name} nextTarget: {nextTarget}`)
+    if agent.Name ~= "monster4" then
+        local footCopy = footprint:Clone()
+        footCopy.CFrame = myHRP.CFrame - Vector3.new(0, 8, 0)
+        footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
+        footCopy.Parent = workspace
+        print(footCopy)
+        Debris:AddItem(footCopy, 5)
+    end
 
     path:Run(nextTarget)
 end

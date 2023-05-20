@@ -7,6 +7,7 @@ local ToolModelServerClass = require(game.ServerScriptService.classes.ToolModelS
 
 ---- services ----
 local CS = game:GetService("CollectionService")
+local ServerStorage = game:GetService("ServerStorage")
 
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
@@ -16,6 +17,8 @@ local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 
+---- events ----
+local remoteEvents = game.ReplicatedStorage.RemoteEvents
 
 ---- variables ----
 
@@ -56,8 +59,22 @@ end
 local colorDoors = workspace.colorDoors:GetDescendants()
 for _, door in colorDoors do
     if door:IsA("Part") then
-        door.Color = colorValue[door.colorString.Value]
+        door.SurfaceGui.color.Text = door.colorString.Value
+        door.SurfaceGui.color.TextColor3 = colorValue[door.colorString.Value]
+        door.SurfaceGui.TextLabel.TextColor3 = colorValue[door.colorString.Value]
     end
+end
+
+---- keys 
+for _, key:Part in workspace.keys:GetChildren() do
+    key.ProximityPrompt.Triggered:Connect(function(player)
+        remoteEvents.hideBucketEvent:FireClient(player, key)  -- same logic with buckets
+        local tool = ServerStorage.keys:FindFirstChild(key.Name)
+        if tool then
+            tool = tool:Clone()
+            tool.Parent = player.Character
+        end
+    end)
 end
 
 ---- monsters ----

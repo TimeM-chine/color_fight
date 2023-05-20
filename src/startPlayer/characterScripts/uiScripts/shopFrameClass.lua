@@ -16,10 +16,14 @@ local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.Skil
 ---- enums ----
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
+local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
+local unitsFolder = localPlayer.PlayerGui.units
 local chosenSkInd = playerModule.GetPlayerOneData(dataKey.chosenSkInd)
+local showingShoeListFrame
 
 local shopFrameClass = {}
 shopFrameClass.__index = shopFrameClass
@@ -42,6 +46,7 @@ function shopFrameClass.new(frame)
 
 
     con = ins.shoeShopBtn.MouseButton1Click:Connect(function()
+        ins:CheckShoes()
         ins:OpenShoeShop()
     end)
     table.insert(ins.connections, con)
@@ -57,6 +62,9 @@ function shopFrameClass.new(frame)
         ins:RefreshCareer()
     end)
     table.insert(ins.connections, con)
+
+    ins:CheckCareer()
+    ins:OpenCareerShop()
     return ins
 
 end
@@ -96,6 +104,14 @@ function shopFrameClass:CheckCareer()
             confirmBtn.Text = "Buy"
         end
 
+        if i == 1 and confirmBtn.Text ~= "Choose" then
+            local tempSkInfo = playerModule.GetPlayerOneData(dataKey.tempSkInfo)
+            local tempSkStart = playerModule.GetPlayerOneData(dataKey.tempSkStart)
+            if tempSkInfo[1] and os.time() - tempSkStart <= tempSkInfo[2] then
+                confirmBtn.Text = "Choose"
+            end
+        end
+
         con = confirmBtn.MouseButton1Click:Connect(function()
             if confirmBtn.Text == "Buy" then
                 print("player want to buy career", i)
@@ -118,6 +134,61 @@ function shopFrameClass:CheckCareer()
             end
         end)
 
+        table.insert(self.connections, con)
+    end
+
+end
+
+
+function shopFrameClass:CheckShoes()
+    local shoe = playerModule.GetPlayerOneData(dataKey.shoe)
+    local scrollingFrame = self.frame.shoeShopFrame.ScrollingFrame
+    
+    for i = 1, 3 do
+        scrollingFrame["shoe"..i].confirm.Visible = false
+        for j = 1,5 do
+            if not shoe[i][j] then
+                scrollingFrame["shoe"..i].confirm.Visible = true
+                break
+            end
+        end
+        
+        local con = scrollingFrame["shoe"..i].confirm.MouseButton1Click:Connect(function()
+            if showingShoeListFrame then
+                showingShoeListFrame.Visible = false
+            end
+            MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.shoes["shoe"..i])
+        end)
+
+        table.insert(self.connections, con)
+        con = scrollingFrame["shoe"..i].choose.MouseButton1Click:Connect(function()
+            local shoeList = playerModule.GetPlayerOneData(dataKey.shoe)
+            if showingShoeListFrame then
+                showingShoeListFrame.Visible = false
+            end
+            showingShoeListFrame = scrollingFrame["shoe"..i].choose.shoeList
+
+            for _, ctrl in showingShoeListFrame.ScrollingFrame:GetChildren() do
+                if ctrl:IsA("ImageButton") then
+                    ctrl:Destroy()
+                end
+            end
+
+            for ind = 1, 5 do
+                if shoeList[i][ind] then
+                    local shoeBtn:ImageButton = unitsFolder.shoeButton:Clone()
+                    shoeBtn.Name = ind
+                    shoeBtn.Image = TextureIds.shoeImg[i][ind]
+                    shoeBtn.MouseButton1Click:Connect(function()
+                        remoteEvents.putonShoeEvent:FireServer(i, ind)
+                        localPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
+                        uiController.SetNotification("Put on new shoes.")
+                    end)
+                    shoeBtn.Parent = showingShoeListFrame.ScrollingFrame
+                end
+            end
+            showingShoeListFrame.Visible = true
+        end)
         table.insert(self.connections, con)
     end
 

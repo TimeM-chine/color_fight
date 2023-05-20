@@ -1,7 +1,12 @@
 local character = script.Parent
 
+local filter = workspace.walls:GetDescendants()
+for _, part in workspace.safeAreas:GetChildren() do
+    table.insert(filter, part)
+end
+
 param = OverlapParams.new()
-param.FilterDescendantsInstances = workspace.walls:GetDescendants()
+param.FilterDescendantsInstances = filter
 param.FilterType = Enum.RaycastFilterType.Include
 
 -- print("playerContact", playerContact)
@@ -13,6 +18,9 @@ local function checkHide()
     local cf, size = script.Parent:GetBoundingBox()
     local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
     for _, conPart in playerContact do
+        if conPart.Parent.Name == "safeAreas" then
+            return true
+        end
         if conPart.colorString.Value == character.colorString.Value then
             return true
         end

@@ -57,6 +57,15 @@
                 },
                 "refreshScreenEvent":{
                     "$className":"RemoteEvent"
+                },
+                "putonShoeEvent":{
+                    "$className":"RemoteEvent"
+                },
+                "friendInEvent":{
+                    "$className":"RemoteEvent"
+                },
+                "tempRewardEvent":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -104,6 +113,12 @@
                 "$className":"Folder"
             },
             "monsters":{
+                "$className":"Folder"
+            },
+            "keys":{
+                "$className":"Folder"
+            },
+            "shoes":{
                 "$className":"Folder"
             }
         },
@@ -160,6 +175,9 @@
             },
             "units":{
                 "$className":"Folder"
+            },
+            "scaredScreen":{
+                "$className":"ScreenGui"
             }
         },
         "Workspace": {
@@ -198,6 +216,12 @@
             },
             "heartSeller":{
                 "$className":"Model"
+            },
+            "lastDoors":{
+                "$className":"Folder"
+            },
+            "keys":{
+                "$className":"Folder"
             }
         },
         "Lighting": {

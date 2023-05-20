@@ -13,6 +13,7 @@ local purchaseHistoryStore = DataStoreService:GetDataStore("PurchaseHistory")
 ---- modules -----
 local ServerSystemClass = require(game.ServerScriptService.classes.ServerSystemClass)
 local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
+local TableModule = require(game.ReplicatedStorage.modules.TableModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -60,10 +61,17 @@ function BuyShoes(receipt, player)
     local playerIns = PlayerServerClass.GetIns(player)
     local shoeList = playerIns:GetOneData(dataKey.shoe)
     local shoeInd
-    for i, value in productIdEnum.shoes do
+    for key, value in productIdEnum.shoes do
         if value == receipt.ProductId then
-            shoeInd = i
-            -- todo give a random shoe to player
+            shoeInd = tonumber(string.sub(key, 5, 5))
+            local shoeLeft = {}
+            for i=1,5 do
+                if not shoeList[shoeInd][i] then
+                    table.insert(shoeLeft, i)
+                end
+            end
+            local number = TableModule.Choices(shoeLeft)
+            shoeList[shoeInd][number[1]] = true
             return true
         end
     end

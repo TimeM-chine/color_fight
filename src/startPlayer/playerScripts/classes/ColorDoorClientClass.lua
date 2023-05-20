@@ -4,6 +4,7 @@
 
 ---- enum ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
+local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 
 ---- services ----
 
@@ -16,6 +17,9 @@ local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
 local perTipEvent = game.ReplicatedStorage.BindableEvents.perTipEvent
 local BindableEvents = game.ReplicatedStorage.BindableEvents
+
+---- functions ----
+local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 
 ---- main ----
 local ColorDoorClientClass = {}
@@ -46,11 +50,14 @@ end
 function ColorDoorClientClass:Clicked()
     if self:CheckCondition() then
         self.remainClick -= 1
-        self.door.SurfaceGui.TextLabel.Text = self.remainClick
         self.door.Transparency = (self.totalClick - self.remainClick)/self.totalClick
+        local wallImg:ImageLabel = self.door.SurfaceGui.ImageLabel
+        wallImg.Visible = true
+        wallImg.Image = TextureIds.wallPaints[self.door.colorString.Value.."Paint"..(5 - self.remainClick)]
         if self.remainClick <= 0 then
             -- self.door:Destroy()
-            if self.door.colorString.Value == colorEnum.ColorName.blue then
+            local levelInd = BindableFunctions.getLevelInd:Invoke()
+            if self.door.colorString.Value == colorEnum.ColorName.blue and levelInd == 2 then
                 self.door.brother.Value.Transparency = 1
                 self.door.brother.Value.ClickDetector.MaxActivationDistance = 0
                 self.door.brother.Value.SurfaceGui.TextLabel.Text = ""
@@ -73,14 +80,16 @@ end
 
 function ColorDoorClientClass:SetVisible(flag)
     if flag then
-        self.door.Transparency = 0
+        self.door.Transparency = 0.35
+        self.door.SurfaceGui.Enabled = true
         self.door.ClickDetector.MaxActivationDistance = 30
-        self.door.SurfaceGui.TextLabel.Text = "5"
+        self.door.SurfaceGui.ImageLabel.Visible = false
         self.remainClick = self.totalClick
     else
         self.door.Transparency = 1
+        self.door.SurfaceGui.Enabled = false
         self.door.ClickDetector.MaxActivationDistance = 0
-        self.door.SurfaceGui.TextLabel.Text = ""
+        -- self.door.SurfaceGui.TextLabel.Text = ""
     end
     self.door.CanCollide = flag
 end

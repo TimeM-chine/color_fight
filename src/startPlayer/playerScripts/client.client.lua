@@ -8,9 +8,8 @@ local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemCl
 local ColorDoorClientClass = require(script.Parent.classes.ColorDoorClientClass)
 
 ---- modules ----
-local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
-local modelModule = require(game.ReplicatedStorage.modules.ModelModule)
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
+local playerModule = require(script.Parent.modules.PlayerClientModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -85,11 +84,19 @@ end)
 
 RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
     if ind > 0 then
+        game.Lighting.Atmosphere.Density = 0.8
         hudBgFrame.inLobby.Visible = false
         hudBgFrame.inGame.Visible = true
         palletNum = 0
         hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..ind]:GetChildren()
         BindableEvents.resetLevelEvent:Fire()
+
+        BindableEvents.perTipEvent:Fire("Pick up the purple paint")
+        local colorString:StringValue = LocalPlayer.Character:WaitForChild("colorString")
+        colorString.Changed:Once(function(value)
+            BindableEvents.perTipEvent:Fire("Find the door that requires purple paint")
+        end)
+
         ---- reset every thing ----
         for _, pallet in workspace.pallets:GetDescendants() do
             if pallet:IsA("Model") then
@@ -100,6 +107,7 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
             end
         end
     else
+        game.Lighting.Atmosphere.Density = 0.6
         hudBgFrame.inLobby.Visible = true
         hudBgFrame.inGame.Visible = false
 
@@ -143,7 +151,13 @@ for _, pallet in workspace.pallets:GetDescendants() do
             end
             pallet:PivotTo(pallet:GetPivot() - Vector3.new(0, 200, 0))
             palletNum += 1
-            hudBgFrame.inGame.pallet.TextLabel.Text = palletNum.."/18"
+            local ind = BindableFunctions.getLevelInd:Invoke()
+            local targetNum = #workspace.pallets['level'..ind]:GetChildren()
+            hudBgFrame.inGame.pallet.TextLabel.Text = palletNum.."/"..targetNum
+
+            if palletNum == targetNum then
+                workspace.lastDoors.level1.CanCollide = false
+            end
         end)
     end
 end
@@ -154,9 +168,17 @@ for _, heart in workspace.heartSeller:GetChildren() do
     end)
 end
 
+RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempSkInfo)
+    if tempSpeedInfo[1] ~= 0 then
+        playerModule.SetRewardSpeed(tempSpeedInfo[1])
+        task.wait(tempSpeedInfo[2])
+        playerModule.SetRewardSpeed(0)
+    end
+end)
 -- workspace.SpawnLocation.CFrame = Workspace.level1SpawnPoint.CFrame
 -- LocalPlayer.CharacterAdded:Wait()
 LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
+game.Lighting.Atmosphere.Density = 0.6
 
 hudBgFrame.inLobby.Visible = true

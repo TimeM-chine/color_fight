@@ -23,9 +23,25 @@ local toolModelsFolder = workspace.toolModels
 local bucketModelsFolder = workspace.bucketModels
 local toolDoorsFolder = workspace.toolDoors
 local colorDoorsFolder = workspace.colorDoors
+local keysFolder = workspace.keys
 local LocalPlayer = game.Players.LocalPlayer
 local chosenSkInd = playerModule.GetPlayerOneData(dataKey.chosenSkInd)
 SkillModule.SetSkillId(chosenSkInd)
+
+local chosenShoe = playerModule.GetPlayerOneData(dataKey.chosenShoeInd)
+while not chosenShoe do
+    chosenShoe = playerModule.GetPlayerOneData(dataKey.chosenShoeInd)
+    task.wait(1)
+end
+
+local cd = SkillModule.GetCd()
+if cd >= 1 then
+    SkillModule.IntoCd()
+end
+
+
+remoteEvents.putonShoeEvent:FireServer(chosenShoe[1], chosenShoe[2])
+LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = playerModule.GetPlayerSpeed()
 
 function ResetLevel()
     for _, toolModel in toolModelsFolder:GetChildren() do
@@ -52,18 +68,18 @@ function ResetLevel()
         module.Reset()
     end
 
+    ----- keys ----
+    for _, key:Part in keysFolder:GetChildren() do
+        key.Transparency = 0
+        key.ProximityPrompt.Enabled = true
+    end
+
+    ----- last doors ----
+    for _, lastDoor in workspace.lastDoors:GetChildren() do
+        lastDoor.CanCollide = true
+    end
 end
 
 ResetLevel()
 
 BindableEvents.resetLevelEvent.Event:Connect(ResetLevel)
-
-LocalPlayer.Character.Humanoid.WalkSpeed = universalEnum.normalSpeed
-
-
-uiController.SetPersistentTip("Pick up the purple paint")
-local colorString:StringValue = LocalPlayer.Character:WaitForChild("colorString")
-colorString.Changed:Once(function(value)
-    uiController.SetPersistentTip("Find the door that requires purple paint")
-end)
-

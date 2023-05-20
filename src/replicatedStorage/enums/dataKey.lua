@@ -11,8 +11,13 @@ return {
     shoe = "shoe", -- 鞋子情况
     career = "career", -- 职业情况
     chosenSkInd = "chosenSkInd", -- 选择的技能
-    chosenShoeInd = "chosenSkInd", -- 选择的鞋子
+    chosenShoeInd = "chosenShoeInd", -- 选择的鞋子
+    levelUnlock = "levelUnlock", -- 关卡解锁情况
     ---- rewards ----
+    tempSpeedStart = "tempSpeedStart",  -- 临时的速度
+    tempSkStart = "tempSkStart",  -- 临时的职业
+    tempSpeedInfo = "tempSpeedInfo", -- 临时的速度信息
+    tempSkInfo = "tempSkInfo", -- 临时的职业信息
     onlineTime = "onlineTime", -- 在线时长
     dailyOnlineTime = "dailyOnlineTime",  -- 每日在线时长
     receivedOnlineTime = "receivedOnlineTime",  -- 已领取的在线时长奖励
@@ -25,6 +30,7 @@ return {
     likedReward = "likedReward", -- 是否领取了点赞奖励
     firstPlay = "firstPlay", -- 是否第一次游玩
     friendsInvitedNum = "friendsInvitedNum", -- 邀请好友数
+    friendsInvited = "friendsInvited", -- 邀请过的好友
     ----- currency -----
     money = "money", -- 货币
     consumptionSum = "consumptionSum",  -- 总消费金额

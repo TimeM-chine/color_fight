@@ -118,6 +118,11 @@ function GamePlayerClass:OnChatted(message, recipient)
         else
             warn(`There is no tool named {name}.`)
         end
+    elseif message == "/all career" then
+        local careerList = self:GetOneData(dataKey.career)
+        for i = 1, 5 do
+            careerList[i] = true
+        end
     end
 end
 
