@@ -10,6 +10,8 @@ return {
     walkSpeed = "walkSpeed", -- 移速
     shoe = "shoe", -- 鞋子情况
     career = "career", -- 职业情况
+    chosenSkInd = "chosenSkInd", -- 选择的技能
+    chosenShoeInd = "chosenSkInd", -- 选择的鞋子
     ---- rewards ----
     onlineTime = "onlineTime", -- 在线时长
     dailyOnlineTime = "dailyOnlineTime",  -- 每日在线时长

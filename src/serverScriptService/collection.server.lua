@@ -27,18 +27,22 @@ CollectionCls.new(ToolModelServerClass)
 local wallsFolder = workspace.walls
 
 for _, wall:Part in wallsFolder:GetDescendants() do
-    if wall:IsA("Folder") then
-        continue
+    if wall:IsA("Part") then
+        CS:AddTag(wall, WallServerClass.tagName)
     end
-    CS:AddTag(wall, WallServerClass.tagName)
 end
 
 ---- bucket models ----
 local bucketModelsFolder = workspace.bucketModels
 
-for _, bucket in bucketModelsFolder:GetChildren() do
+for _, bucket in bucketModelsFolder.level1:GetChildren() do
     CS:AddTag(bucket, BucketModelServerClass.tagName)
 end
+
+for _, bucket in bucketModelsFolder.level2:GetChildren() do
+    CS:AddTag(bucket, BucketModelServerClass.tagName)
+end
+
 
 ---- tool models ----
 local toolModelsFolder = workspace.toolModels
@@ -57,12 +61,15 @@ for _, door in colorDoors do
 end
 
 ---- monsters ----
-local monster = game.ServerStorage.monster
-local part = workspace.pathPoints:FindFirstChild("Part1")
+local monsters = game.ServerStorage.monsters
 
-monster:PivotTo(part.CFrame)
+for _, monster in monsters:GetChildren() do
+    -- if monster.Name ~= "monster3" then continue end
+    local part = workspace.pathPoints:FindFirstChild(monster.Name):FindFirstChild("Part1")
+    monster:PivotTo(part.CFrame)
+    monster.Parent = workspace
 
-monster.Parent = workspace
+    local aiScript = game.ServerStorage.monsterAi
+    aiScript:Clone().Parent = monster
+end
 
-local aiScript = game.ServerStorage.monsterAi
-aiScript:Clone().Parent = monster

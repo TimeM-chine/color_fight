@@ -295,7 +295,6 @@ function Path:Run(target)
 	local pathComputed, _ = pcall(function()
 		self._path:ComputeAsync(self._agent.PrimaryPart.Position, (typeof(target) == "Vector3" and target) or target.Position)
 	end)
-
 	--Make sure path computation is successful
 	if not pathComputed
 		or self._path.Status == Enum.PathStatus.NoPath

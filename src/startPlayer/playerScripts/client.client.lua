@@ -1,5 +1,8 @@
 local Workspace = game:GetService("Workspace")
 
+---- services ----
+local MarketplaceService = game:GetService"MarketplaceService"
+
 ---- classes ----
 local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
 local ColorDoorClientClass = require(script.Parent.classes.ColorDoorClientClass)
@@ -11,10 +14,13 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
+local BindableEvents = game.ReplicatedStorage.BindableEvents
+local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 
 ---- enums ----
 local keyCode = Enum.KeyCode
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
+local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 
 ---- variables ----
 local clientSys = SystemClass.new()
@@ -23,15 +29,13 @@ local lastColor = nil
 local palletNum = 0
 local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
-local nowLevel
+local nowLevel = 0
 local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
 
 
 clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     local color = args.color
-
     for _, wall:Part in wallsFolder:GetDescendants() do
-
         if (not wall:IsA("Part")) or (wall.Name ~= "Part") then
             continue
         end
@@ -50,8 +54,6 @@ clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     lastColor = color
 end)
 
-
-KeyboardRecall.SetClientRecall(keyCode.Backspace)
 
 ---- event recalls ----
 RemoteEvents.destroyEvent.OnClientEvent:Connect(function(ins:Instance)
@@ -76,24 +78,8 @@ RemoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
 end)
 
 RemoteEvents.hideToolDoorEvent.OnClientEvent:Connect(function(door)
-    if door:IsA("Part") or door:IsA("UnionOperation") then
-        if not door:FindFirstChild("originalCf") then
-            CreateModule.CreateValue("CFrameValue", "originalCf", door.CFrame, door)
-        end
-        door.CFrame = door.CFrame - Vector3.new(0, 100, 0)
-    elseif door:IsA("Model") then
-        if not door:FindFirstChild("originalCf") then
-            CreateModule.CreateValue("CFrameValue", "originalCf", door:GetPivot(), door)
-        end
-        door:PivotTo(door:GetPivot() - Vector3.new(0, 100, 0))
-    end
-
-    if door.Name == "ladder" then
-        for _, part:Part in door.ladder:GetChildren() do
-			part.Transparency = 0
-			part.CanCollide = true
-		end
-    end
+    local module = require(door.clientSet)
+    module.Set()
 end)
 
 
@@ -101,13 +87,37 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
     if ind > 0 then
         hudBgFrame.inLobby.Visible = false
         hudBgFrame.inGame.Visible = true
-
+        palletNum = 0
         hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..ind]:GetChildren()
+        BindableEvents.resetLevelEvent:Fire()
+        ---- reset every thing ----
+        for _, pallet in workspace.pallets:GetDescendants() do
+            if pallet:IsA("Model") then
+                if not pallet:FindFirstChild("originalCf") then
+                    CreateModule.CreateValue("CFrameValue", "originalCf", pallet:GetPivot(), pallet)
+                end
+                pallet:PivotTo(pallet.originalCf.value)
+            end
+        end
     else
         hudBgFrame.inLobby.Visible = true
         hudBgFrame.inGame.Visible = false
+
+        for _, tool in workspace.toolModels:GetChildren() do
+            local name = tool.Name
+            if LocalPlayer.Character:FindFirstChild(name) then
+                LocalPlayer.Character[name]:Destroy()
+            end
+        end
+
+        RemoteEvents.changeColorEvent:FireServer("empty")
     end
+    nowLevel = ind
 end)
+
+BindableFunctions.getLevelInd.OnInvoke = function()
+    return nowLevel
+end
 
 ---- init things ----
 for _, part in workspace.airLands:GetChildren() do
@@ -127,17 +137,26 @@ end
 for _, pallet in workspace.pallets:GetDescendants() do
     if pallet:IsA("Model") then
         pallet.plate.ProximityPrompt.Triggered:Connect(function(playerWhoTriggered)
-            pallet:Destroy()
+            -- CreateModule.CreateValue("CFrameVA")
+            if not pallet:FindFirstChild("originalCf") then
+                CreateModule.CreateValue("CFrameValue", "originalCf", pallet:GetPivot(), pallet)
+            end
+            pallet:PivotTo(pallet:GetPivot() - Vector3.new(0, 200, 0))
             palletNum += 1
             hudBgFrame.inGame.pallet.TextLabel.Text = palletNum.."/18"
         end)
     end
 end
 
+for _, heart in workspace.heartSeller:GetChildren() do
+    heart.ProximityPrompt.Triggered:Connect(function()
+        MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
+    end)
+end
+
 -- workspace.SpawnLocation.CFrame = Workspace.level1SpawnPoint.CFrame
 -- LocalPlayer.CharacterAdded:Wait()
-
-task.wait(5)
+LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
 
 hudBgFrame.inLobby.Visible = true

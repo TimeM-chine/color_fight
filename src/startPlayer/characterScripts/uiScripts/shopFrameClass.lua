@@ -2,18 +2,24 @@
 -- init when shop frame is pushed
 -- ================================================================================
 
+---- services ----
+local MarketplaceService = game:GetService"MarketplaceService"
+
+---- events ----
+local remoteEvents = game.ReplicatedStorage.RemoteEvents
+
 ---- modules ----
 local uiController = require(script.Parent.uiController)
 local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
 local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
 
----- variables ----
-local localPlayer = game.Players.LocalPlayer
-
 ---- enums ----
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 
+---- variables ----
+local localPlayer = game.Players.LocalPlayer
+local chosenSkInd = playerModule.GetPlayerOneData(dataKey.chosenSkInd)
 
 local shopFrameClass = {}
 shopFrameClass.__index = shopFrameClass
@@ -47,11 +53,32 @@ function shopFrameClass.new(frame)
     end)
     table.insert(ins.connections, con)
 
-
+    con = remoteEvents.refreshScreenEvent.OnClientEvent:Connect(function()
+        ins:RefreshCareer()
+    end)
+    table.insert(ins.connections, con)
     return ins
 
 end
 
+
+function shopFrameClass:RefreshCareer()
+    local career = playerModule.GetPlayerOneData(dataKey.career)
+    for i = 1, #career do
+        local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career" .. i]
+        local confirmBtn = careerFrame.Frame.Frame.confirm
+        local con
+
+        if career[i] then
+            confirmBtn.Text = "Choose"
+            if i == chosenSkInd then
+                confirmBtn.Text = "Chosen"
+            end
+        else
+            confirmBtn.Text = "Buy"
+        end
+    end
+end
 
 function shopFrameClass:CheckCareer()
     local career = playerModule.GetPlayerOneData(dataKey.career)
@@ -59,8 +86,12 @@ function shopFrameClass:CheckCareer()
         local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career"..i]
         local confirmBtn:TextButton = careerFrame.Frame.Frame.confirm
         local con
+
         if career[i] then
             confirmBtn.Text = "Choose"
+            if i == chosenSkInd then
+                confirmBtn.Text = "Chosen"
+            end
         else
             confirmBtn.Text = "Buy"
         end
@@ -68,10 +99,22 @@ function shopFrameClass:CheckCareer()
         con = confirmBtn.MouseButton1Click:Connect(function()
             if confirmBtn.Text == "Buy" then
                 print("player want to buy career", i)
-                confirmBtn.Text = "Choose"
-            else
+                MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.career["sk"..i])
+                -- confirmBtn.Text = "Choose"
+            elseif confirmBtn.Text == "Choose" then
                 print("player choose career", i)
+                uiController.SetNotification("success", "top")
+                if chosenSkInd > 0 then
+                    self.frame.careerShopFrame.ScrollingFrame["career"..chosenSkInd].Frame.Frame.confirm.Text = "Choose"
+                end
+                chosenSkInd = i
+                confirmBtn.Text = "Chosen"
                 SkillModule.SetSkillId(i)
+            elseif confirmBtn.Text == "Chosen" then
+                print("player reset career", i)
+                uiController.SetNotification("success", "top")
+                confirmBtn.Text = "Choose"
+                SkillModule.SetSkillId(0)
             end
         end)
 
@@ -82,9 +125,9 @@ end
 
 function shopFrameClass:DestroyIns()
     -- print(self, "destroy")
-    -- for _, con in self.connections do
-    --     con:Disconnect()
-    -- end
+    for _, con in self.connections do
+        con:Disconnect()
+    end
 
     for key, _ in self do
         self[key] = nil

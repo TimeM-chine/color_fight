@@ -15,6 +15,7 @@ local doorFolder = workspace.colorDoors
 local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
 local perTipEvent = game.ReplicatedStorage.BindableEvents.perTipEvent
+local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 ---- main ----
 local ColorDoorClientClass = {}
@@ -32,6 +33,10 @@ function ColorDoorClientClass.new(door)
     end)
 
     localPlayer.CharacterAdded:Connect(function(character)
+        self:SetVisible(true)
+    end)
+
+    BindableEvents.resetLevelEvent.Event:Connect(function()
         self:SetVisible(true)
     end)
 

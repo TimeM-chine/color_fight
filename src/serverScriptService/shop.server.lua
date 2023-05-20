@@ -53,26 +53,50 @@ end
 function AddHealth(receipt, player)
     local playerIns = PlayerServerClass.GetIns(player)
     playerIns:AddHealth()
+    return true
 end
 
 function BuyShoes(receipt, player)
     local playerIns = PlayerServerClass.GetIns(player)
     local shoeList = playerIns:GetOneData(dataKey.shoe)
-    shoeList[1] = true
+    local shoeInd
+    for i, value in productIdEnum.shoes do
+        if value == receipt.ProductId then
+            shoeInd = i
+            -- todo give a random shoe to player
+            return true
+        end
+    end
 end
 
 function BuyCareers(receipt, player)
     local playerIns = PlayerServerClass.GetIns(player)
     local careerList = playerIns:GetOneData(dataKey.career)
-    careerList[1] = true
+    local careerInd
+    for key, value in productIdEnum.career do
+        if value == receipt.ProductId then
+            careerInd = tonumber(string.sub(key, 3, 3))
+            careerList[careerInd] = true
+            RemoteEvents.refreshScreenEvent:FireClient(player)
+            return true
+        end
+    end
+    return `there is no career product {receipt.ProductId}`
 end
 
 local productFunctions = {}
-productFunctions[productIdEnum.goods1] = emptyHandle
+for _, value in productIdEnum.career do
+    productFunctions[value] = BuyCareers
+end
+
+for _, value in productIdEnum.shoes do
+    productFunctions[value] = BuyShoes
+end
+productFunctions[productIdEnum.heart] = AddHealth
 
 
 local function processReceipt(receiptInfo)
-	print(`playerId {receiptInfo.PlayerId} is purchasing {receiptInfo.PurchaseId}.`)
+	print(`playerId {receiptInfo.PlayerId} is purchasing {receiptInfo.ProductId}.`)
 
 	-- check whether player bought this product before
 	local playerProductKey = receiptInfo.PlayerId .. "_" .. receiptInfo.PurchaseId

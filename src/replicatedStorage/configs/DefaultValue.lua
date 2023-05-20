@@ -10,6 +10,8 @@ return {
     career = {
         false, false, false, false, false
     }, -- 职业情况
+    chosenSkInd = 0, -- 选择的技能
+    chosenShoeInd = 0, -- 选择的鞋子
     ---- rewards ----
     onlineTime = 0, -- 在线时长
     dailyOnlineTime = 0,  -- 每日在线时长

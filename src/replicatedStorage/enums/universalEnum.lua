@@ -1,5 +1,7 @@
 local universalEnum = {}
 
+universalEnum.normalSpeed = 32
+
 universalEnum.maxHealth = 6
 
 universalEnum.oneHour = 3600

@@ -51,6 +51,12 @@
                 },
                 "playerHideSkill":{
                     "$className":"RemoteEvent"
+                },
+                "chooseSkillEvent":{
+                    "$className":"RemoteEvent"
+                },
+                "refreshScreenEvent":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -60,12 +66,21 @@
                 },
                 "perTipEvent":{
                     "$className":"BindableEvent"
+                },
+                "resetLevelEvent":{
+                    "$className":"BindableEvent"
                 }
             },
             "RemoteFunctions": {
                 "$className": "Folder",
                 "ClientGetData": {
                     "$className": "RemoteFunction"
+                }
+            },
+            "BindableFunctions":{
+                "$className":"Folder",
+                "getLevelInd":{
+                    "$className":"BindableFunction"
                 }
             }
         },
@@ -173,7 +188,7 @@
                 "$className": "Folder"
             },
             "airLands": {
-                "$className": "Model"
+                "$className": "Folder"
             },
             "others": {
                 "$className": "Folder"

@@ -10,7 +10,8 @@ local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 ---- variables ----
 local agent:Model = script.Parent
 local target, lastHurtPlayer, lastPointPart
-local pointsFolder = workspace.pathPoints
+local pointsFolder = workspace.pathPoints:FindFirstChild(agent.Name)
+local pointsNum = #pointsFolder:GetChildren()
 local myHRP = agent:WaitForChild("HumanoidRootPart")
 local myH = agent:WaitForChild("Humanoid")
 local cor = nil
@@ -36,12 +37,12 @@ local function GetNextPoint()
     if not lastPointPart then
         return pointsFolder:FindFirstChild("Part1")
     end
-
-    if (myHRP.CFrame.Position - lastPointPart.CFrame.Position).Magnitude <= 3 then
+    -- print(lastPointPart)
+    if (myHRP.CFrame.Position - lastPointPart.CFrame.Position).Magnitude <= 10 then
         local lastInd = string.match(lastPointPart.Name, "Part(%d+)")
-        return pointsFolder:FindFirstChild("Part"..(lastInd % 11 + 1))
+        -- print(lastPointPart, pointsFolder:FindFirstChild("Part"..(lastInd % pointsNum + 1)))
+        return pointsFolder:FindFirstChild("Part"..(lastInd % pointsNum + 1))
     end
-
     return lastPointPart
 end
 
@@ -100,7 +101,7 @@ local function GetNextTarget()
             playerTargetTime[player] = 1
         end
         -- print(playerTargetTime[player])
-        if playerTargetTime[player] >= 20 then
+        if playerTargetTime[player] >= 15 then
             SetLastHurtPlayer(player)
             playerTargetTime[player] = 0
         end
@@ -124,10 +125,9 @@ path.Visualize = true
 
 while task.wait(0.5) do
     local nextTarget = GetNextTarget()
-    -- print("next target", nextTarget)
+    -- print(`{agent.Name} nextTarget: {nextTarget}`)
 
     path:Run(nextTarget)
-    
 end
 
 

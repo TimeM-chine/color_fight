@@ -19,7 +19,12 @@ function PlayerClientModule.GetPos()
 end
 
 function PlayerClientModule.GetPlayerOneData(key)
-    return ClientGetData:InvokeServer(key)
+    local value = ClientGetData:InvokeServer(key)
+    while not value do
+        value = ClientGetData:InvokeServer(key)
+        task.wait(0.1)
+    end
+    return value
 end
 
 
