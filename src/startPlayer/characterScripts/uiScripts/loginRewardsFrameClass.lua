@@ -6,6 +6,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 ---- modules ----
 local uiController = require(script.Parent.uiController)
 local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
@@ -32,6 +33,8 @@ function loginRewardsFrameClass.new(frame)
     ins.closeBtn = ins.frame.basement.closeBtn
     ins.connections = {}
     local con = ins.closeBtn.MouseButton1Click:Connect(function()
+        localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
         ins:DestroyIns()
         uiController.PopScreen()
     end)
@@ -55,14 +58,20 @@ function loginRewardsFrameClass:CheckLoginDay()
         if not loginState[i] and (i < todayIndex) then
             receiveBtn.missed.Visible = true
             local con = receiveBtn.missed.MouseButton1Click:Connect(function()
+                localPlayer.Character.HumanoidRootPart.clickUI:Play()
                 self:ReSign(i)
             end)
             table.insert(self.connections, con)
         end
 
         local receiveCon = receiveBtn.MouseButton1Click:Connect(function()
+            localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
             receiveBtn.received.Visible = true
             getLoginRewardEvent:FireServer(i)
+            GAModule:addDesignEvent({
+                eventId = `rewardsCheck:loginRewards:day{i}:normal:{localPlayer.UserId}`
+            })
             uiController.SetNotification("success", "bottom")
         end)
         table.insert(self.connections, receiveCon)
@@ -72,6 +81,8 @@ function loginRewardsFrameClass:CheckLoginDay()
     for i=todayIndex+1, 7 do
         local receiveBtn:ImageButton = self.innerFrame["day"..i].receiveBtn
         local receiveCon = receiveBtn.MouseButton1Click:Connect(function()
+            localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
             uiController.SetNotification("not today", "bottom")
         end)
         table.insert(self.connections, receiveCon)
@@ -93,6 +104,10 @@ function loginRewardsFrameClass:ReSign(day)
         if wins >= 20 then
             self.innerFrame["day"..day].receiveBtn.received.Visible = true
             getLoginRewardEvent:FireServer(day)
+            GAModule:addDesignEvent({
+                eventId = `rewardsCheck:loginRewards:day{day}:resign:{localPlayer.UserId}`
+            })
+            
             uiController.SetNotification("success", "bottom")
         else
             uiController.SetNotification("not enough wins", "bottom")
