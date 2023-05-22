@@ -14,6 +14,7 @@ local purchaseHistoryStore = DataStoreService:GetDataStore("PurchaseHistory")
 local ServerSystemClass = require(game.ServerScriptService.classes.ServerSystemClass)
 local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
 local TableModule = require(game.ReplicatedStorage.modules.TableModule)
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -72,6 +73,7 @@ function BuyShoes(receipt, player)
             end
             local number = TableModule.Choices(shoeLeft)
             shoeList[shoeInd][number[1]] = true
+            RemoteEvents.refreshScreenEvent:FireClient(player)
             return true
         end
     end
@@ -105,7 +107,7 @@ productFunctions[productIdEnum.heart] = AddHealth
 
 local function processReceipt(receiptInfo)
 	print(`playerId {receiptInfo.PlayerId} is purchasing {receiptInfo.ProductId}.`)
-
+    GAModule:ProcessReceiptCallback(receiptInfo)
 	-- check whether player bought this product before
 	local playerProductKey = receiptInfo.PlayerId .. "_" .. receiptInfo.PurchaseId
 	local purchased = false

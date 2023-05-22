@@ -10,7 +10,7 @@ local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
 local hudBgFrame = PlayerGui.hudScreen.bgFrame
 local shopBtn = hudBgFrame.inLobby.shopBtn
-local loginBtn = hudBgFrame.inLobby.loginBtn
+local onlineBtn = hudBgFrame.inLobby.onlineBtn
 local buyHeartBtn = hudBgFrame.hpFrame.buyHeartBtn
 local unitsFolder = PlayerGui.units
 local hpFrame = hudBgFrame.hpFrame
@@ -33,7 +33,7 @@ local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 ---- modules ----
 local uiController = require(script.Parent.uiController)
 local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
-
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---------------------- events -------------------------
 notifyEvent.Event:Connect(function(msg, noteType)
@@ -51,25 +51,34 @@ perTipEvent.Event:Connect(function(msg)
 end)
 
 ---------------------- buttons -------------------------
--- loginBtn.MouseButton1Click:Connect(function()
---     uiController.PushScreen(screenEnum.loginRewardsFrame)
--- end)
+onlineBtn.MouseButton1Click:Connect(function()
+    uiController.PushScreen(screenEnum.onlineRewardsFrame)
+    GAModule:addDesignEvent({
+        eventId = `pageCheck:onlineRewardsPage:{LocalPlayer.UserId}`
+    })
+end)
 
 shopBtn.MouseButton1Click:Connect(function()
+    LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
     uiController.PushScreen(screenEnum.shopFrame)
 end)
 
 buyHeartBtn.MouseButton1Click:Connect(function()
+    LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
+
     print("player buy heart")
     addHealthEvent:FireServer()
     -- MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
 end)
 
 hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
+    LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
+
     SkillModule.UseSkill()
 end)
 
 local function canSendGameInvite(sendingPlayer)
+
 	local success, canSend = pcall(function()
 		return SocialService:CanSendGameInviteAsync(sendingPlayer)
 	end)
@@ -77,6 +86,10 @@ local function canSendGameInvite(sendingPlayer)
 end
 
 inviteBtn.MouseButton1Click:Connect(function()
+    LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
+    GAModule:addDesignEvent({
+        eventId = `buttonCheck:inviteBtn:{LocalPlayer.UserId}`
+    })
     local canInvite = canSendGameInvite(LocalPlayer)
 	if canInvite then
 		local success, errorMessage = pcall(function()
@@ -88,6 +101,9 @@ end)
 
 workspace.signBox.ProximityPrompt.Triggered:Connect(function()
     uiController.PushScreen(screenEnum.loginRewardsFrame)
+    GAModule:addDesignEvent({
+        eventId = `pageCheck:loginPage:{LocalPlayer.UserId}`
+    })
 end)
 ---------------------- hp -------------------------
 
@@ -119,11 +135,13 @@ end)
 local function onPlayerAdded(player:Player)
 	if LocalPlayer:IsFriendsWith(player.UserId) then
         friendNum += 1
+        GAModule:addDesignEvent({
+            eventId = `inviteSuccess:{LocalPlayer.UserId}:{player.UserId}`
+        })
         RemoteEvents.friendInEvent:FireServer(player.UserId)
     end
     friendFrame.TextLabel.Text = `friend num: {friendNum}`
     speedFrame.TextLabel.Text = `Speed buff: {math.min(15, friendNum*5)}%`
-    
 end
 
 for _, player in pairs(game.Players:GetPlayers()) do

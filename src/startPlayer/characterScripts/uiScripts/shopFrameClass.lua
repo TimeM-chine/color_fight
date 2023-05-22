@@ -39,6 +39,8 @@ function shopFrameClass.new(frame)
     ins.careerShopBtn = frame.careerShopBtn
     ins.connections = {}
     local con = ins.closeBtn.MouseButton1Click:Connect(function()
+        localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
         ins:DestroyIns()
         uiController.PopScreen()
     end)
@@ -46,6 +48,8 @@ function shopFrameClass.new(frame)
 
 
     con = ins.shoeShopBtn.MouseButton1Click:Connect(function()
+        localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
         ins:CheckShoes()
         ins:OpenShoeShop()
     end)
@@ -53,13 +57,18 @@ function shopFrameClass.new(frame)
 
 
     con = ins.careerShopBtn.MouseButton1Click:Connect(function()
+        localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
         ins:CheckCareer()
         ins:OpenCareerShop()
     end)
     table.insert(ins.connections, con)
 
     con = remoteEvents.refreshScreenEvent.OnClientEvent:Connect(function()
+        localPlayer.Character.HumanoidRootPart.clickUI:Play()
+
         ins:RefreshCareer()
+        ins:RefreshShoes()
     end)
     table.insert(ins.connections, con)
 
@@ -75,8 +84,6 @@ function shopFrameClass:RefreshCareer()
     for i = 1, #career do
         local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career" .. i]
         local confirmBtn = careerFrame.Frame.Frame.confirm
-        local con
-
         if career[i] then
             confirmBtn.Text = "Choose"
             if i == chosenSkInd then
@@ -137,6 +144,20 @@ function shopFrameClass:CheckCareer()
         table.insert(self.connections, con)
     end
 
+end
+
+function shopFrameClass:RefreshShoes()
+    local shoe = playerModule.GetPlayerOneData(dataKey.shoe)
+    local scrollingFrame = self.frame.shoeShopFrame.ScrollingFrame
+    for i = 1, 3 do
+        scrollingFrame["shoe"..i].confirm.Visible = false
+        for j = 1,5 do
+            if not shoe[i][j] then
+                scrollingFrame["shoe"..i].confirm.Visible = true
+                break
+            end
+        end
+    end
 end
 
 

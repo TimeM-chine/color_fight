@@ -23,7 +23,7 @@ return {
     tempSkInfo = {0, 0}, -- 临时的职业信息
     onlineTime = 0, -- 在线时长
     dailyOnlineTime = 0,  -- 每日在线时长
-    receivedOnlineTime = 0,  -- 已领取的在线时长奖励
+    receivedOnlineTime = {false, false, false, false, false, false, false},  -- 已领取的在线时长奖励
     lastLoginTimeStamp = 0, -- 上次登录的时间戳
     lastLeaveTimeStamp = 0, -- 上次下线时间戳
     loginState = {false, false, false, false, false, false, false}, -- 签到情况

@@ -57,6 +57,7 @@ end
 function SkillModule.Sk1()
     -- get the vision of monsters
     local ind = BindableFunctions.getLevelInd:Invoke()
+    notifyEvent:Fire("Now you can see the monster's outline.")
     if ind == 1 then
         workspace.monster1.Highlight.Enabled = true
         task.wait(10)
@@ -75,22 +76,29 @@ end
 
 function SkillModule.Sk2()
     -- hide for few seconds
+    notifyEvent:Fire("You will hide for few seconds.")
     playerHideSkill:FireServer()
 end
 
 function SkillModule.Sk3()
+    notifyEvent:Fire("You will speed up for few seconds.")
+
     LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed() * 1.65
     task.wait(10)
     LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
 end
 
 function SkillModule.Sk4()
+    notifyEvent:Fire("Your vision will be larger for few seconds.")
+
     game.Lighting.Atmosphere.Density = 0.6
     task.wait(20)
     game.Lighting.Atmosphere.Density = 0.8
 end
 
 function SkillModule.Sk5()
+    notifyEvent:Fire("Now you can see pallets' outline.")
+
     -- platte vision
     local ind = BindableFunctions.getLevelInd:Invoke()
     for _, platte:Model in workspace.pallets["level"..ind]:GetChildren() do

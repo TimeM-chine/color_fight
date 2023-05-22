@@ -51,10 +51,20 @@ function CheckLoginReward(player)
     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
 end
 
+
 PS.PlayerAdded:Connect(function(player)
     local pIns = PlayerServerClass.GetIns(player)
-    -- pIns:SetCollisionGroup("player")
-    
+    local nowDay = math.floor(os.time()/universalEnum.oneDay)
+    local lastLoginTimeStamp = pIns:GetOneData(dataKey.lastLoginTimeStamp)
+    while not lastLoginTimeStamp do
+        task.wait(0.1)
+        lastLoginTimeStamp = pIns:GetOneData(dataKey.lastLoginTimeStamp)
+    end
+    local lastDay = math.floor(lastLoginTimeStamp/universalEnum.oneDay)
+    if nowDay ~= lastDay then
+        pIns:SetOneData(dataKey.dailyOnlineTime, 0)
+        pIns:SetOneData(dataKey.lastLoginTimeStamp, os.time())
+    end
 end)
 
 
@@ -92,6 +102,27 @@ getLoginRewardEvent.OnServerEvent:Connect(function(player, day)
     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+end)
+
+RemoteEvents.getOnlineRewardEvent.OnServerEvent:Connect(function(player, ind)
+    local playerIns = PlayerServerClass.GetIns(player)
+    if ind >=3 then
+        playerIns:AddHealth()
+    elseif ind == 1 then
+        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+        playerIns:SetOneData(dataKey.tempSpeedInfo, {5, universalEnum.oneMinute * 5})
+
+        local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+        local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+        RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+    else
+        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+        playerIns:SetOneData(dataKey.tempSpeedInfo, {5, universalEnum.oneMinute * 10})
+
+        local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+        local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+        RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+    end
 end)
 
 playerHideSkill.OnServerEvent:Connect(function(player)
@@ -152,7 +183,6 @@ RemoteEvents.friendInEvent.OnServerEvent:Connect(function(player, friendId)
     if not table.find(friendsInvited, friendId) then
         table.insert(friendsInvited, friendId)
         playerIns:UpdatedOneData(dataKey.friendsInvitedNum, 1)
-
         -- local num = playerIns:GetOneData(dataKey.friendsInvited)
         -- if num == 1 then
         --     playerIns:AddHealth()

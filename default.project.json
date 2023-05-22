@@ -40,32 +40,38 @@
                 "getLoginRewardEvent": {
                     "$className": "RemoteEvent"
                 },
-                "addHealthEvent":{
-                    "$className":"RemoteEvent"
+                "getOnlineRewardEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "serverNotifyEvent":{
-                    "$className":"RemoteEvent"
+                "addHealthEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "teleportEvent":{
-                    "$className":"RemoteEvent"
+                "serverNotifyEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "playerHideSkill":{
-                    "$className":"RemoteEvent"
+                "teleportEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "chooseSkillEvent":{
-                    "$className":"RemoteEvent"
+                "playerHideSkill": {
+                    "$className": "RemoteEvent"
                 },
-                "refreshScreenEvent":{
-                    "$className":"RemoteEvent"
+                "chooseSkillEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "putonShoeEvent":{
-                    "$className":"RemoteEvent"
+                "refreshScreenEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "friendInEvent":{
-                    "$className":"RemoteEvent"
+                "putonShoeEvent": {
+                    "$className": "RemoteEvent"
                 },
-                "tempRewardEvent":{
-                    "$className":"RemoteEvent"
+                "friendInEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "tempRewardEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "myDesignEvent": {
+                    "$className": "RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -73,11 +79,11 @@
                 "notifyEvent": {
                     "$className": "BindableEvent"
                 },
-                "perTipEvent":{
-                    "$className":"BindableEvent"
+                "perTipEvent": {
+                    "$className": "BindableEvent"
                 },
-                "resetLevelEvent":{
-                    "$className":"BindableEvent"
+                "resetLevelEvent": {
+                    "$className": "BindableEvent"
                 }
             },
             "RemoteFunctions": {
@@ -86,10 +92,10 @@
                     "$className": "RemoteFunction"
                 }
             },
-            "BindableFunctions":{
-                "$className":"Folder",
-                "getLevelInd":{
-                    "$className":"BindableFunction"
+            "BindableFunctions": {
+                "$className": "Folder",
+                "getLevelInd": {
+                    "$className": "BindableFunction"
                 }
             }
         },
@@ -109,17 +115,20 @@
             "paintCan": {
                 "$className": "Accessory"
             },
-            "animations":{
-                "$className":"Folder"
+            "animations": {
+                "$className": "Folder"
             },
-            "monsters":{
-                "$className":"Folder"
+            "monsters": {
+                "$className": "Folder"
             },
-            "keys":{
-                "$className":"Folder"
+            "keys": {
+                "$className": "Folder"
             },
-            "shoes":{
-                "$className":"Folder"
+            "shoes": {
+                "$className": "Folder"
+            },
+            "footprint": {
+                "$className": "Part"
             }
         },
         "StarterPlayer": {
@@ -139,8 +148,12 @@
                 "$className": "ScreenGui",
                 "bgFrame": {
                     "$className": "Frame",
-                    "inLobby":{"$className":"Frame"},
-                    "inGame":{"$className":"Frame"}
+                    "inLobby": {
+                        "$className": "Frame"
+                    },
+                    "inGame": {
+                        "$className": "Frame"
+                    }
                 }
             },
             "pushScreen": {
@@ -173,11 +186,11 @@
             "screens": {
                 "$className": "Folder"
             },
-            "units":{
-                "$className":"Folder"
+            "units": {
+                "$className": "Folder"
             },
-            "scaredScreen":{
-                "$className":"ScreenGui"
+            "scaredScreen": {
+                "$className": "ScreenGui"
             }
         },
         "Workspace": {
@@ -214,14 +227,14 @@
             "pallets": {
                 "$className": "Folder"
             },
-            "heartSeller":{
-                "$className":"Model"
+            "heartSeller": {
+                "$className": "Model"
             },
-            "lastDoors":{
-                "$className":"Folder"
+            "lastDoors": {
+                "$className": "Folder"
             },
-            "keys":{
-                "$className":"Folder"
+            "keys": {
+                "$className": "Folder"
             }
         },
         "Lighting": {

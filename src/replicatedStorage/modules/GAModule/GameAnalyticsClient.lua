@@ -5,6 +5,8 @@ local UserInputService = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ScriptContext = game:GetService("ScriptContext")
 
+local myDesignEvent = game.ReplicatedStorage.RemoteEvents.myDesignEvent
+
 --[[
     The modules are required inside each function because we wouldn't
     want to load the GameAnalytics library if we're just requiring this
@@ -44,6 +46,10 @@ function module.initClient()
 
 	--Filtering
 	Postie.setCallback("getPlatform", getPlatform)
+end
+
+function module:addDesignEvent(param)
+    myDesignEvent:FireServer(param)
 end
 
 return module

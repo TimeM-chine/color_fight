@@ -25,9 +25,12 @@ local animator:Animator = myH.Animator
 local aniTrack = animator:LoadAnimation(walkAnim)
 local playerTargetTime = {}
 local footprint:Part = ServerStorage.footprint
+local monsterSound:Sound = game.SoundService.monster:Clone()
 
 ---- main ----
 aniTrack:Play()
+monsterSound.Parent = agent.HumanoidRootPart
+monsterSound:Play()
 
 local pathParam = table.clone(argsEnum.CreatePath)
 pathParam.AgentCanClimb = false
@@ -134,10 +137,15 @@ while task.wait(0.5) do
     -- print(`{agent.Name} nextTarget: {nextTarget}`)
     if agent.Name ~= "monster4" then
         local footCopy = footprint:Clone()
-        footCopy.CFrame = myHRP.CFrame - Vector3.new(0, 8, 0)
+        footCopy.CFrame = agent.RightFoot.CFrame
         footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
         footCopy.Parent = workspace
-        print(footCopy)
+        Debris:AddItem(footCopy, 5)
+
+        footCopy = footprint:Clone()
+        footCopy.CFrame = agent.LeftFoot.CFrame
+        footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
+        footCopy.Parent = workspace
         Debris:AddItem(footCopy, 5)
     end
 

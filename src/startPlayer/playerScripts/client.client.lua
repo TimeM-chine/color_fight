@@ -1,3 +1,4 @@
+local Lighting = game:GetService("Lighting")
 local Workspace = game:GetService("Workspace")
 
 ---- services ----
@@ -74,6 +75,11 @@ RemoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
     toolModel.Transparency = 1
     toolModel.ProximityPrompt.Enabled = false
     toolModel.CanCollide = false
+
+    if toolModel.Parent.Name ~= "keys" then
+        LocalPlayer.Character.HumanoidRootPart.pickUpBucket:Play()
+        
+    end
 end)
 
 RemoteEvents.hideToolDoorEvent.OnClientEvent:Connect(function(door)
@@ -84,7 +90,6 @@ end)
 
 RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
     if ind > 0 then
-        game.Lighting.Atmosphere.Density = 0.8
         hudBgFrame.inLobby.Visible = false
         hudBgFrame.inGame.Visible = true
         palletNum = 0
@@ -107,6 +112,7 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
             end
         end
     else
+        BindableEvents.perTipEvent:Fire()
         game.Lighting.Atmosphere.Density = 0.6
         hudBgFrame.inLobby.Visible = true
         hudBgFrame.inGame.Visible = false
@@ -132,7 +138,7 @@ for _, part in workspace.airLands:GetChildren() do
     part.CanCollide = false
 end
 
-for _, part in workspace.safeAreas:GetChildren() do
+for _, part:Part in workspace.safeAreas:GetChildren() do
     part.CanCollide = false
 end
 
@@ -146,6 +152,7 @@ for _, pallet in workspace.pallets:GetDescendants() do
     if pallet:IsA("Model") then
         pallet.plate.ProximityPrompt.Triggered:Connect(function(playerWhoTriggered)
             -- CreateModule.CreateValue("CFrameVA")
+            LocalPlayer.Character.HumanoidRootPart.pickUp:Play()
             if not pallet:FindFirstChild("originalCf") then
                 CreateModule.CreateValue("CFrameValue", "originalCf", pallet:GetPivot(), pallet)
             end

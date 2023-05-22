@@ -12,7 +12,7 @@ param.FilterType = Enum.RaycastFilterType.Include
 -- print("playerContact", playerContact)
 
 character:WaitForChild("isHiding")
-character:WaitForChild("Highlight")
+-- character:WaitForChild("Highlight")
 
 local function checkHide()
     local cf, size = script.Parent:GetBoundingBox()
@@ -31,10 +31,10 @@ end
 while task.wait(0.05) do
     if checkHide() then
         character.isHiding.Value = true
-        character.Highlight.Enabled = true
+        -- character.Highlight.Enabled = true
     else
         character.isHiding.Value = false
-        character.Highlight.Enabled = false
+        -- character.Highlight.Enabled = false
     end
 end
 

@@ -19,6 +19,7 @@ local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.Pla
 local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
 
 ---- variables ----
+local touchSafeArea = false
 local toolModelsFolder = workspace.toolModels
 local bucketModelsFolder = workspace.bucketModels
 local toolDoorsFolder = workspace.toolDoors
@@ -38,6 +39,12 @@ local cd = SkillModule.GetCd()
 if cd >= 1 then
     SkillModule.IntoCd()
 end
+
+---- sounds -----
+game.SoundService.pickUp:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.pickUpBucket:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.playerDie:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.clickUI:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
 
 
 remoteEvents.putonShoeEvent:FireServer(chosenShoe[1], chosenShoe[2])
@@ -83,3 +90,56 @@ end
 ResetLevel()
 
 BindableEvents.resetLevelEvent.Event:Connect(ResetLevel)
+
+
+for _, part:Part in workspace.safeAreas:GetChildren() do
+    part.Touched:Connect(function(otherPart)
+        if otherPart:IsDescendantOf(LocalPlayer.Character) and (not touchSafeArea) then
+            game.Lighting.Atmosphere.Density = 0.6
+            touchSafeArea = true
+        end
+    end)
+
+    part.TouchEnded:Connect(function(otherPart)
+        if otherPart:IsDescendantOf(LocalPlayer.Character) and touchSafeArea then
+            game.Lighting.Atmosphere.Density = 0.8
+            touchSafeArea = false
+        end
+    end)
+end
+
+
+local character = script.Parent
+
+local filter = workspace.walls:GetDescendants()
+for _, part in workspace.safeAreas:GetChildren() do
+    table.insert(filter, part)
+end
+
+param = OverlapParams.new()
+param.FilterDescendantsInstances = filter
+param.FilterType = Enum.RaycastFilterType.Include
+
+character:WaitForChild("Highlight")
+
+local function checkHide()
+    local cf, size = script.Parent:GetBoundingBox()
+    local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
+    for _, conPart in playerContact do
+        if conPart.Parent.Name == "safeAreas" then
+            return true
+        end
+        if conPart.colorString.Value == character.colorString.Value then
+            return true
+        end
+    end
+    return false
+end
+
+while task.wait(0.05) do
+    if checkHide() then
+        character.Highlight.Enabled = true
+    else
+        character.Highlight.Enabled = false
+    end
+end

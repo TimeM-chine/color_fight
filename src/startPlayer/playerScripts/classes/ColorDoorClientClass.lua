@@ -44,6 +44,8 @@ function ColorDoorClientClass.new(door)
         self:SetVisible(true)
     end)
 
+    game.SoundService.paint:Clone().Parent = self.door
+
     return self
 end
 
@@ -70,7 +72,7 @@ function ColorDoorClientClass:Clicked()
             self:SetVisible(false)
             changeColorEvent:FireServer("empty")
         end
-
+        self.door.paint:Play()
     else
         notifyEvent:Fire("not right color")
     end

@@ -38,12 +38,17 @@ function GamePlayerClass:SetCollisionGroup(groupName)
     end
 
     local character = self.player.Character
-    -- task.wait(3)
-    for _, Object in pairs(character:GetChildren()) do
-        ChangeGroup(Object)
+    if not character then
+        character = self.player.CharacterAdded:Wait()
     end
 
-    print(`  --> Change {self.player.Name} collision group to {groupName}.`)
+    task.delay(3, function()
+        for _, Object in pairs(character:GetChildren()) do
+            ChangeGroup(Object)
+        end
+        print(`  --> Change {self.player.Name} collision group to {groupName}.`)
+    end)
+
 end
 
 
