@@ -31,6 +31,8 @@ return {
     firstPlay = "firstPlay", -- 是否第一次游玩
     friendsInvitedNum = "friendsInvitedNum", -- 邀请好友数
     friendsInvited = "friendsInvited", -- 邀请过的好友
+    friendsRewards = "friendsRewards", -- 已领取的好友奖励
+    cdKeyUsed = "cdKeyUsed", -- 已使用的cd key
     ----- currency -----
     money = "money", -- 货币
     consumptionSum = "consumptionSum",  -- 总消费金额

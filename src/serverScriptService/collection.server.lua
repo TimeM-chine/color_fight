@@ -4,6 +4,7 @@ local WallServerClass = require(game.ServerScriptService.classes.WallServerClass
 local CollectionCls = require(game.ServerScriptService.classes.CollectionClass)
 local BucketModelServerClass = require(game.ServerScriptService.classes.BucketModelServerClass)
 local ToolModelServerClass = require(game.ServerScriptService.classes.ToolModelServerClass)
+local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
 
 ---- services ----
 local CS = game:GetService("CollectionService")
@@ -16,6 +17,7 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 
 ---- events ----
 local remoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -65,7 +67,7 @@ for _, door in colorDoors do
     end
 end
 
----- keys 
+---- keys
 for _, key:Part in workspace.keys:GetChildren() do
     key.ProximityPrompt.Triggered:Connect(function(player)
         remoteEvents.hideBucketEvent:FireClient(player, key)  -- same logic with buckets
@@ -74,6 +76,12 @@ for _, key:Part in workspace.keys:GetChildren() do
             tool = tool:Clone()
             tool.Parent = player.Character
         end
+        if key.Name == "level1Key" then
+            remoteEvents.serverNotifyEvent:FireServer(player, "Get back to lobby to unlock level 2.")
+        else
+            remoteEvents.serverNotifyEvent:FireServer(player, "Get back to lobby to get wins.")
+        end
+        PlayerServerClass.GetIns(player):UpdatedOneData(dataKey.wins, 1)
     end)
 end
 

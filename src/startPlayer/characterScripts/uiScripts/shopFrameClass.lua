@@ -85,12 +85,16 @@ function shopFrameClass:RefreshCareer()
         local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career" .. i]
         local confirmBtn = careerFrame.Frame.Frame.confirm
         if career[i] then
-            confirmBtn.Text = "Choose"
+            confirmBtn.Text = "Equip"
+            confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.066666, 0.858823, 0.372549))
             if i == chosenSkInd then
-                confirmBtn.Text = "Chosen"
+                confirmBtn.Text = "Remove"
+                confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.858823, 0.066666, 0.066666))
             end
         else
             confirmBtn.Text = "Buy"
+            confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.984313, 1, 0.070588))
+
         end
     end
 end
@@ -103,40 +107,45 @@ function shopFrameClass:CheckCareer()
         local con
 
         if career[i] then
-            confirmBtn.Text = "Choose"
+            confirmBtn.Text = "Equip"
+            confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.066666, 0.858823, 0.372549))
             if i == chosenSkInd then
-                confirmBtn.Text = "Chosen"
+                confirmBtn.Text = "Remove"
+                confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.858823, 0.066666, 0.066666))
             end
         else
             confirmBtn.Text = "Buy"
+            confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.984313, 1, 0.070588))
         end
 
-        if i == 1 and confirmBtn.Text ~= "Choose" then
+        if i == 1 and confirmBtn.Text ~= "Equip" then
             local tempSkInfo = playerModule.GetPlayerOneData(dataKey.tempSkInfo)
             local tempSkStart = playerModule.GetPlayerOneData(dataKey.tempSkStart)
             if tempSkInfo[1] and os.time() - tempSkStart <= tempSkInfo[2] then
-                confirmBtn.Text = "Choose"
+                confirmBtn.Text = "Equip"
             end
         end
 
         con = confirmBtn.MouseButton1Click:Connect(function()
             if confirmBtn.Text == "Buy" then
-                print("player want to buy career", i)
                 MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.career["sk"..i])
-                -- confirmBtn.Text = "Choose"
-            elseif confirmBtn.Text == "Choose" then
-                print("player choose career", i)
+                -- confirmBtn.Text = "Equip"
+            elseif confirmBtn.Text == "Equip" then
                 uiController.SetNotification("success", "top")
                 if chosenSkInd > 0 then
-                    self.frame.careerShopFrame.ScrollingFrame["career"..chosenSkInd].Frame.Frame.confirm.Text = "Choose"
+                    self.frame.careerShopFrame.ScrollingFrame["career"..chosenSkInd].Frame.Frame.confirm.Text = "Equip"
                 end
                 chosenSkInd = i
-                confirmBtn.Text = "Chosen"
+                confirmBtn.Text = "Remove"
+                confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.858823, 0.066666, 0.066666))
+
                 SkillModule.SetSkillId(i)
-            elseif confirmBtn.Text == "Chosen" then
+            elseif confirmBtn.Text == "Remove" then
                 print("player reset career", i)
                 uiController.SetNotification("success", "top")
-                confirmBtn.Text = "Choose"
+                confirmBtn.Text = "Equip"
+                confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.066666, 0.858823, 0.372549))
+
                 SkillModule.SetSkillId(0)
             end
         end)

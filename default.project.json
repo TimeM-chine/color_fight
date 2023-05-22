@@ -72,6 +72,9 @@
                 },
                 "myDesignEvent": {
                     "$className": "RemoteEvent"
+                },
+                "getFriendRewards":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -90,6 +93,9 @@
                 "$className": "Folder",
                 "ClientGetData": {
                     "$className": "RemoteFunction"
+                },
+                "Redeem":{
+                    "$className":"RemoteFunction"
                 }
             },
             "BindableFunctions": {

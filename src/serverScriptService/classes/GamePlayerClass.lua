@@ -128,6 +128,9 @@ function GamePlayerClass:OnChatted(message, recipient)
         for i = 1, 5 do
             careerList[i] = true
         end
+    elseif message == "/unlock 2" then
+        local l = self:GetOneData(dataKey.levelUnlock)
+        l[2] = true
     end
 end
 

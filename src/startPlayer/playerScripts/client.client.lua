@@ -1,4 +1,5 @@
 local Lighting = game:GetService("Lighting")
+local SoundService = game:GetService("SoundService")
 local Workspace = game:GetService("Workspace")
 
 ---- services ----
@@ -19,6 +20,7 @@ local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 
 ---- enums ----
 local keyCode = Enum.KeyCode
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 
@@ -112,8 +114,10 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
             end
         end
     else
+        task.wait(0.1)
         BindableEvents.perTipEvent:Fire()
         game.Lighting.Atmosphere.Density = 0.6
+  
         hudBgFrame.inLobby.Visible = true
         hudBgFrame.inGame.Visible = false
 
@@ -125,6 +129,13 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
         end
 
         RemoteEvents.changeColorEvent:FireServer("empty")
+
+        local levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
+        if levelUnlock[2] then
+            workspace.mainCity.teleport.door2.SurfaceGui.Enabled = false
+            workspace.mainCity.teleport.door2.unlockGui.Enabled = true
+        end
+
     end
     nowLevel = ind
 end)
@@ -163,7 +174,7 @@ for _, pallet in workspace.pallets:GetDescendants() do
             hudBgFrame.inGame.pallet.TextLabel.Text = palletNum.."/"..targetNum
 
             if palletNum == targetNum then
-                workspace.lastDoors.level1.CanCollide = false
+                workspace.lastDoors['level'..ind].CanCollide = false
             end
         end)
     end
@@ -189,3 +200,17 @@ LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
 game.Lighting.Atmosphere.Density = 0.6
 
 hudBgFrame.inLobby.Visible = true
+
+local lobbyBGM = SoundService.lobby:Clone()
+lobbyBGM.Parent = workspace.level0SpawnLocation
+lobbyBGM:Play()
+
+local levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
+while not levelUnlock do
+    task.wait(1)
+    levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
+end
+if levelUnlock[2] then
+    workspace.mainCity.teleport.door2.SurfaceGui.Enabled = false
+    workspace.mainCity.teleport.door2.unlockGui.Enabled = true
+end

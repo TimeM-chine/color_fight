@@ -87,7 +87,8 @@ local function GetNearestCharacterAndDist()
         end
 
         if not player.Character then continue end
-
+        if not player.Character:FindFirstChild("isHiding") then continue end
+        if player.Character.isHiding.Value then continue end
         local playerDis = (player.Character.PrimaryPart.Position - fromPosition).Magnitude
 		if playerDis < dist then
             if playerDis <= 15 then

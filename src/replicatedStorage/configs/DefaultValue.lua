@@ -34,6 +34,8 @@ return {
     firstPlay = true, -- 是否第一次游玩
     friendsInvitedNum = 0, -- 邀请好友数
     friendsInvited = {}, -- 已邀请的好友
+    friendsRewards = {}, -- 已领取的好友奖励
+    cdKeyUsed = {}, -- 已使用的cd key
 
     ----- currency -----
     money = 0, -- 货币

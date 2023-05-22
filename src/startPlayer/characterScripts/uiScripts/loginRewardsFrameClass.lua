@@ -107,7 +107,6 @@ function loginRewardsFrameClass:ReSign(day)
             GAModule:addDesignEvent({
                 eventId = `rewardsCheck:loginRewards:day{day}:resign:{localPlayer.UserId}`
             })
-            
             uiController.SetNotification("success", "bottom")
         else
             uiController.SetNotification("not enough wins", "bottom")

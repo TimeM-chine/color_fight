@@ -15,12 +15,15 @@ local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
+local RedeemKey = require(game.ReplicatedStorage.configs.RedeemKey)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
 local getLoginRewardEvent = game.ReplicatedStorage.RemoteEvents.getLoginRewardEvent
 local playerHideSkill = game.ReplicatedStorage.RemoteEvents.playerHideSkill
+
+local remoteFunctions = game.ReplicatedStorage.RemoteFunctions
 
 ---- services ----
 local PS = game:GetService("Players")
@@ -73,10 +76,13 @@ changeColorEvent.OnServerEvent:Connect(function(player, color)
     pIns:SetColor(color)
 end)
 
-getLoginRewardEvent.OnServerEvent:Connect(function(player, day)
+getLoginRewardEvent.OnServerEvent:Connect(function(player, day, isResign)
     local loginState = PlayerServerClass.GetIns(player):GetOneData(dataKey.loginState)
     loginState[day] = true
     local playerIns = PlayerServerClass.GetIns(player)
+    if isResign then
+        playerIns:UpdatedOneData(dataKey.wins, -20)
+    end
     if day == 1 then
         playerIns:AddHealth()
     elseif day == 2 then
@@ -183,13 +189,51 @@ RemoteEvents.friendInEvent.OnServerEvent:Connect(function(player, friendId)
     if not table.find(friendsInvited, friendId) then
         table.insert(friendsInvited, friendId)
         playerIns:UpdatedOneData(dataKey.friendsInvitedNum, 1)
-        -- local num = playerIns:GetOneData(dataKey.friendsInvited)
-        -- if num == 1 then
-        --     playerIns:AddHealth()
-        -- elseif num == 3 then
-        --     playerIns:AddHealth()
-        -- elseif num == 3 then
-        --     playerIns:AddHealth()
-        -- end
     end
 end)
+
+RemoteEvents.getFriendRewards.OnServerEvent:Connect(function(player, ind)
+    local playerIns = PlayerServerClass.GetIns(player)
+    if ind == 1 or ind == 2 then
+        playerIns:AddHealth()
+    elseif ind == 3 then
+        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+        playerIns:SetOneData(dataKey.tempSpeedInfo, {15, universalEnum.oneMinute * 10})
+    elseif ind == 4 then
+        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+        playerIns:SetOneData(dataKey.tempSpeedInfo, {15, universalEnum.oneMinute * 15})
+    elseif ind == 5 then
+        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+        playerIns:SetOneData(dataKey.tempSpeedInfo, {15, universalEnum.oneMinute * 20})
+    elseif ind == 6 then
+        if not playerIns:GetOneData(dataKey.career)[1] then
+            playerIns:SetOneData(dataKey.tempSkStart, os.time())
+            playerIns:SetOneData(dataKey.tempSkInfo, {1, universalEnum.oneMinute * 30})
+        end
+    else
+        if not playerIns:GetOneData(dataKey.career)[1] then
+            playerIns:SetOneData(dataKey.tempSkStart, os.time())
+            playerIns:SetOneData(dataKey.tempSkInfo, {1, universalEnum.oneHour * 2})
+        end
+    end
+    local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+    local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+    RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+end)
+
+
+function remoteFunctions.Redeem.OnServerInvoke(player, key)
+    local playerIns = PlayerServerClass.GetIns(player)
+
+    local cdKeyUsed = playerIns:GetOneData(dataKey.cdKeyUsed)
+    if table.find(cdKeyUsed, key) then
+        return "used"
+    else
+        if RedeemKey[key] then
+            RedeemKey[key](player)
+            return "success"
+        else
+            return "wrong key"
+        end
+    end
+end

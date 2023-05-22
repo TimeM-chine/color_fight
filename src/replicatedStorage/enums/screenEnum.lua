@@ -1,5 +1,8 @@
 return {
     shopFrame = "shopFrame",
     loginRewardsFrame = "loginRewardsFrame",
-    onlineRewardsFrame = "onlineRewardsFrame"
+    onlineRewardsFrame = "onlineRewardsFrame",
+    friendsRewards = "friendsRewards",
+    cdKeyFrame = "cdKeyFrame",
+    wantLikeFrame = "wantLikeFrame"
 }

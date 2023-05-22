@@ -18,6 +18,9 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
 local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
 
+---- functions ----
+local BindableFunctions = game.ReplicatedStorage.BindableFunctions
+
 ---- variables ----
 local touchSafeArea = false
 local toolModelsFolder = workspace.toolModels
@@ -26,6 +29,8 @@ local toolDoorsFolder = workspace.toolDoors
 local colorDoorsFolder = workspace.colorDoors
 local keysFolder = workspace.keys
 local LocalPlayer = game.Players.LocalPlayer
+local PlayerGui = LocalPlayer.PlayerGui
+local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
 local chosenSkInd = playerModule.GetPlayerOneData(dataKey.chosenSkInd)
 SkillModule.SetSkillId(chosenSkInd)
 
@@ -96,14 +101,21 @@ for _, part:Part in workspace.safeAreas:GetChildren() do
     part.Touched:Connect(function(otherPart)
         if otherPart:IsDescendantOf(LocalPlayer.Character) and (not touchSafeArea) then
             game.Lighting.Atmosphere.Density = 0.6
+            hudBgFrame.inLobby.Visible = true
+            hudBgFrame.inGame.Visible = false
+
             touchSafeArea = true
         end
     end)
 
     part.TouchEnded:Connect(function(otherPart)
         if otherPart:IsDescendantOf(LocalPlayer.Character) and touchSafeArea then
-            game.Lighting.Atmosphere.Density = 0.8
             touchSafeArea = false
+            -- local ind = BindableFunctions.getLevelInd:Invoke()
+            game.Lighting.Atmosphere.Density = 0.8
+            hudBgFrame.inLobby.Visible = false
+            hudBgFrame.inGame.Visible = true
+
         end
     end)
 end

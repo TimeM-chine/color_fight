@@ -2,7 +2,6 @@
 -- ui client
 -- ================================================================================
 ---- services ----
-local SocialService = game:GetService("SocialService")
 local MarketplaceService = game:GetService"MarketplaceService"
 
 ---- variables ----
@@ -18,6 +17,8 @@ local speedFrame = hudBgFrame.speedFrame
 local friendFrame = hudBgFrame.friendFrame
 local inviteBtn = speedFrame.inviteBtn
 local friendNum = 0
+local cdKeyBtn = hudBgFrame.cdKeyFrame.btn
+local touching
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -51,12 +52,18 @@ perTipEvent.Event:Connect(function(msg)
 end)
 
 ---------------------- buttons -------------------------
+cdKeyBtn.MouseButton1Click:Connect(function()
+    uiController.PushScreen(screenEnum.cdKeyFrame)
+end)
+
 onlineBtn.MouseButton1Click:Connect(function()
     uiController.PushScreen(screenEnum.onlineRewardsFrame)
     GAModule:addDesignEvent({
         eventId = `pageCheck:onlineRewardsPage:{LocalPlayer.UserId}`
     })
 end)
+
+
 
 shopBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
@@ -65,10 +72,9 @@ end)
 
 buyHeartBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
-
     print("player buy heart")
-    addHealthEvent:FireServer()
-    -- MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
+    -- addHealthEvent:FireServer()
+    MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
 end)
 
 hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
@@ -77,33 +83,43 @@ hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
     SkillModule.UseSkill()
 end)
 
-local function canSendGameInvite(sendingPlayer)
 
-	local success, canSend = pcall(function()
-		return SocialService:CanSendGameInviteAsync(sendingPlayer)
-	end)
-	return success and canSend
-end
 
 inviteBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
     GAModule:addDesignEvent({
         eventId = `buttonCheck:inviteBtn:{LocalPlayer.UserId}`
     })
-    local canInvite = canSendGameInvite(LocalPlayer)
-	if canInvite then
-		local success, errorMessage = pcall(function()
-			SocialService:PromptGameInvite(LocalPlayer)
-		end)
-	end
+    uiController.PushScreen(screenEnum.friendsRewards)
+
 end)
 
+workspace.roleSeller.Hologram.Base.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        uiController.PushScreen(screenEnum.shopFrame)
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+end)
 
-workspace.signBox.ProximityPrompt.Triggered:Connect(function()
-    uiController.PushScreen(screenEnum.loginRewardsFrame)
-    GAModule:addDesignEvent({
-        eventId = `pageCheck:loginPage:{LocalPlayer.UserId}`
-    })
+workspace.signBox.touchPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        if LocalPlayer:IsInGroup(17008261) then
+            uiController.PushScreen(screenEnum.loginRewardsFrame)
+            GAModule:addDesignEvent({
+                eventId = `pageCheck:loginPage:{LocalPlayer.UserId}`
+            })
+        elseif not PlayerGui.pushScreen.Enabled then
+            uiController.PushScreen(screenEnum.wantLikeFrame)
+        end
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+
 end)
 ---------------------- hp -------------------------
 
