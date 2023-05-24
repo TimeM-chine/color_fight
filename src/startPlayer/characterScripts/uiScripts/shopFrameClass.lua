@@ -31,6 +31,7 @@ shopFrameClass.frame = nil
 shopFrameClass.connections = {}
 
 function shopFrameClass.new(frame)
+    chosenSkInd = playerModule.GetPlayerOneData(dataKey.chosenSkInd)
     local ins = setmetatable({}, shopFrameClass)
     -- print("init frame,", frame)
     ins.frame = frame
@@ -94,13 +95,15 @@ function shopFrameClass:RefreshCareer()
         else
             confirmBtn.Text = "Buy"
             confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.984313, 1, 0.070588))
-
         end
     end
 end
 
 function shopFrameClass:CheckCareer()
     local career = playerModule.GetPlayerOneData(dataKey.career)
+    local tempSkInfo = playerModule.GetPlayerOneData(dataKey.tempSkInfo)
+    local tempSkStart = playerModule.GetPlayerOneData(dataKey.tempSkStart)
+
     for i=1, #career do
         local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career"..i]
         local confirmBtn:TextButton = careerFrame.Frame.Frame.confirm
@@ -118,11 +121,14 @@ function shopFrameClass:CheckCareer()
             confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.984313, 1, 0.070588))
         end
 
-        if i == 1 and confirmBtn.Text ~= "Equip" then
-            local tempSkInfo = playerModule.GetPlayerOneData(dataKey.tempSkInfo)
-            local tempSkStart = playerModule.GetPlayerOneData(dataKey.tempSkStart)
-            if tempSkInfo[1] and os.time() - tempSkStart <= tempSkInfo[2] then
+        if confirmBtn.Text == "Buy" then
+            if i == tempSkInfo[1] and os.time() - tempSkStart <= tempSkInfo[2] then
                 confirmBtn.Text = "Equip"
+                confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.066666, 0.858823, 0.372549))
+                if i == chosenSkInd then
+                    confirmBtn.Text = "Remove"
+                    confirmBtn.UIGradient.Color = ColorSequence.new(Color3.new(0.858823, 0.066666, 0.066666))
+                end
             end
         end
 
@@ -133,7 +139,9 @@ function shopFrameClass:CheckCareer()
             elseif confirmBtn.Text == "Equip" then
                 uiController.SetNotification("success", "top")
                 if chosenSkInd > 0 then
-                    self.frame.careerShopFrame.ScrollingFrame["career"..chosenSkInd].Frame.Frame.confirm.Text = "Equip"
+                    local btn = self.frame.careerShopFrame.ScrollingFrame["career"..chosenSkInd].Frame.Frame.confirm
+                    btn.Text = "Equip"
+                    btn.UIGradient.Color = ColorSequence.new(Color3.new(0.066666, 0.858823, 0.372549))
                 end
                 chosenSkInd = i
                 confirmBtn.Text = "Remove"

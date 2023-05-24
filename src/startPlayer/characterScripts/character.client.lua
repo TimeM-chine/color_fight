@@ -94,6 +94,11 @@ end
 
 ResetLevel()
 
+
+LocalPlayer.Character.Humanoid.Died:Once(function()
+    SkillModule.CancelAllSkill()
+end)
+
 BindableEvents.resetLevelEvent.Event:Connect(ResetLevel)
 
 

@@ -4,6 +4,7 @@ local Workspace = game:GetService("Workspace")
 
 ---- services ----
 local MarketplaceService = game:GetService"MarketplaceService"
+local ContentProvider = game:GetService("ContentProvider")
 
 ---- classes ----
 local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
@@ -12,6 +13,7 @@ local ColorDoorClientClass = require(script.Parent.classes.ColorDoorClientClass)
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local playerModule = require(script.Parent.modules.PlayerClientModule)
+local SkillModule = require(script.Parent.modules.SkillModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -23,6 +25,7 @@ local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
+local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 
 ---- variables ----
 local clientSys = SystemClass.new()
@@ -195,6 +198,7 @@ RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempS
 end)
 -- workspace.SpawnLocation.CFrame = Workspace.level1SpawnPoint.CFrame
 -- LocalPlayer.CharacterAdded:Wait()
+
 LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
 game.Lighting.Atmosphere.Density = 0.6
@@ -214,3 +218,10 @@ if levelUnlock[2] then
     workspace.mainCity.teleport.door2.SurfaceGui.Enabled = false
     workspace.mainCity.teleport.door2.unlockGui.Enabled = true
 end
+
+local imgs = {}
+for _, img in TextureIds.wallPaints do
+    table.insert(imgs, img)
+end
+
+ContentProvider:PreloadAsync(imgs)

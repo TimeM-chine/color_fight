@@ -50,7 +50,7 @@ function cdKeyFrameClass.new(frame)
     con = ins.confirmBtn.MouseButton1Click:Connect(function()
         if ins.confirmBtn.Text == "Redeem" then
             local keyInput = ins.textBox.Text
-            local res = Redeem:InvokeServer(keyInput)
+            local res, image, text = Redeem:InvokeServer(keyInput)
             if res == "used" then
                 BindableEvents.notifyEvent:Fire("The key is used.", "top")
             elseif res == "wrong key" then
@@ -60,7 +60,8 @@ function cdKeyFrameClass.new(frame)
                 ins.textBox.Visible = false
                 ins.itemIcon.Visible = true
                 --- todo 设置图片
-
+                ins.itemIcon.Image = image
+                ins.itemIcon.TextLabel.Text = text
             end
         elseif ins.confirmBtn.Text == "Confirm" then
             ins.confirmBtn.Text = "Redeem"
@@ -74,9 +75,6 @@ function cdKeyFrameClass.new(frame)
     return ins
 
 end
-
-
-
 
 
 function cdKeyFrameClass:DestroyIns()

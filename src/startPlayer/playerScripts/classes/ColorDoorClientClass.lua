@@ -32,6 +32,7 @@ ColorDoorClientClass.remainClick = ColorDoorClientClass.totalClick
 function ColorDoorClientClass.new(door)
     local self = setmetatable({}, ColorDoorClientClass)
     self.door = door
+    self.door.ClickDetector.CursorIcon = TextureIds.cursor[self.door.colorString.Value]
     self.door.ClickDetector.MouseClick:Connect(function()
         self:Clicked()
     end)

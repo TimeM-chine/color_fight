@@ -103,7 +103,7 @@ function loginRewardsFrameClass:ReSign(day)
         local wins = playerModule.GetPlayerOneData(dataKey.wins)
         if wins >= 20 then
             self.innerFrame["day"..day].receiveBtn.received.Visible = true
-            getLoginRewardEvent:FireServer(day)
+            getLoginRewardEvent:FireServer(day, true)
             GAModule:addDesignEvent({
                 eventId = `rewardsCheck:loginRewards:day{day}:resign:{localPlayer.UserId}`
             })

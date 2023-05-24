@@ -77,11 +77,15 @@ for _, key:Part in workspace.keys:GetChildren() do
             tool.Parent = player.Character
         end
         if key.Name == "level1Key" then
-            remoteEvents.serverNotifyEvent:FireServer(player, "Get back to lobby to unlock level 2.")
+            remoteEvents.serverNotifyEvent:FireClient(player, "Get back to lobby to unlock level 2.")
         else
-            remoteEvents.serverNotifyEvent:FireServer(player, "Get back to lobby to get wins.")
+            remoteEvents.serverNotifyEvent:FireClient(player, "Get back to the lobby.")
         end
-        PlayerServerClass.GetIns(player):UpdatedOneData(dataKey.wins, 1)
+        local playerIns = PlayerServerClass.GetIns(player)
+        playerIns:UpdatedOneData(dataKey.wins, 1)
+        playerIns:UpdatedOneData(dataKey.totalWins, 1)
+        player.leaderstats.Wins.Value = playerIns:GetOneData(dataKey.totalWins)
+        player.leaderstats.NowWins.Value = playerIns:GetOneData(dataKey.wins)
     end)
 end
 

@@ -15,7 +15,6 @@ local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
-local RedeemKey = require(game.ReplicatedStorage.configs.RedeemKey)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -33,7 +32,7 @@ local PhysicsService = game:GetService("PhysicsService")
 PhysicsService:RegisterCollisionGroup("player")
 PhysicsService:CollisionGroupSetCollidable("player", "player", false)
 
-function CheckLoginReward(player)
+function CheckTempReward(player)
     local playerIns = PlayerServerClass.GetIns(player)
     local tempSpeedStart = playerIns:GetOneData(dataKey.tempSpeedStart)
     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
@@ -42,7 +41,7 @@ function CheckLoginReward(player)
 
     if os.time() - tempSkStart > tempSkInfo[2] then
         tempSkInfo = {0, 0}
-        if playerIns:GetOneData(dataKey.chosenSkInd) == 1 then
+        if playerIns:GetOneData(dataKey.chosenSkInd) == tempSkInfo[1] then
             playerIns:SetOneData(dataKey.chosenSkInd, 0)
         end
     end
@@ -68,6 +67,19 @@ PS.PlayerAdded:Connect(function(player)
         pIns:SetOneData(dataKey.dailyOnlineTime, 0)
         pIns:SetOneData(dataKey.lastLoginTimeStamp, os.time())
     end
+
+    local leaderstats = Instance.new("Folder")
+    leaderstats.Name = "leaderstats"
+    leaderstats.Parent = player
+
+    local wins = Instance.new("IntValue")
+    wins.Name = "Wins"
+    wins.Value = pIns:GetOneData(dataKey.totalWins)
+    wins.Parent = leaderstats
+    local NowWins = Instance.new("IntValue")
+    NowWins.Name = "NowWins"
+    NowWins.Value = pIns:GetOneData(dataKey.wins)
+    NowWins.Parent = leaderstats
 end)
 
 
@@ -82,6 +94,7 @@ getLoginRewardEvent.OnServerEvent:Connect(function(player, day, isResign)
     local playerIns = PlayerServerClass.GetIns(player)
     if isResign then
         playerIns:UpdatedOneData(dataKey.wins, -20)
+        player.leaderstats.NowWins.Value = playerIns:GetOneData(dataKey.wins)
     end
     if day == 1 then
         playerIns:AddHealth()
@@ -229,11 +242,25 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
     if table.find(cdKeyUsed, key) then
         return "used"
     else
-        if RedeemKey[key] then
-            RedeemKey[key](player)
-            return "success"
+        table.insert(cdKeyUsed, key)
+        if key == "KoiStudio" then
+            if not playerIns:GetOneData(dataKey.career)[3] then
+                playerIns:SetOneData(dataKey.tempSkStart, os.time())
+                playerIns:SetOneData(dataKey.tempSkInfo, {3, universalEnum.oneMinute * 5})
+            end
+            local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+            local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+            RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+            return "success", TextureIds.skillImg[3][1], "Experience ParkourMan for 5 minutes!"
         else
             return "wrong key"
         end
+    end
+end
+
+
+while task.wait(60) do
+    for _, player in game.Players:GetPlayers() do
+        CheckTempReward(player)
     end
 end

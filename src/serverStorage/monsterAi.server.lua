@@ -26,6 +26,7 @@ local aniTrack = animator:LoadAnimation(walkAnim)
 local playerTargetTime = {}
 local footprint:Part = ServerStorage.footprint
 local monsterSound:Sound = game.SoundService.monster:Clone()
+local targetTraceTime = 0
 
 ---- main ----
 aniTrack:Play()
@@ -35,7 +36,9 @@ monsterSound:Play()
 local pathParam = table.clone(argsEnum.CreatePath)
 pathParam.AgentCanClimb = false
 pathParam.AgentCanJump = false
-
+pathParam.AgentRadius = 1
+pathParam.AgentHeight = 8
+pathParam.WaypointSpacing = 5
 -- local spParam = table.clone(argsEnum.SimplePath)
 -- spParam.TIME_VARIANCE = 0.3
 -- spParam.JUMP_WHEN_STUCK = false
@@ -115,11 +118,11 @@ local function GetNextTarget()
             SetLastHurtPlayer(player)
             playerTargetTime[player] = 0
         end
-        return character.HumanoidRootPart
+        return character.HumanoidRootPart, true
     end
 
     lastPointPart = GetNextPoint()
-    return lastPointPart
+    return lastPointPart, false
 end
 
 
@@ -133,8 +136,8 @@ end
 --     print("reached", ...)
 -- end)
 
-while task.wait(0.5) do
-    local nextTarget = GetNextTarget()
+while task.wait(0.1) do
+    local nextTarget, isPlayer  = GetNextTarget()
     -- print(`{agent.Name} nextTarget: {nextTarget}`)
     if agent.Name ~= "monster4" then
         local footCopy = footprint:Clone()
@@ -150,7 +153,15 @@ while task.wait(0.5) do
         Debris:AddItem(footCopy, 5)
     end
 
-    path:Run(nextTarget)
+    if (not path:Run(nextTarget)) and (not isPlayer) then
+        targetTraceTime += 1
+        if targetTraceTime >= 30 then
+            agent:PivotTo(nextTarget.CFrame)
+            targetTraceTime = 0
+        end
+    else
+        targetTraceTime = 0
+    end
 end
 
 

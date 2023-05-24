@@ -6,6 +6,7 @@ local Debris = game:GetService"Debris"
 local cd = 0
 local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
+PlayerGui:WaitForChild("hudScreen")
 local skillBtn:ImageButton = PlayerGui.hudScreen.bgFrame.inGame.skillBtn
 local cdImg = skillBtn.cdImage
 local skillId = skillBtn.skillId.Value
@@ -44,12 +45,13 @@ end
 
 function SkillModule.SetSkillId(ind)
     chooseSkillEvent:FireServer(ind)
+    skillId = ind
     if ind == 0 then
+        skillBtn.Visible = false
         return
     end
     skillBtn.Image = TextureIds.skillImg[ind][1]
     skillBtn.PressedImage = TextureIds.skillImg[ind][2]
-    skillId = ind
     skillBtn.Visible = true
 end
 
@@ -142,5 +144,14 @@ function SkillModule.GetCd()
     return cd
 end
 
+function SkillModule.CancelAllSkill()
+    print("Cancel All Skills.")
+    game.Lighting.Atmosphere.Density = 0.8
+    LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
+    workspace.monster1.Highlight.Enabled = false
+    workspace.monster2.Highlight.Enabled = false
+    workspace.monster3.Highlight.Enabled = false
+    workspace.monster4.Highlight.Enabled = false
+end
 
 return SkillModule

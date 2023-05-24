@@ -126,4 +126,14 @@ TextureIds.footprint = {
     "rbxassetid://13495123617", -- yellowFootprint1
     "rbxassetid://13495123257", -- yellowFootprint2
 }
+
+TextureIds.cursor = {
+    orange = "rbxassetid://13465168378",
+    purple = "rbxassetid://13465160251",
+    red = "rbxassetid://13465165167",
+    green = "rbxassetid://13465164688",
+    blue = "rbxassetid://13465164770",
+    cyan = "rbxassetid://13465160881",
+    yellow = "rbxassetid://13465165040"
+}
 return TextureIds

@@ -30,9 +30,10 @@ function controller.PushScreen(screenName)
 
     local frame = screenIns:Clone()
     local frameClass = script.Parent:FindFirstChild(screenName.."Class")
+    local frameIns
     if frameClass then
         local cls = require(frameClass)
-        cls.new(frame)
+        frameIns = cls.new(frame)
     else
         warn(`There is no screen class named {screenName.."Class"}`)
     end
@@ -41,6 +42,7 @@ function controller.PushScreen(screenName)
     pushScreenGui.Enabled = true
 
     controller.ShowBySize(pushScreenGui.bgFrame)
+    return frameIns
 end
 
 -- pop screen

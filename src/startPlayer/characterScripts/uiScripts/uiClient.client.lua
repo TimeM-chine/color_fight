@@ -104,6 +104,17 @@ workspace.roleSeller.Hologram.Base.Touched:Connect(function(part:Part)
     end
 end)
 
+workspace.shoeShop.showPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        local frameIns = uiController.PushScreen(screenEnum.shopFrame)
+        frameIns:OpenShoeShop()
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+end)
+
 workspace.signBox.touchPart.Touched:Connect(function(part:Part)
     if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
         touching = true

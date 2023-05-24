@@ -11,8 +11,8 @@ colorEnum.ColorName = {
     cyan = "cyan",
     blue = "blue",
     purple = "purple",
-    grey = "grey",
-    white = "white"
+    -- grey = "grey",
+    -- white = "white"
 }
 
 colorEnum.ColorValue = {
@@ -23,8 +23,8 @@ colorEnum.ColorValue = {
     cyan = Color3.new(0, 1, 0.784313),
     blue = Color3.new(0, 0.466666, 1),
     purple = Color3.new(0.968627, 0, 1),
-    grey = Color3.new(0.619607, 0.619607, 0.619607),
-    white = Color3.new(1, 1, 1)
+    -- grey = Color3.new(0.619607, 0.619607, 0.619607),
+    -- white = Color3.new(1, 1, 1)
 }
 
 
