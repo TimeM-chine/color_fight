@@ -40,4 +40,11 @@ return {
     ----- currency -----
     money = 0, -- 货币
     consumptionSum = 0,  -- 总消费金额
+
+    ----- rank list ----
+    lv1Wins = 0,  -- 第一关通关次数
+    lv2Wins = 0,  -- 第二关通关次数
+    lv1Time = 999999, -- 第一关通关时间
+    lv2Time = 999999, -- 第二关通关时间
+
 }

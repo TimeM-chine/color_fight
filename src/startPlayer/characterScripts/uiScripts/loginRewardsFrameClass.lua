@@ -14,6 +14,7 @@ local localPlayer = game.Players.LocalPlayer
 ---- enums ----
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
+local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- events ----
 local getLoginRewardEvent = game.ReplicatedStorage.RemoteEvents.getLoginRewardEvent
@@ -94,14 +95,14 @@ end
 function loginRewardsFrameClass:ReSign(day)
     self.modalFrame.Visible = true
     -- todo check text
-    self.modalFrame.inner.textFrame.TextLabel.Text = "Sure to resign? Needs 20 wins."
+    self.modalFrame.inner.textFrame.TextLabel.Text = `Sure to resign? Needs {gameConfig.resignCost} wins.`
     -- if confirm, check player data
     local confirmBtn:ImageButton = self.modalFrame.inner.confirmBtn
     local cancelBtn:ImageButton = self.modalFrame.inner.cancelBtn
 
     local con1 = confirmBtn.MouseButton1Click:Connect(function()        
         local wins = playerModule.GetPlayerOneData(dataKey.wins)
-        if wins >= 20 then
+        if wins >= gameConfig.resignCost then
             self.innerFrame["day"..day].receiveBtn.received.Visible = true
             getLoginRewardEvent:FireServer(day, true)
             GAModule:addDesignEvent({

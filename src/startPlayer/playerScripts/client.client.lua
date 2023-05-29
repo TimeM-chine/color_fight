@@ -225,3 +225,4 @@ for _, img in TextureIds.wallPaints do
 end
 
 ContentProvider:PreloadAsync(imgs)
+print("Images loading finished.")

@@ -93,6 +93,7 @@ function GamePlayerClass:InitPlayer()
 
     CreateModule.CreateValue("StringValue", "colorString", "nil", character)
     CreateModule.CreateValue("BoolValue", "isHiding", false, character)
+    CreateModule.CreateValue("BoolValue", "beforeDeath", false, character)
 
     local param = argsEnum.changeColorEvent
     param.color = "empty"
@@ -105,11 +106,6 @@ function GamePlayerClass:InitPlayer()
     gunTrack.Looped = true
     gunTrack.Priority = Enum.AnimationPriority.Movement
     gunTrack:Play()
-
-    local highlight = Instance.new("Highlight")
-    highlight.Enabled = false
-    highlight.Parent = self.player.Character
-
 end
 
 function GamePlayerClass:OnChatted(message, recipient)
@@ -131,6 +127,9 @@ function GamePlayerClass:OnChatted(message, recipient)
     elseif message == "/unlock 2" then
         local l = self:GetOneData(dataKey.levelUnlock)
         l[2] = true
+    elseif message == '/helmet' then
+        local as = game.ServerStorage:FindFirstChild("helmet"):Clone()
+        as.Parent = self.player.Character
     end
 end
 

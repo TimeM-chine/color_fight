@@ -28,6 +28,9 @@ local footprint:Part = ServerStorage.footprint
 local monsterSound:Sound = game.SoundService.monster:Clone()
 local targetTraceTime = 0
 
+---- events ----
+local remoteEvents = game.ReplicatedStorage.RemoteEvents
+
 ---- main ----
 aniTrack:Play()
 monsterSound.Parent = agent.HumanoidRootPart
@@ -59,9 +62,14 @@ local function GetNextPoint()
 end
 
 function HurtPlayer(player)
-    if not player.character.isHiding.Value then
-        local human:Humanoid = player.character.Humanoid
+    if not player.Character.isHiding.Value then
+        local human:Humanoid = player.Character.Humanoid
+        -- if human.Health > 1 then
         human:TakeDamage(1)
+        -- else
+        --     player.Character.beforeDeath.Value = true
+        --     remoteEvents.beforeDeathEvent:FireClient(player)
+        -- end
         PlayerServerClass.GetIns(player):SetOneData(dataKey.hp, math.max(1, human.Health))
     end
     SetLastHurtPlayer(player)
@@ -74,7 +82,7 @@ function SetLastHurtPlayer(player)
     lastHurtPlayer = player
 
     cor = coroutine.create(function()
-        task.wait(8)
+        task.wait(6)
         lastHurtPlayer = nil
     end)
     coroutine.resume(cor)
@@ -88,13 +96,15 @@ local function GetNearestCharacterAndDist()
         if player == lastHurtPlayer then
             continue
         end
-
         if not player.Character then continue end
         if not player.Character:FindFirstChild("isHiding") then continue end
-        if player.Character.isHiding.Value then continue end
+        if not player.Character:FindFirstChild("beforeDeath") then continue end
+        -- print(player.Character.beforeDeath.Value, lastHurtPlayer)
+        if player.Character.beforeDeath.Value then continue end
+
         local playerDis = (player.Character.PrimaryPart.Position - fromPosition).Magnitude
 		if playerDis < dist then
-            if playerDis <= 15 then
+            if playerDis <= 10 then
                 HurtPlayer(player)
             end
 			character, dist = player.Character, playerDis

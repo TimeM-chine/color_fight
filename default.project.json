@@ -73,8 +73,14 @@
                 "myDesignEvent": {
                     "$className": "RemoteEvent"
                 },
-                "getFriendRewards":{
-                    "$className":"RemoteEvent"
+                "getFriendRewards": {
+                    "$className": "RemoteEvent"
+                },
+                "beforeDeathEvent": {
+                    "$className": "RemoteEvent"
+                },
+                "playerLiveBackEvent": {
+                    "$className": "RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -87,6 +93,9 @@
                 },
                 "resetLevelEvent": {
                     "$className": "BindableEvent"
+                },
+                "teleportBindEvent":{
+                    "$className":"BindableEvent"
                 }
             },
             "RemoteFunctions": {
@@ -94,8 +103,8 @@
                 "ClientGetData": {
                     "$className": "RemoteFunction"
                 },
-                "Redeem":{
-                    "$className":"RemoteFunction"
+                "Redeem": {
+                    "$className": "RemoteFunction"
                 }
             },
             "BindableFunctions": {
@@ -112,13 +121,14 @@
         "ServerStorage": {
             "$className": "ServerStorage",
             "$path": "src/serverStorage",
-            "monster": {
-                "$className": "Model"
-            },
+            "$ignoreUnknownInstances": true,
             "tools": {
                 "$className": "Folder"
             },
             "paintCan": {
+                "$className": "Accessory"
+            },
+            "helmet": {
                 "$className": "Accessory"
             },
             "animations": {
@@ -241,6 +251,9 @@
             },
             "keys": {
                 "$className": "Folder"
+            },
+            "rankLists":{
+                "$className":"Folder"
             }
         },
         "Lighting": {

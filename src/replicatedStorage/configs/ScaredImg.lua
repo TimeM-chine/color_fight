@@ -31,10 +31,10 @@ imgs.scared = {
 imgs.died = {
     "rbxassetid://13491508144",
     "rbxassetid://13491507830",
-    "rbxassetid://13491507536",
+    -- "rbxassetid://13491507536",
     "rbxassetid://13491506767",
     "rbxassetid://13491506502",
-    "rbxassetid://13491500518",
+    -- "rbxassetid://13491500518",
     "rbxassetid://13491500095",
     "rbxassetid://13491499778",
     "rbxassetid://13491499355",

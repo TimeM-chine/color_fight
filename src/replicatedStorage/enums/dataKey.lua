@@ -36,4 +36,9 @@ return {
     ----- currency -----
     money = "money", -- 货币
     consumptionSum = "consumptionSum",  -- 总消费金额
+    ----- rank list ----
+    lv1Wins = "lv1Wins",  -- 第一关通关次数
+    lv2Wins = "lv2Wins",  -- 第二关通关次数
+    lv1Time = "lv1Time", -- 第一关通关时间
+    lv2Time = "lv2Time", -- 第二关通关时间
 }

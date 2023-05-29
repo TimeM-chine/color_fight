@@ -55,7 +55,12 @@ game.SoundService.clickUI:Clone().Parent = LocalPlayer.Character.HumanoidRootPar
 remoteEvents.putonShoeEvent:FireServer(chosenShoe[1], chosenShoe[2])
 LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = playerModule.GetPlayerSpeed()
 
-function ResetLevel()
+local highlight = Instance.new("Highlight")
+highlight.Enabled = false
+highlight.Parent = script.Parent
+
+
+function DieRest()
     for _, toolModel in toolModelsFolder:GetChildren() do
         toolModel.ProximityPrompt.Enabled = true
         toolModel.CanCollide = true
@@ -85,14 +90,17 @@ function ResetLevel()
         key.Transparency = 0
         key.ProximityPrompt.Enabled = true
     end
+end
 
+function ResetLevel()
+    DieRest()
     ----- last doors ----
     for _, lastDoor in workspace.lastDoors:GetChildren() do
         lastDoor.CanCollide = true
     end
 end
 
-ResetLevel()
+DieRest()
 
 
 LocalPlayer.Character.Humanoid.Died:Once(function()
@@ -117,7 +125,7 @@ for _, part:Part in workspace.safeAreas:GetChildren() do
         if otherPart:IsDescendantOf(LocalPlayer.Character) and touchSafeArea then
             touchSafeArea = false
             -- local ind = BindableFunctions.getLevelInd:Invoke()
-            game.Lighting.Atmosphere.Density = 0.8
+            game.Lighting.Atmosphere.Density = 0.7
             hudBgFrame.inLobby.Visible = false
             hudBgFrame.inGame.Visible = true
 

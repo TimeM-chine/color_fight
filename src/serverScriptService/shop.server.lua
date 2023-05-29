@@ -3,6 +3,7 @@
 -- ================================================================================
 
 ---- services ----
+local Debris = game:GetService("Debris")
 local MarketplaceService = game:GetService("MarketplaceService")
 local DataStoreService = game:GetService("DataStoreService")
 local PlayerService = game:GetService("Players")
@@ -53,6 +54,14 @@ end
 
 
 function AddHealth(receipt, player)
+    if player.Character.beforeDeath.Value then
+        local force = Instance.new("ForceField")
+        Debris:AddItem(force, 5)
+        force.Parent = player.Character
+        player.Character.beforeDeath.Value = false
+        RemoteEvents.playerLiveBackEvent:FireClient(player)
+        return true
+    end
     local playerIns = PlayerServerClass.GetIns(player)
     playerIns:AddHealth()
     return true

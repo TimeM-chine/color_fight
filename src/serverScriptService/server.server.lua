@@ -5,6 +5,7 @@ local SystemClass = require(game.ServerScriptService.classes.ServerSystemClass)
 local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
 local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
 local ModelModule = require(game.ReplicatedStorage.modules.ModelModule)
+local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
 
 ---- enums ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
@@ -15,6 +16,7 @@ local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
+local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -93,7 +95,7 @@ getLoginRewardEvent.OnServerEvent:Connect(function(player, day, isResign)
     loginState[day] = true
     local playerIns = PlayerServerClass.GetIns(player)
     if isResign then
-        playerIns:UpdatedOneData(dataKey.wins, -20)
+        playerIns:UpdatedOneData(dataKey.wins, -gameConfig.resignCost)
         player.leaderstats.NowWins.Value = playerIns:GetOneData(dataKey.wins)
     end
     if day == 1 then
@@ -260,6 +262,7 @@ end
 
 
 while task.wait(60) do
+    BillboardManager.initBillboard()
     for _, player in game.Players:GetPlayers() do
         CheckTempReward(player)
     end

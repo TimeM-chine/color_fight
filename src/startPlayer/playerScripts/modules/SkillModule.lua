@@ -95,7 +95,7 @@ function SkillModule.Sk4()
 
     game.Lighting.Atmosphere.Density = 0.6
     task.wait(20)
-    game.Lighting.Atmosphere.Density = 0.8
+    game.Lighting.Atmosphere.Density = 0.7
 end
 
 function SkillModule.Sk5()
@@ -146,7 +146,7 @@ end
 
 function SkillModule.CancelAllSkill()
     print("Cancel All Skills.")
-    game.Lighting.Atmosphere.Density = 0.8
+    game.Lighting.Atmosphere.Density = 0.7
     LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
     workspace.monster1.Highlight.Enabled = false
     workspace.monster2.Highlight.Enabled = false

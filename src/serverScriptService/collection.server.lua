@@ -12,17 +12,30 @@ local ServerStorage = game:GetService("ServerStorage")
 
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
+local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
 
 ---- enums ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+local rankListConfig = require(game.ReplicatedStorage.configs.RankList)
 
 ---- events ----
 local remoteEvents = game.ReplicatedStorage.RemoteEvents
+local teleportBindEvent = game.ReplicatedStorage.BindableEvents.teleportBindEvent
 
 ---- variables ----
+local playerStartTime = {}
+
+
+teleportBindEvent.Event:Connect(function(player, levelInd)
+    if not playerStartTime[player] then
+        playerStartTime[player] = {}
+    end
+    playerStartTime[player][levelInd] = os.time()
+end)
+
 
 CollectionCls.new(WallServerClass)
 CollectionCls.new(BucketModelServerClass)
@@ -69,19 +82,38 @@ end
 
 ---- keys
 for _, key:Part in workspace.keys:GetChildren() do
-    key.ProximityPrompt.Triggered:Connect(function(player)
+    key.ProximityPrompt.Triggered:Connect(function(player:Player)
         remoteEvents.hideBucketEvent:FireClient(player, key)  -- same logic with buckets
-        local tool = ServerStorage.keys:FindFirstChild(key.Name)
-        if tool then
-            tool = tool:Clone()
-            tool.Parent = player.Character
-        end
-        if key.Name == "level1Key" then
-            remoteEvents.serverNotifyEvent:FireClient(player, "Get back to lobby to unlock level 2.")
-        else
-            remoteEvents.serverNotifyEvent:FireClient(player, "Get back to the lobby.")
-        end
+        -- local tool = ServerStorage.keys:FindFirstChild(key.Name)
+        -- if tool then
+        --     tool = tool:Clone()
+        --     tool.Parent = player.Character
+        -- end
+
+        remoteEvents.serverNotifyEvent:FireClient(player, "You win in this level!")
+        player.Character:PivotTo(workspace.mainCityLocation.CFrame + Vector3.new(0, 5, 0))
+	    remoteEvents.teleportEvent:FireClient(player, 0)
+
         local playerIns = PlayerServerClass.GetIns(player)
+        if key.Name == "level1Key" then
+            playerIns:UpdatedOneData(dataKey.lv1Wins, 1)
+            local lv1Time = os.time() - playerStartTime[player][1]
+            if lv1Time < playerIns:GetOneData(dataKey.lv1Time) then
+                playerIns:SetOneData(dataKey.lv1Time, lv1Time)
+                BillboardManager.savePlayerRankData(player.UserId, playerIns:GetOneData(dataKey.lv1Time), rankListConfig.listNames.lv1Time)
+            end
+
+            BillboardManager.savePlayerRankData(player.UserId, playerIns:GetOneData(dataKey.lv1Wins), rankListConfig.listNames.lv1Win)
+        else
+            playerIns:UpdatedOneData(dataKey.lv2Wins, 1)
+            local lv2Time = os.time() - playerStartTime[player][2]
+            if lv2Time < playerIns:GetOneData(dataKey.lv2Time) then
+                playerIns:SetOneData(dataKey.lv2Time, lv2Time)
+                BillboardManager.savePlayerRankData(player.UserId, playerIns:GetOneData(dataKey.lv2Time), rankListConfig.listNames.lv2Time)
+            end
+
+            BillboardManager.savePlayerRankData(player.UserId, playerIns:GetOneData(dataKey.lv2Wins), rankListConfig.listNames.lv2Win)
+        end
         playerIns:UpdatedOneData(dataKey.wins, 1)
         playerIns:UpdatedOneData(dataKey.totalWins, 1)
         player.leaderstats.Wins.Value = playerIns:GetOneData(dataKey.totalWins)
