@@ -68,6 +68,7 @@ PS.PlayerAdded:Connect(function(player)
     if nowDay ~= lastDay then
         pIns:SetOneData(dataKey.dailyOnlineTime, 0)
         pIns:SetOneData(dataKey.lastLoginTimeStamp, os.time())
+        pIns:SetOneData(dataKey.receivedOnlineTime, {false, false, false, false, false, false, false})
     end
 
     local leaderstats = Instance.new("Folder")
@@ -127,23 +128,26 @@ end)
 
 RemoteEvents.getOnlineRewardEvent.OnServerEvent:Connect(function(player, ind)
     local playerIns = PlayerServerClass.GetIns(player)
-    if ind >=3 then
-        playerIns:AddHealth()
-    elseif ind == 1 then
-        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
-        playerIns:SetOneData(dataKey.tempSpeedInfo, {5, universalEnum.oneMinute * 5})
+    local receivedOnlineTime = playerIns:GetOneData(dataKey.receivedOnlineTime)
+    receivedOnlineTime[ind] = true
+    playerIns:AddHealth()
+    -- if ind >=3 then
+    --     playerIns:AddHealth()
+    -- elseif ind == 1 then
+    --     playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+    --     playerIns:SetOneData(dataKey.tempSpeedInfo, {5, universalEnum.oneMinute * 5})
 
-        local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
-        local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
-        RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
-    else
-        playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
-        playerIns:SetOneData(dataKey.tempSpeedInfo, {5, universalEnum.oneMinute * 10})
+    --     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+    --     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+    --     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+    -- else
+    --     playerIns:SetOneData(dataKey.tempSpeedStart, os.time())
+    --     playerIns:SetOneData(dataKey.tempSpeedInfo, {5, universalEnum.oneMinute * 10})
 
-        local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
-        local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
-        RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
-    end
+    --     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+    --     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+    --     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+    -- end
 end)
 
 playerHideSkill.OnServerEvent:Connect(function(player)

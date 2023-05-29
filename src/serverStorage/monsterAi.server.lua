@@ -66,6 +66,7 @@ function HurtPlayer(player)
         local human:Humanoid = player.Character.Humanoid
         -- if human.Health > 1 then
         human:TakeDamage(1)
+        print(`hurt {player}, last player {lastHurtPlayer}`)
         -- else
         --     player.Character.beforeDeath.Value = true
         --     remoteEvents.beforeDeathEvent:FireClient(player)
@@ -117,6 +118,10 @@ end
 local function GetNextTarget()
     local character, dist = GetNearestCharacterAndDist()
     if character and character.HumanoidRootPart and dist <= 50 then
+        if lastHurtPlayer then
+            lastPointPart = GetNextPoint()
+            return lastPointPart, false
+        end
         local player = game.Players:GetPlayerFromCharacter(character)
         if playerTargetTime[player] then
             playerTargetTime[player] += 1

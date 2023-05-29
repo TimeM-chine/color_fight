@@ -20,7 +20,6 @@ local Redeem = game.ReplicatedStorage.RemoteFunctions.Redeem
 local localPlayer = game.Players.LocalPlayer
 
 ---- events ----
-local getOnlineRewardEvent = game.ReplicatedStorage.RemoteEvents.getOnlineRewardEvent
 local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 local cdKeyFrameClass = {}

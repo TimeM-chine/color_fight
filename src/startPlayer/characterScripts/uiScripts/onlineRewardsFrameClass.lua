@@ -11,15 +11,15 @@ local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
-
+local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
 local timeTable = {
-    10*universalEnum.oneMinute,
-    30*universalEnum.oneMinute,
-    60*universalEnum.oneMinute,
-    90*universalEnum.oneMinute,
+    1*universalEnum.oneMinute,
+    3*universalEnum.oneMinute,
+    6*universalEnum.oneMinute,
+    9*universalEnum.oneMinute,
     120*universalEnum.oneMinute,
 }
 
@@ -53,9 +53,13 @@ function onlineRewardsFrameClass.new(frame)
 end
 
 function onlineRewardsFrameClass:CheckOnlineTime()
+    if os.time() > gameConfig.onlineRewardsEnd then
+        self.frame.Visible = false
+        return
+    end
     local lastLoginTimeStamp = playerModule.GetPlayerOneData(dataKey.lastLoginTimeStamp)
     local receivedOnlineTime = playerModule.GetPlayerOneData(dataKey.receivedOnlineTime)
-    for i = 1, 5 do
+    for i = 1, 4 do
         if receivedOnlineTime[i] then
             self.innerFrame['reward'..i].btn.received.Visible = true
         else
@@ -71,7 +75,6 @@ function onlineRewardsFrameClass:CheckOnlineTime()
             table.insert(self.connections, con)
         end
     end
-
 
 end
 

@@ -101,7 +101,7 @@ function DataManager:SetPlayerOneData(player, key, value)
 	end
 	local profile = DataManager:GetPlayerAllData(player)
 	assert(profile.Data[key], `Can't find key {key} in {player.Name}'s data`)
-	assert(type(profile.Data[key]) == type(value), `data types don't match, data:{type(profile.Data[key])}, key:{type(value)} `)
+	assert(type(profile.Data[key]) == type(value), `data types don't match, param key:{key}, param value:{value} `)
 	profile.Data[key] = value
 end
 
