@@ -64,7 +64,6 @@ onlineBtn.MouseButton1Click:Connect(function()
 end)
 
 
-
 shopBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
     uiController.PushScreen(screenEnum.shopFrame)
@@ -73,8 +72,8 @@ end)
 buyHeartBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
     print("player buy heart")
-    -- addHealthEvent:FireServer()
-    MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
+    addHealthEvent:FireServer()
+    -- MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
 end)
 
 hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
