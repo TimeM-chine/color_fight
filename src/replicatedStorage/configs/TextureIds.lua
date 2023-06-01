@@ -1,5 +1,7 @@
 local TextureIds = {}
 
+TextureIds.heart = "rbxassetid://13495989092"
+
 TextureIds.skillImg = {
     {"rbxassetid://13482413535", "rbxassetid://13482413418"},
     {"rbxassetid://13482413006", "rbxassetid://13482412819"},

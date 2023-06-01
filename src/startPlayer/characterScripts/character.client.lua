@@ -59,6 +59,13 @@ local highlight = Instance.new("Highlight")
 highlight.Enabled = false
 highlight.Parent = script.Parent
 
+KeyboardRecall.SetClientRecall(Enum.KeyCode.Equals, function()
+    playerModule.Set2DCamera()
+end)
+
+KeyboardRecall.SetClientRecall(Enum.KeyCode.Minus, function()
+    playerModule.Cancel2DCamera()
+end)
 
 function DieRest()
     for _, toolModel in toolModelsFolder:GetChildren() do

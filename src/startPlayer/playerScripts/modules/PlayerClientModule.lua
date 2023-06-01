@@ -5,9 +5,18 @@
 ---- remote functions ----
 local ClientGetData = game.ReplicatedStorage.RemoteFunctions.ClientGetData
 
+---- services ----
+local TweenService = game:GetService("TweenService")
+
 ---- variables ----
 local LocalPlayer = game.Players.LocalPlayer
 local rewardSpeed = 0
+if not LocalPlayer.Character then
+    LocalPlayer.CharacterAdded:Wait()
+end
+LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+local camera = workspace.CurrentCamera
+local cameraStep
 
 ---- enums ----
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
@@ -46,6 +55,27 @@ end
 
 function PlayerClientModule.SetRewardSpeed(value)
     rewardSpeed = value
+end
+
+function PlayerClientModule.Set2DCamera()
+    camera.CameraType = Enum.CameraType.Scriptable
+    local part = LocalPlayer.Character.HumanoidRootPart
+    local tweenInfo = TweenInfo.new(2)
+    local target = {
+        CFrame = CFrame.new(part.CFrame.Position) + Vector3.new(0, 10, 45)
+    }
+    local tween = TweenService:Create(camera, tweenInfo, target)
+    tween:Play()
+    task.wait(2)
+    cameraStep = game:GetService("RunService").Stepped:Connect(function(time, deltaTime)
+        camera.CFrame = CFrame.new(part.CFrame.Position) + Vector3.new(0, 10, 45)
+    end)
+end
+
+function PlayerClientModule.Cancel2DCamera()
+    camera.CameraType = Enum.CameraType.Custom
+    cameraStep:Disconnect()
+    
 end
 
 return PlayerClientModule

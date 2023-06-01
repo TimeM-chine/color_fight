@@ -78,6 +78,7 @@ function DataManager:GetPlayerOneData(player, key)
 	end
 	local profile = DataManager:GetPlayerAllData(player)
     if not profile then
+        warn(`Asking for key: {key}, but data is not ready.`)
         return
     end
 	assert(profile.Data[key], `Can't find key {key} in {player.Name}'s data`)

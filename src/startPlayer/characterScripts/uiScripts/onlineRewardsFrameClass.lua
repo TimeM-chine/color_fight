@@ -16,13 +16,12 @@ local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
 local timeTable = {
-    1*universalEnum.oneMinute,
-    3*universalEnum.oneMinute,
-    6*universalEnum.oneMinute,
-    9*universalEnum.oneMinute,
+    10*universalEnum.oneMinute,
+    30*universalEnum.oneMinute,
+    60*universalEnum.oneMinute,
+    90*universalEnum.oneMinute,
     120*universalEnum.oneMinute,
 }
-
 
 ---- events ----
 local getOnlineRewardEvent = game.ReplicatedStorage.RemoteEvents.getOnlineRewardEvent
@@ -53,10 +52,6 @@ function onlineRewardsFrameClass.new(frame)
 end
 
 function onlineRewardsFrameClass:CheckOnlineTime()
-    if os.time() > gameConfig.onlineRewardsEnd then
-        self.frame.Visible = false
-        return
-    end
     local lastLoginTimeStamp = playerModule.GetPlayerOneData(dataKey.lastLoginTimeStamp)
     local receivedOnlineTime = playerModule.GetPlayerOneData(dataKey.receivedOnlineTime)
     for i = 1, 4 do

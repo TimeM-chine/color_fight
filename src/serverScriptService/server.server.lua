@@ -33,6 +33,7 @@ local PhysicsService = game:GetService("PhysicsService")
 
 PhysicsService:RegisterCollisionGroup("player")
 PhysicsService:CollisionGroupSetCollidable("player", "player", false)
+PhysicsService:CollisionGroupSetCollidable("player", "monster", false)
 
 function CheckTempReward(player)
     local playerIns = PlayerServerClass.GetIns(player)
@@ -61,7 +62,7 @@ PS.PlayerAdded:Connect(function(player)
     local nowDay = math.floor(os.time()/universalEnum.oneDay)
     local lastLoginTimeStamp = pIns:GetOneData(dataKey.lastLoginTimeStamp)
     while not lastLoginTimeStamp do
-        task.wait(0.1)
+        task.wait(1)
         lastLoginTimeStamp = pIns:GetOneData(dataKey.lastLoginTimeStamp)
     end
     local lastDay = math.floor(lastLoginTimeStamp/universalEnum.oneDay)
@@ -119,7 +120,6 @@ getLoginRewardEvent.OnServerEvent:Connect(function(player, day, isResign)
             playerIns:SetOneData(dataKey.tempSkStart, os.time())
             playerIns:SetOneData(dataKey.tempSkInfo, {1, universalEnum.oneMinute * 30})
         end
-
     end
     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
@@ -258,16 +258,19 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
             local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
             RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
             return "success", TextureIds.skillImg[3][1], "Experience ParkourMan for 5 minutes!"
+        elseif key == "YOLDLDO" then
+            playerIns:AddHealth()
+            return "success", TextureIds.heart, "You got a heart, HP +1!"
         else
             return "wrong key"
         end
     end
 end
 
-
-while task.wait(60) do
-    BillboardManager.initBillboard()
-    for _, player in game.Players:GetPlayers() do
-        CheckTempReward(player)
-    end
-end
+---- bill board ----
+-- while task.wait(60) do
+--     BillboardManager.initBillboard()
+--     for _, player in game.Players:GetPlayers() do
+--         CheckTempReward(player)
+--     end
+-- end

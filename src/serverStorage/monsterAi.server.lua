@@ -64,13 +64,13 @@ end
 function HurtPlayer(player)
     if not player.Character.isHiding.Value then
         local human:Humanoid = player.Character.Humanoid
-        -- if human.Health > 1 then
-        human:TakeDamage(1)
-        print(`hurt {player}, last player {lastHurtPlayer}`)
-        -- else
-        --     player.Character.beforeDeath.Value = true
-        --     remoteEvents.beforeDeathEvent:FireClient(player)
-        -- end
+        if human.Health > 1 then
+            human:TakeDamage(1)
+            print(`hurt {player}, last player {lastHurtPlayer}`)
+        else
+            player.Character.beforeDeath.Value = true
+            remoteEvents.beforeDeathEvent:FireClient(player)
+        end
         PlayerServerClass.GetIns(player):SetOneData(dataKey.hp, math.max(1, human.Health))
     end
     SetLastHurtPlayer(player)
@@ -93,10 +93,13 @@ end
 local function GetNearestCharacterAndDist()
     local fromPosition = myHRP.CFrame.Position
     local character, dist = nil, math.huge
+    if lastHurtPlayer then
+        return character, dist
+    end
 	for _, player in ipairs(game.Players:GetPlayers()) do
-        if player == lastHurtPlayer then
-            continue
-        end
+        -- if player == lastHurtPlayer then
+        --     continue
+        -- end
         if not player.Character then continue end
         if not player.Character:FindFirstChild("isHiding") then continue end
         if not player.Character:FindFirstChild("beforeDeath") then continue end
@@ -116,12 +119,12 @@ end
 
 
 local function GetNextTarget()
+    if lastHurtPlayer then
+        lastPointPart = GetNextPoint()
+        return lastPointPart, false
+    end
     local character, dist = GetNearestCharacterAndDist()
     if character and character.HumanoidRootPart and dist <= 50 then
-        if lastHurtPlayer then
-            lastPointPart = GetNextPoint()
-            return lastPointPart, false
-        end
         local player = game.Players:GetPlayerFromCharacter(character)
         if playerTargetTime[player] then
             playerTargetTime[player] += 1
@@ -129,7 +132,7 @@ local function GetNextTarget()
             playerTargetTime[player] = 1
         end
         -- print(playerTargetTime[player])
-        if playerTargetTime[player] >= 15 then
+        if playerTargetTime[player] >= 60 then
             SetLastHurtPlayer(player)
             playerTargetTime[player] = 0
         end

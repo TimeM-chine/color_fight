@@ -214,7 +214,7 @@
                 "FilteringEnabled": true
             },
             "walls": {
-                "$className": "Model"
+                "$className": "Folder"
             },
             "colorDoors": {
                 "$className": "Folder"
@@ -244,7 +244,7 @@
                 "$className": "Folder"
             },
             "heartSeller": {
-                "$className": "Model"
+                "$className": "Folder"
             },
             "lastDoors": {
                 "$className": "Folder"

@@ -33,5 +33,7 @@ for _, value in colorEnum.ColorName do
     table.insert(colorEnum.ColorList, value)
 end
 
+colorEnum.white = Color3.new(1, 1, 1)
+
 
 return colorEnum

@@ -86,8 +86,7 @@ function GamePlayerClass:InitPlayer()
     local hp = self:GetOneData(dataKey.hp)
     while not hp do
         hp = self:GetOneData(dataKey.hp)
-        print"wait"
-        task.wait(0.1)
+        task.wait(0.5)
     end
     character.Humanoid.Health = hp
 

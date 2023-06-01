@@ -53,14 +53,6 @@ end
 ---- bucket models ----
 local bucketModelsFolder = workspace.bucketModels
 
-for _, bucket in bucketModelsFolder.level1:GetChildren() do
-    CS:AddTag(bucket, BucketModelServerClass.tagName)
-end
-
-for _, bucket in bucketModelsFolder.level2:GetChildren() do
-    CS:AddTag(bucket, BucketModelServerClass.tagName)
-end
-
 
 ---- tool models ----
 local toolModelsFolder = workspace.toolModels
@@ -122,15 +114,15 @@ for _, key:Part in workspace.keys:GetChildren() do
 end
 
 ---- monsters ----
-local monsters = game.ServerStorage.monsters
+-- local monsters = game.ServerStorage.monsters
 
-for _, monster in monsters:GetChildren() do
-    -- if monster.Name ~= "monster3" then continue end
-    local part = workspace.pathPoints:FindFirstChild(monster.Name):FindFirstChild("Part1")
-    monster:PivotTo(part.CFrame)
-    monster.Parent = workspace
+-- for _, monster in monsters:GetChildren() do
+--     -- if monster.Name ~= "monster3" then continue end
+--     local part = workspace.pathPoints:FindFirstChild(monster.Name):FindFirstChild("Part1")
+--     monster:PivotTo(part.CFrame)
+--     monster.Parent = workspace
 
-    local aiScript = game.ServerStorage.monsterAi
-    aiScript:Clone().Parent = monster
-end
+--     local aiScript = game.ServerStorage.monsterAi
+--     aiScript:Clone().Parent = monster
+-- end
 

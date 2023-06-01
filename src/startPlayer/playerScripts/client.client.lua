@@ -24,6 +24,7 @@ local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
+local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 
@@ -46,12 +47,13 @@ clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
         end
         -- handle with last color first
         if wall.colorString.Value == lastColor then
-            wall.Material = Enum.Material.Glass
+            -- wall.Material = Enum.Material.Glass
             wall.CanCollide = true
         end
 
         if wall.colorString.Value == color then
-            wall.Material = Enum.Material.Neon
+            -- wall.Material = Enum.Material.Neon
+            wall.Color = colorEnum.ColorValue[wall.colorString.Value]
             wall.CanCollide = false
         end
     end
@@ -196,18 +198,17 @@ RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempS
         playerModule.SetRewardSpeed(0)
     end
 end)
--- workspace.SpawnLocation.CFrame = Workspace.level1SpawnPoint.CFrame
--- LocalPlayer.CharacterAdded:Wait()
 
 LocalPlayer.Character:WaitForChild("HumanoidRootPart")
-LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
+-- LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
 game.Lighting.Atmosphere.Density = 0.6
 
 hudBgFrame.inLobby.Visible = true
 
-local lobbyBGM = SoundService.lobby:Clone()
-lobbyBGM.Parent = workspace.level0SpawnLocation
-lobbyBGM:Play()
+---- lobby music -----
+-- local lobbyBGM = SoundService.lobby:Clone()
+-- lobbyBGM.Parent = workspace.level0SpawnLocation
+-- lobbyBGM:Play()
 
 local levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
 while not levelUnlock do
@@ -226,3 +227,20 @@ end
 
 ContentProvider:PreloadAsync(imgs)
 print("Images loading finished.")
+
+---- handle with parts ----
+local clsFolder = game.StarterPlayer.StarterPlayerScripts.classes
+local partsClsNames = {
+    "KillingPart", "SizeChangePart", "TeleportPart", "TransChangePart", "MovingPart"
+}
+
+for _, folder in workspace:GetDescendants() do
+	if not folder:IsA("Folder") then continue end
+
+    for _, name in partsClsNames do
+        if folder.Name == name then
+            local cls = require(clsFolder[name])
+            cls.new(folder.Parent)
+        end
+    end
+end
