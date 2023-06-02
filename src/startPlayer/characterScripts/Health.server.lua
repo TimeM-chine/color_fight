@@ -1,6 +1,12 @@
 local character = script.Parent
 
-local filter = workspace.walls:GetDescendants()
+local filter = {}
+
+for _, child in workspace.walls:GetChildren() do
+    table.insert(filter, child.wall)
+end
+
+
 for _, part in workspace.safeAreas:GetChildren() do
     table.insert(filter, part)
 end

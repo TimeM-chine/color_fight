@@ -4,5 +4,6 @@ return{
     ladder = "Climb up to the storage attic",
     crank = "Shut down the leaking steam",
     shovel = "Shovel away the dirt in the basement",
-    crowbar = "Pry open the ventilation duct"
+    crowbar = "Pry open the ventilation duct",
+    cassette = "Not set yet."
 }

@@ -1,10 +1,12 @@
 local Lighting = game:GetService("Lighting")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 local Workspace = game:GetService("Workspace")
 
 ---- services ----
 local MarketplaceService = game:GetService"MarketplaceService"
 local ContentProvider = game:GetService("ContentProvider")
+local Debris = game:GetService"Debris"
 
 ---- classes ----
 local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
@@ -14,6 +16,7 @@ local ColorDoorClientClass = require(script.Parent.classes.ColorDoorClientClass)
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local playerModule = require(script.Parent.modules.PlayerClientModule)
 local SkillModule = require(script.Parent.modules.SkillModule)
+local ToolDoorModule = require(script.Parent.modules.ToolDoorModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -41,20 +44,19 @@ local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
 
 clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     local color = args.color
-    for _, wall:Part in wallsFolder:GetDescendants() do
-        if (not wall:IsA("Part")) or (wall.Name ~= "Part") then
-            continue
-        end
+    for _, wallModel in wallsFolder:GetChildren() do
+        local wall:Part = wallModel.wall
+        if not wall:FindFirstChild("colorString") then continue end
         -- handle with last color first
         if wall.colorString.Value == lastColor then
-            -- wall.Material = Enum.Material.Glass
             wall.CanCollide = true
+            wall.Transparency = 0
         end
 
         if wall.colorString.Value == color then
-            -- wall.Material = Enum.Material.Neon
             wall.Color = colorEnum.ColorValue[wall.colorString.Value]
             wall.CanCollide = false
+            wall.Transparency = 0.2
         end
     end
 
@@ -74,7 +76,6 @@ RemoteEvents.hideToolEvent.OnClientEvent:Connect(function(toolModel:Part)
         end
     end
     toolModel.ProximityPrompt.Enabled = false
-    toolModel.CanCollide = false
 end)
 
 
@@ -90,8 +91,7 @@ RemoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
 end)
 
 RemoteEvents.hideToolDoorEvent.OnClientEvent:Connect(function(door)
-    local module = require(door.clientSet)
-    module.Set()
+    ToolDoorModule.Set(door)
 end)
 
 
@@ -134,12 +134,6 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
         end
 
         RemoteEvents.changeColorEvent:FireServer("empty")
-
-        local levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
-        if levelUnlock[2] then
-            workspace.mainCity.teleport.door2.SurfaceGui.Enabled = false
-            workspace.mainCity.teleport.door2.unlockGui.Enabled = true
-        end
 
     end
     nowLevel = ind
@@ -210,16 +204,6 @@ hudBgFrame.inLobby.Visible = true
 -- lobbyBGM.Parent = workspace.level0SpawnLocation
 -- lobbyBGM:Play()
 
-local levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
-while not levelUnlock do
-    task.wait(1)
-    levelUnlock = playerModule.GetPlayerOneData(dataKey.levelUnlock)
-end
-if levelUnlock[2] then
-    workspace.mainCity.teleport.door2.SurfaceGui.Enabled = false
-    workspace.mainCity.teleport.door2.unlockGui.Enabled = true
-end
-
 local imgs = {}
 for _, img in TextureIds.wallPaints do
     table.insert(imgs, img)
@@ -243,4 +227,23 @@ for _, folder in workspace:GetDescendants() do
             cls.new(folder.Parent)
         end
     end
+end
+
+local agent:Model = workspace:WaitForChild("monster1")
+local footprint = ReplicatedStorage:WaitForChild("footprint")
+
+while task.wait(0.3) do
+    local rFoot:Part = agent.RightFoot
+    local lFoot:Part = agent.LeftFoot
+    local footCopy = footprint:Clone()
+    footCopy.CFrame = CFrame.new(rFoot.CFrame.Position.X, 1.6, rFoot.CFrame.Position.Z)
+    footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
+    footCopy.Parent = workspace
+    Debris:AddItem(footCopy, 5)
+
+    footCopy = footprint:Clone()
+    footCopy.CFrame = CFrame.new(lFoot.CFrame.Position.X, 1.6, lFoot.CFrame.Position.Z)
+    footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
+    footCopy.Parent = workspace
+    Debris:AddItem(footCopy, 5)
 end

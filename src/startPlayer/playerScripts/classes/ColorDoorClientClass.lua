@@ -58,14 +58,7 @@ function ColorDoorClientClass:Clicked()
         wallImg.Visible = true
         wallImg.Image = TextureIds.wallPaints[self.door.colorString.Value.."Paint"..(5 - self.remainClick)]
         if self.remainClick <= 0 then
-            -- self.door:Destroy()
-            local levelInd = BindableFunctions.getLevelInd:Invoke()
-            if self.door.colorString.Value == colorEnum.ColorName.blue and levelInd == 2 then
-                self.door.brother.Value.Transparency = 1
-                self.door.brother.Value.ClickDetector.MaxActivationDistance = 0
-                self.door.brother.Value.SurfaceGui.TextLabel.Text = ""
-                self.door.brother.Value.CanCollide = false
-            elseif self.door.colorString.Value == colorEnum.ColorName.purple then
+            if self.door.colorString.Value == colorEnum.ColorName.purple then
                 perTipEvent:Fire()
                 notifyEvent:Fire("Now you can't hide behind the purple wall", "bottom")
             end
@@ -99,7 +92,6 @@ end
 
 function ColorDoorClientClass:CheckCondition()
     local color = localPlayer.Character.colorString.Value
-
     return color == self.door.colorString.Value
 end
 

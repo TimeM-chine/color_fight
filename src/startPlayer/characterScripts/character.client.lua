@@ -17,6 +17,7 @@ local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
 local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
+local ToolDoorModule = require(game.StarterPlayer.StarterPlayerScripts.modules.ToolDoorModule)
 
 ---- functions ----
 local BindableFunctions = game.ReplicatedStorage.BindableFunctions
@@ -55,22 +56,21 @@ game.SoundService.clickUI:Clone().Parent = LocalPlayer.Character.HumanoidRootPar
 remoteEvents.putonShoeEvent:FireServer(chosenShoe[1], chosenShoe[2])
 LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = playerModule.GetPlayerSpeed()
 
-local highlight = Instance.new("Highlight")
-highlight.Enabled = false
-highlight.Parent = script.Parent
 
 KeyboardRecall.SetClientRecall(Enum.KeyCode.Equals, function()
-    playerModule.Set2DCamera()
+    -- playerModule.Set2DCamera()
+    playerModule.TurnOnTopLight()
 end)
 
 KeyboardRecall.SetClientRecall(Enum.KeyCode.Minus, function()
-    playerModule.Cancel2DCamera()
+    -- playerModule.Cancel2DCamera()
+    playerModule.TurnOffTopLight()
+
 end)
 
 function DieRest()
     for _, toolModel in toolModelsFolder:GetChildren() do
         toolModel.ProximityPrompt.Enabled = true
-        toolModel.CanCollide = true
         for _, child in toolModel:GetChildren() do
             if child:IsA("BasePart") then
                 child.Transparency = 0
@@ -88,8 +88,7 @@ function DieRest()
     end
 
     for _, toolDoor in toolDoorsFolder:GetChildren() do
-        local module = require(toolDoor.clientSet)
-        module.Reset()
+        ToolDoorModule.Reset(toolDoor)
     end
 
     ----- keys ----
@@ -141,37 +140,37 @@ for _, part:Part in workspace.safeAreas:GetChildren() do
 end
 
 
-local character = script.Parent
+-- local character = script.Parent
 
-local filter = workspace.walls:GetDescendants()
-for _, part in workspace.safeAreas:GetChildren() do
-    table.insert(filter, part)
-end
+-- local filter = workspace.walls:GetDescendants()
+-- for _, part in workspace.safeAreas:GetChildren() do
+--     table.insert(filter, part)
+-- end
 
-param = OverlapParams.new()
-param.FilterDescendantsInstances = filter
-param.FilterType = Enum.RaycastFilterType.Include
+-- param = OverlapParams.new()
+-- param.FilterDescendantsInstances = filter
+-- param.FilterType = Enum.RaycastFilterType.Include
 
-character:WaitForChild("Highlight")
+-- character:WaitForChild("Highlight")
 
-local function checkHide()
-    local cf, size = script.Parent:GetBoundingBox()
-    local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
-    for _, conPart in playerContact do
-        if conPart.Parent.Name == "safeAreas" then
-            return true
-        end
-        if conPart.colorString.Value == character.colorString.Value then
-            return true
-        end
-    end
-    return false
-end
+-- local function checkHide()
+--     local cf, size = script.Parent:GetBoundingBox()
+--     local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
+--     for _, conPart in playerContact do
+--         if conPart.Parent.Name == "safeAreas" then
+--             return true
+--         end
+--         if conPart.colorString.Value == character.colorString.Value then
+--             return true
+--         end
+--     end
+--     return false
+-- end
 
-while task.wait(0.05) do
-    if checkHide() then
-        character.Highlight.Enabled = true
-    else
-        character.Highlight.Enabled = false
-    end
-end
+-- while task.wait(0.05) do
+--     if checkHide() then
+--         character.Highlight.Enabled = true
+--     else
+--         character.Highlight.Enabled = false
+--     end
+-- end

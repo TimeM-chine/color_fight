@@ -31,20 +31,6 @@ game.Players.PlayerRemoving:Connect(function(player)
         value = os.time()
     })
 
-    local levelUnlock = PlayerServerClass.GetIns(player):GetOneData(dataKey.levelUnlock)
-    if levelUnlock then
-        local value = 0
-        if levelUnlock[2] then
-            value = 1
-        end
-        GAModule:addDesignEvent(player.UserId, {
-            eventId = `levelCheck:level2:{player.UserId}`,
-            value = value
-        })
-    else
-        warn("leaving without finding data.")
-    end
-
 end)
 
 

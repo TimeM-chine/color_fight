@@ -34,6 +34,7 @@ for _, value in colorEnum.ColorName do
 end
 
 colorEnum.white = Color3.new(1, 1, 1)
+colorEnum.black = Color3.new(0, 0, 0)
 
 
 return colorEnum

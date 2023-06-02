@@ -1,7 +1,6 @@
 local ServerStorage = game:GetService("ServerStorage")
 
 ---- services ----
-local Debris = game:GetService"Debris"
 
 ---- modules -----
 local SimplePath = require(game.ServerScriptService.modules.SimplePath)
@@ -24,7 +23,6 @@ local walkAnim = agent.Animation
 local animator:Animator = myH.Animator
 local aniTrack = animator:LoadAnimation(walkAnim)
 local playerTargetTime = {}
-local footprint:Part = ServerStorage.footprint
 local monsterSound:Sound = game.SoundService.monster:Clone()
 local targetTraceTime = 0
 
@@ -157,19 +155,6 @@ end
 while task.wait(0.1) do
     local nextTarget, isPlayer  = GetNextTarget()
     -- print(`{agent.Name} nextTarget: {nextTarget}`)
-    if agent.Name ~= "monster4" then
-        local footCopy = footprint:Clone()
-        footCopy.CFrame = agent.RightFoot.CFrame
-        footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
-        footCopy.Parent = workspace
-        Debris:AddItem(footCopy, 5)
-
-        footCopy = footprint:Clone()
-        footCopy.CFrame = agent.LeftFoot.CFrame
-        footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
-        footCopy.Parent = workspace
-        Debris:AddItem(footCopy, 5)
-    end
 
     if (not path:Run(nextTarget)) and (not isPlayer) then
         targetTraceTime += 1

@@ -78,4 +78,20 @@ function PlayerClientModule.Cancel2DCamera()
     
 end
 
+function PlayerClientModule.TurnOnTopLight()
+    local Cone = game.ReplicatedStorage:FindFirstChild("Cone"):Clone()
+    local hrp = LocalPlayer.Character.HumanoidRootPart
+    Cone.CFrame = hrp.CFrame + Vector3.new(0, 6, 0)
+    Cone.WeldConstraint.Part0 = Cone
+    Cone.WeldConstraint.Part1 = hrp
+    Cone.Parent = workspace
+end
+
+function PlayerClientModule.TurnOffTopLight()
+    local cone = workspace:FindFirstChild('Cone')
+    if cone then
+        cone:Destroy()
+    end
+end
+
 return PlayerClientModule

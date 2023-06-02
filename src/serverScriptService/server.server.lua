@@ -30,7 +30,6 @@ local remoteFunctions = game.ReplicatedStorage.RemoteFunctions
 local PS = game:GetService("Players")
 local PhysicsService = game:GetService("PhysicsService")
 
-
 PhysicsService:RegisterCollisionGroup("player")
 PhysicsService:CollisionGroupSetCollidable("player", "player", false)
 PhysicsService:CollisionGroupSetCollidable("player", "monster", false)
@@ -55,6 +54,17 @@ function CheckTempReward(player)
 
     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
 end
+
+
+-- KeyboardRecall.SetServerRecall(keyCode.Equals, function(player)
+--     local playerIns = PlayerServerClass.GetIns(player)
+--     playerIns:TurnOnTopLight()
+-- end)
+
+-- KeyboardRecall.SetServerRecall(keyCode.Minus, function(player)
+--     local playerIns = PlayerServerClass.GetIns(player)
+--     playerIns:TurnOffTopLight()
+-- end)
 
 
 PS.PlayerAdded:Connect(function(player)

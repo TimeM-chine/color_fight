@@ -25,10 +25,12 @@ end
 function TeleportPart:Init()
     local con = self.part.Touched:Connect(function(otherPart)
         if self.isTouching then return end
+        print(1)
         if otherPart:IsDescendantOf(localPlayer.Character) then
             self.isTouching = true
-            
+            print(2, self.destination.CFrame + self.offset)
             localPlayer.Character.PrimaryPart.CFrame = self.destination.CFrame + self.offset
+            print(3, localPlayer.Character.PrimaryPart.CFrame)
 
             task.delay(1, function()
                 self.isTouching = false

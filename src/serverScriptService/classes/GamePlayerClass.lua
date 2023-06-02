@@ -1,3 +1,4 @@
+local ServerStorage = game:GetService("ServerStorage")
 -- ================================================================================
 -- game player cls --> specific game player
 -- ================================================================================
@@ -6,8 +7,9 @@
 
 
 ---- enums ----
-local colorName = require(game.ReplicatedStorage.enums.colorEnum).ColorName
-local colorValue = require(game.ReplicatedStorage.enums.colorEnum).ColorValue
+local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
+local colorName = colorEnum.ColorName
+local colorValue = colorEnum.ColorValue
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
@@ -58,10 +60,12 @@ function GamePlayerClass:SetColor(color)
         character = self.player.CharacterAdded:Wait()
     end
     character:WaitForChild("colorString").Value = color
-
+    
     if color == "empty" then
+        character:WaitForChild("Highlight").FillColor = colorEnum.white
         self.paintCan.fluid.Transparency = 1
     else
+        character:WaitForChild("Highlight").FillColor = colorValue[color]
         self.paintCan.fluid.Color = colorValue[color]
         self.paintCan.fluid.Transparency = 0
     end
@@ -93,6 +97,13 @@ function GamePlayerClass:InitPlayer()
     CreateModule.CreateValue("StringValue", "colorString", "nil", character)
     CreateModule.CreateValue("BoolValue", "isHiding", false, character)
     CreateModule.CreateValue("BoolValue", "beforeDeath", false, character)
+
+    local highlight = Instance.new("Highlight")
+    highlight.FillColor = colorEnum.white
+    highlight.DepthMode = Enum.HighlightDepthMode.Occluded
+    highlight.OutlineColor = colorEnum.black
+    highlight.FillTransparency = 0.3
+    highlight.Parent = character
 
     local param = argsEnum.changeColorEvent
     param.color = "empty"
@@ -153,6 +164,23 @@ function GamePlayerClass:AddHealth()
     if nowDataHealth < 6 then
         self.player.Character.Humanoid.Health = nowDataHealth + 1
         self:SetOneData(dataKey.hp, math.min(nowDataHealth + 1, universalEnum.maxHealth))
+    end
+end
+
+function GamePlayerClass:TurnOnTopLight()
+    local Cone = ServerStorage:FindFirstChild("Cone"):Clone()
+    local hrp = self.player.Character.HumanoidRootPart
+    Cone.CFrame = hrp.CFrame + Vector3.new(0, 6, 0)
+    Cone.WeldConstraint.Part0 = Cone
+    Cone.WeldConstraint.Part1 = hrp
+    Cone.Parent = hrp
+end
+
+function GamePlayerClass:TurnOffTopLight()
+    local hrp = self.player.Character.HumanoidRootPart
+    local cone = hrp:FindFirstChild('Cone')
+    if cone then
+        cone:Destroy()
     end
 end
 
