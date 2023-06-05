@@ -104,7 +104,11 @@ local function GetNearestCharacterAndDist()
         -- print(player.Character.beforeDeath.Value, lastHurtPlayer)
         if player.Character.beforeDeath.Value then continue end
 
-        local playerDis = (player.Character.PrimaryPart.Position - fromPosition).Magnitude
+        local playerPos = Vector3.new(0, -100, 0)
+        if player.Character.PrimaryPart then
+            playerPos = player.Character.PrimaryPart.Position
+        end
+        local playerDis = (playerPos - fromPosition).Magnitude
 		if playerDis < dist then
             if playerDis <= 10 then
                 HurtPlayer(player)

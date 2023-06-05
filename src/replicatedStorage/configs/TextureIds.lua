@@ -3,11 +3,11 @@ local TextureIds = {}
 TextureIds.heart = "rbxassetid://13495989092"
 
 TextureIds.skillImg = {
-    {"rbxassetid://13482413535", "rbxassetid://13482413418"},
-    {"rbxassetid://13482413006", "rbxassetid://13482412819"},
-    {"rbxassetid://13482413281", "rbxassetid://13482413144"},
-    {"rbxassetid://13482417104", "rbxassetid://13482416978"},
-    {"rbxassetid://13482416891", "rbxassetid://13482416796"},
+    {"rbxassetid://13635986597", "rbxassetid://13635986435"},
+    {"rbxassetid://13635980891", "rbxassetid://13635980672"},
+    {"rbxassetid://13635986165", "rbxassetid://13635981069"},
+    {"rbxassetid://13635993743", "rbxassetid://13635987244"},
+    {"rbxassetid://13635987044", "rbxassetid://13635986794"},
 }
 
 TextureIds.shoeImg = {
@@ -129,13 +129,33 @@ TextureIds.footprint = {
     "rbxassetid://13495123257", -- yellowFootprint2
 }
 
+-- TextureIds.cursor = {
+--     orange = "rbxassetid://13465168378",
+--     purple = "rbxassetid://13465160251",
+--     red = "rbxassetid://13465165167",
+--     green = "rbxassetid://13465164688",
+--     blue = "rbxassetid://13465164770",
+--     cyan = "rbxassetid://13465160881",
+--     yellow = "rbxassetid://13465165040", 
+--     white = "rbxassetid://13465165040"
+-- }
 TextureIds.cursor = {
-    orange = "rbxassetid://13465168378",
-    purple = "rbxassetid://13465160251",
-    red = "rbxassetid://13465165167",
-    green = "rbxassetid://13465164688",
-    blue = "rbxassetid://13465164770",
-    cyan = "rbxassetid://13465160881",
-    yellow = "rbxassetid://13465165040"
+    orange = "rbxassetid://13634776971",
+    purple = "rbxassetid://13634769422",
+    red = "rbxassetid://13634776767",
+    green = "rbxassetid://13634770294",
+    blue = "rbxassetid://13634776182",
+    cyan = "rbxassetid://13634769881",
+    yellow = "rbxassetid://13634776587", 
+    white = "rbxassetid://13634783385",
+    black = "rbxassetid://13634783385", -- empty
+}
+TextureIds.toolDoorCursor = {
+    door = "rbxassetid://13634769666",
+    fence = "rbxassetid://13633301851",
+    mound = "rbxassetid://13634777197",
+    piano = "rbxassetid://13634770134",
+    xbox = "rbxassetid://13634776411",
+    baffle = "rbxassetid://13634783130"
 }
 return TextureIds

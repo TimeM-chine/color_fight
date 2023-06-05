@@ -59,23 +59,25 @@ end
 
 function PlayerClientModule.Set2DCamera()
     camera.CameraType = Enum.CameraType.Scriptable
+    local offset = Vector3.new(45, 10, 0)
     local part = LocalPlayer.Character.HumanoidRootPart
     local tweenInfo = TweenInfo.new(2)
     local target = {
-        CFrame = CFrame.new(part.CFrame.Position) + Vector3.new(0, 10, 45)
+        CFrame = CFrame.new(part.CFrame.Position + offset, part.CFrame.Position)
     }
     local tween = TweenService:Create(camera, tweenInfo, target)
     tween:Play()
     task.wait(2)
     cameraStep = game:GetService("RunService").Stepped:Connect(function(time, deltaTime)
-        camera.CFrame = CFrame.new(part.CFrame.Position) + Vector3.new(0, 10, 45)
+        camera.CFrame = CFrame.new(part.CFrame.Position + offset, part.CFrame.Position)
     end)
 end
 
 function PlayerClientModule.Cancel2DCamera()
     camera.CameraType = Enum.CameraType.Custom
-    cameraStep:Disconnect()
-    
+    if cameraStep then 
+        cameraStep:Disconnect()
+    end
 end
 
 function PlayerClientModule.TurnOnTopLight()
@@ -93,5 +95,6 @@ function PlayerClientModule.TurnOffTopLight()
         cone:Destroy()
     end
 end
+
 
 return PlayerClientModule

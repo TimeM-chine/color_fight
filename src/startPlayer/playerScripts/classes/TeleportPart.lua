@@ -1,5 +1,8 @@
+local Lighting = game:GetService("Lighting")
 local localPlayer = game.Players.LocalPlayer
 local BasePartCls = require(game.StarterPlayer.StarterPlayerScripts.classes.BasePartCls)
+local pModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
+local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 ---- main ----
 
@@ -25,12 +28,18 @@ end
 function TeleportPart:Init()
     local con = self.part.Touched:Connect(function(otherPart)
         if self.isTouching then return end
-        print(1)
         if otherPart:IsDescendantOf(localPlayer.Character) then
             self.isTouching = true
-            print(2, self.destination.CFrame + self.offset)
             localPlayer.Character.PrimaryPart.CFrame = self.destination.CFrame + self.offset
-            print(3, localPlayer.Character.PrimaryPart.CFrame)
+
+            if self.part:FindFirstChild("resetCamera") then
+                pModule.Cancel2DCamera()
+            end
+
+            if self.folder:FindFirstChild("density") then
+                BindableEvents.densityEvent:Fire(self.folder.density.Value)
+                -- Lighting.Atmosphere.Density = self.folder.density.Value
+            end
 
             task.delay(1, function()
                 self.isTouching = false

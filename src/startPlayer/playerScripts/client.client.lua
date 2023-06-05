@@ -6,6 +6,7 @@ local Workspace = game:GetService("Workspace")
 ---- services ----
 local MarketplaceService = game:GetService"MarketplaceService"
 local ContentProvider = game:GetService("ContentProvider")
+local TS = game:GetService("TweenService")
 local Debris = game:GetService"Debris"
 
 ---- classes ----
@@ -30,6 +31,7 @@ local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
+local tipsConfig = require(game.ReplicatedStorage.configs.TipsConfig)
 
 ---- variables ----
 local clientSys = SystemClass.new()
@@ -38,12 +40,46 @@ local lastColor = nil
 local palletNum = 0
 local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
-local nowLevel = 0
+local nowLevel = 1 --- TODO still don't know how to change
 local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
-
 
 clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     local color = args.color
+
+    if color == "black" then
+        LocalPlayer.Character.HumanoidRootPart.win:Play()
+        game.Lighting.Atmosphere.Density = 0
+        local door = workspace.colorWorld.getBackDoor
+        door.Part.CanTouch = true
+        local tweenInfo = TweenInfo.new(2)
+        local final = {
+            Transparency = 0
+        }
+        for _, part in door:GetChildren() do
+            part.CanCollide = true
+            local tween = TS:Create(part, tweenInfo, final)
+            tween:Play()
+        end
+
+        for _, part:Part in workspace.colorWorld:GetDescendants() do
+            if not part:IsA("BasePart") then continue end
+            final = {
+                Color = part.originalColor.Value
+            }
+            local tween = TS:Create(part, tweenInfo, final)
+            tween:Play()
+        end
+        BindableEvents.perTipEvent:Fire(tipsConfig.Win)
+        BindableEvents.resetLevelEvent:Fire()
+        palletNum = 0
+        hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..nowLevel]:GetChildren()
+        return
+    end
+
+    if color == "purple" then
+        BindableEvents.perTipEvent:Fire(tipsConfig.beforeFirstColorDoor)
+    end
+
     for _, wallModel in wallsFolder:GetChildren() do
         local wall:Part = wallModel.wall
         if not wall:FindFirstChild("colorString") then continue end
@@ -83,22 +119,16 @@ RemoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
     toolModel.Transparency = 1
     toolModel.ProximityPrompt.Enabled = false
     toolModel.CanCollide = false
-
-    if toolModel.Parent.Name ~= "keys" then
-        LocalPlayer.Character.HumanoidRootPart.pickUpBucket:Play()
-        
-    end
 end)
 
 RemoteEvents.hideToolDoorEvent.OnClientEvent:Connect(function(door)
     ToolDoorModule.Set(door)
 end)
 
-
 RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
     if ind > 0 then
-        hudBgFrame.inLobby.Visible = false
-        hudBgFrame.inGame.Visible = true
+        -- hudBgFrame.inLobby.Visible = false
+        -- hudBgFrame.inGame.Visible = true
         palletNum = 0
         hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..ind]:GetChildren()
         BindableEvents.resetLevelEvent:Fire()
@@ -108,16 +138,6 @@ RemoteEvents.teleportEvent.OnClientEvent:Connect(function(ind)
         colorString.Changed:Once(function(value)
             BindableEvents.perTipEvent:Fire("Find the door that requires purple paint")
         end)
-
-        ---- reset every thing ----
-        for _, pallet in workspace.pallets:GetDescendants() do
-            if pallet:IsA("Model") then
-                if not pallet:FindFirstChild("originalCf") then
-                    CreateModule.CreateValue("CFrameValue", "originalCf", pallet:GetPivot(), pallet)
-                end
-                pallet:PivotTo(pallet.originalCf.value)
-            end
-        end
     else
         task.wait(0.1)
         BindableEvents.perTipEvent:Fire()
@@ -142,6 +162,7 @@ end)
 BindableFunctions.getLevelInd.OnInvoke = function()
     return nowLevel
 end
+
 
 ---- init things ----
 for _, part in workspace.airLands:GetChildren() do
@@ -172,8 +193,13 @@ for _, pallet in workspace.pallets:GetDescendants() do
             local targetNum = #workspace.pallets['level'..ind]:GetChildren()
             hudBgFrame.inGame.pallet.TextLabel.Text = palletNum.."/"..targetNum
 
+            if tipsConfig.pallets[palletNum] then
+                BindableEvents.notifyEvent:Fire(tipsConfig.pallets[palletNum])
+            end
+
             if palletNum == targetNum then
                 workspace.lastDoors['level'..ind].CanCollide = false
+                workspace.lastDoors['level'..ind].Transparency = 1
             end
         end)
     end
@@ -185,6 +211,20 @@ for _, heart in workspace.heartSeller:GetChildren() do
     end)
 end
 
+for _, part:Part in workspace.colorWorld:GetDescendants() do
+    if not part:IsA("BasePart") then continue end
+    CreateModule.CreateValue("Color3Value", "originalColor", part.Color, part)
+    if math.random(0, 1) > 0 then
+        part.Color = colorEnum.white
+    else
+        part.Color = colorEnum.black
+    end
+end
+
+for _, model in workspace.toolDoors:GetChildren() do
+    model.ClickDetector.CursorIcon = TextureIds.toolDoorCursor[model.Name]
+end
+
 RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempSkInfo)
     if tempSpeedInfo[1] ~= 0 then
         playerModule.SetRewardSpeed(tempSpeedInfo[1])
@@ -194,10 +234,13 @@ RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempS
 end)
 
 LocalPlayer.Character:WaitForChild("HumanoidRootPart")
--- LocalPlayer.Character:PivotTo(workspace.mainCityLocation.CFrame)
-game.Lighting.Atmosphere.Density = 0.6
+-- LocalPlayer.Character:PivotTo(workspace.spawn.mainCityLocation.CFrame)
+-- game.Lighting.Atmosphere.Density = 0.6
 
 hudBgFrame.inLobby.Visible = true
+hudBgFrame.inGame.Visible = true
+palletNum = 0
+hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..nowLevel]:GetChildren()
 
 ---- lobby music -----
 -- local lobbyBGM = SoundService.lobby:Clone()
@@ -229,20 +272,21 @@ for _, folder in workspace:GetDescendants() do
     end
 end
 
+---- monster foot print -----
 local agent:Model = workspace:WaitForChild("monster1")
 local footprint = ReplicatedStorage:WaitForChild("footprint")
 
 while task.wait(0.3) do
-    local rFoot:Part = agent.RightFoot
-    local lFoot:Part = agent.LeftFoot
+    local agentRootCf:CFrame = agent.HumanoidRootPart.CFrame
     local footCopy = footprint:Clone()
-    footCopy.CFrame = CFrame.new(rFoot.CFrame.Position.X, 1.6, rFoot.CFrame.Position.Z)
+    agentRootCf = agentRootCf - Vector3.new(0, agentRootCf.Y - 1.6, 0)
+    footCopy.CFrame = agentRootCf + agentRootCf.RightVector * math.random(5, 10)/10 + agentRootCf.LookVector * math.random(-5, 5)
     footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
     footCopy.Parent = workspace
     Debris:AddItem(footCopy, 5)
 
     footCopy = footprint:Clone()
-    footCopy.CFrame = CFrame.new(lFoot.CFrame.Position.X, 1.6, lFoot.CFrame.Position.Z)
+    footCopy.CFrame = agentRootCf - agentRootCf.RightVector * math.random(5, 10)/10 + agentRootCf.LookVector * math.random(-5, 5)
     footCopy.SurfaceGui.ImageLabel.Image = TextureIds.footprint[math.random(1, #TextureIds.footprint)]
     footCopy.Parent = workspace
     Debris:AddItem(footCopy, 5)

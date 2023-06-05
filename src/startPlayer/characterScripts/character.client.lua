@@ -10,6 +10,7 @@ local BindableEvents = game.ReplicatedStorage.BindableEvents
 ---- enums ----
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+local tipsConfig = require(game.ReplicatedStorage.configs.TipsConfig)
 
 ---- modules ----
 local uiController = require(script.Parent.uiScripts.uiController)
@@ -28,10 +29,10 @@ local toolModelsFolder = workspace.toolModels
 local bucketModelsFolder = workspace.bucketModels
 local toolDoorsFolder = workspace.toolDoors
 local colorDoorsFolder = workspace.colorDoors
-local keysFolder = workspace.keys
 local LocalPlayer = game.Players.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
 local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
+local density
 local chosenSkInd = playerModule.GetPlayerOneData(dataKey.chosenSkInd)
 SkillModule.SetSkillId(chosenSkInd)
 
@@ -52,20 +53,21 @@ game.SoundService.pickUpBucket:Clone().Parent = LocalPlayer.Character.HumanoidRo
 game.SoundService.playerDie:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
 game.SoundService.clickUI:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
 
+game.SoundService.teleport:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.mound:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.door:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.fence:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.xbox:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.baffle:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+game.SoundService.win:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
+
 
 remoteEvents.putonShoeEvent:FireServer(chosenShoe[1], chosenShoe[2])
 LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = playerModule.GetPlayerSpeed()
 
 
-KeyboardRecall.SetClientRecall(Enum.KeyCode.Equals, function()
-    -- playerModule.Set2DCamera()
-    playerModule.TurnOnTopLight()
-end)
-
-KeyboardRecall.SetClientRecall(Enum.KeyCode.Minus, function()
-    -- playerModule.Cancel2DCamera()
-    playerModule.TurnOffTopLight()
-
+BindableEvents.densityEvent.Event:Connect(function(value)
+    density = value
 end)
 
 function DieRest()
@@ -78,24 +80,16 @@ function DieRest()
         end
     end
 
-    for _, bucketPart:Part in bucketModelsFolder:GetDescendants() do
-        if bucketPart:IsA("Part") then
-            bucketPart.ProximityPrompt.Enabled = true
-            bucketPart.CanCollide = true
-            bucketPart.Transparency = 0
-        end
-
+    for _, bucketPart:Part in bucketModelsFolder:GetChildren() do
+        bucketPart.ProximityPrompt.Enabled = true
+        bucketPart.CanCollide = true
+        bucketPart.Transparency = 0
     end
 
     for _, toolDoor in toolDoorsFolder:GetChildren() do
         ToolDoorModule.Reset(toolDoor)
     end
 
-    ----- keys ----
-    for _, key:Part in keysFolder:GetChildren() do
-        key.Transparency = 0
-        key.ProximityPrompt.Enabled = true
-    end
 end
 
 function ResetLevel()
@@ -103,7 +97,19 @@ function ResetLevel()
     ----- last doors ----
     for _, lastDoor in workspace.lastDoors:GetChildren() do
         lastDoor.CanCollide = true
+        lastDoor.Transparency = 0.35
     end
+
+    ---- pallets ----
+    for _, pallet in workspace.pallets:GetDescendants() do
+        if pallet:IsA("Model") then
+            if not pallet:FindFirstChild("originalCf") then
+                CreateModule.CreateValue("CFrameValue", "originalCf", pallet:GetPivot(), pallet)
+            end
+            pallet:PivotTo(pallet.originalCf.value)
+        end
+    end
+
 end
 
 DieRest()
@@ -116,27 +122,50 @@ end)
 BindableEvents.resetLevelEvent.Event:Connect(ResetLevel)
 
 
-for _, part:Part in workspace.safeAreas:GetChildren() do
-    part.Touched:Connect(function(otherPart)
-        if otherPart:IsDescendantOf(LocalPlayer.Character) and (not touchSafeArea) then
-            game.Lighting.Atmosphere.Density = 0.6
-            hudBgFrame.inLobby.Visible = true
-            hudBgFrame.inGame.Visible = false
+-- for _, part:Part in workspace.safeAreas:GetChildren() do
+--     part.CanTouch = true
+--     part.Touched:Connect(function(otherPart)
+--         if otherPart:IsDescendantOf(LocalPlayer.Character) and (not touchSafeArea) then
+--             game.Lighting.Atmosphere.Density = 0.6
+--             -- hudBgFrame.inLobby.Visible = true
+--             -- hudBgFrame.inGame.Visible = false
 
-            touchSafeArea = true
+--             touchSafeArea = true
+--         end
+--     end)
+
+--     part.TouchEnded:Connect(function(otherPart)
+--         if otherPart:IsDescendantOf(LocalPlayer.Character) and touchSafeArea then
+--             touchSafeArea = false
+--             -- local ind = BindableFunctions.getLevelInd:Invoke()
+--             game.Lighting.Atmosphere.Density = 0.7
+--             -- hudBgFrame.inLobby.Visible = false
+--             -- hudBgFrame.inGame.Visible = true
+--         end
+--     end)
+-- end
+
+uiController.SetPersistentTip(tipsConfig.mainCity)
+
+script.Parent:WaitForChild("HumanoidRootPart")
+local checkPart:Part = workspace.spawn.checkPart
+local filter = script.Parent:GetChildren()
+
+local param = OverlapParams.new()
+param.FilterDescendantsInstances = filter
+param.FilterType = Enum.RaycastFilterType.Include
+while task.wait(0.5) do
+    local cf, size = checkPart.CFrame, checkPart.Size
+    local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
+    if playerContact[1] then
+        game.Lighting.Atmosphere.Density = 0
+    else
+        if density then
+            game.Lighting.Atmosphere.Density = density
+        else
+            game.Lighting.Atmosphere.Density = 0.8
         end
-    end)
-
-    part.TouchEnded:Connect(function(otherPart)
-        if otherPart:IsDescendantOf(LocalPlayer.Character) and touchSafeArea then
-            touchSafeArea = false
-            -- local ind = BindableFunctions.getLevelInd:Invoke()
-            game.Lighting.Atmosphere.Density = 0.7
-            hudBgFrame.inLobby.Visible = false
-            hudBgFrame.inGame.Visible = true
-
-        end
-    end)
+    end
 end
 
 

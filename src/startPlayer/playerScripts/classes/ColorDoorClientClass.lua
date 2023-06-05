@@ -5,6 +5,7 @@
 ---- enum ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
+local tipsConfig = require(game.ReplicatedStorage.configs.TipsConfig)
 
 ---- services ----
 
@@ -32,6 +33,7 @@ ColorDoorClientClass.remainClick = ColorDoorClientClass.totalClick
 function ColorDoorClientClass.new(door)
     local self = setmetatable({}, ColorDoorClientClass)
     self.door = door
+    -- print(self.door.colorString.Value)
     self.door.ClickDetector.CursorIcon = TextureIds.cursor[self.door.colorString.Value]
     self.door.ClickDetector.MouseClick:Connect(function()
         self:Clicked()
@@ -60,7 +62,9 @@ function ColorDoorClientClass:Clicked()
         if self.remainClick <= 0 then
             if self.door.colorString.Value == colorEnum.ColorName.purple then
                 perTipEvent:Fire()
-                notifyEvent:Fire("Now you can't hide behind the purple wall", "bottom")
+                notifyEvent:Fire(tipsConfig.loseColor.purple, "bottom")
+            elseif self.door.colorString.Value == "white" then
+                perTipEvent:Fire(tipsConfig.beforeFirstBucket)
             end
             
             self:SetVisible(false)

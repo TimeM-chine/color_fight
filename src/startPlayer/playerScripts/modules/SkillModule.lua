@@ -58,21 +58,10 @@ end
 
 function SkillModule.Sk1()
     -- get the vision of monsters
-    local ind = BindableFunctions.getLevelInd:Invoke()
     notifyEvent:Fire("Now you can see the monster's outline.")
-    if ind == 1 then
-        workspace.monster1.Highlight.Enabled = true
-        task.wait(10)
-        workspace.monster1.Highlight.Enabled = false
-    else
-        workspace.monster2.Highlight.Enabled = true
-        workspace.monster3.Highlight.Enabled = true
-        workspace.monster4.Highlight.Enabled = true
-        task.wait(10)
-        workspace.monster2.Highlight.Enabled = false
-        workspace.monster3.Highlight.Enabled = false
-        workspace.monster4.Highlight.Enabled = false
-    end
+    workspace.monster1.Highlight.Enabled = true
+    task.wait(10)
+    workspace.monster1.Highlight.Enabled = false
 
 end
 
@@ -149,9 +138,6 @@ function SkillModule.CancelAllSkill()
     game.Lighting.Atmosphere.Density = 0.7
     LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
     workspace.monster1.Highlight.Enabled = false
-    workspace.monster2.Highlight.Enabled = false
-    workspace.monster3.Highlight.Enabled = false
-    workspace.monster4.Highlight.Enabled = false
 end
 
 return SkillModule

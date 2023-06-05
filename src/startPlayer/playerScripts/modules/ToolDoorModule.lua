@@ -7,6 +7,11 @@ local PlayerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.Pla
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
+local oldIcon = "rbxassetid://13634776411"
+local xboxCon
+
+---- events -----
+local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 ---- main ----
 
@@ -14,9 +19,25 @@ local ToolDoorModule  ={}
 
 function ToolDoorModule.Set(toolDoor)
     toolDoor.ClickDetector.MaxActivationDistance = 0
+    local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild(toolDoor)
+    if music then
+        music:Play()
+    end
     if toolDoor.Name == "xbox" then
+        toolDoor.ClickDetector.MaxActivationDistance = 32
+        toolDoor.ClickDetector.CursorIcon = ""
+        xboxCon = toolDoor.ClickDetector.MouseClick:Connect(function()
+            local destination = toolDoor.destination.Value
+            local density = toolDoor.density.Value
+            BindableEvents.densityEvent:Fire(density)
+            localPlayer.Character.PrimaryPart.CFrame = destination.CFrame + Vector3.new(0, 10, 0)
+            PlayerModule.Set2DCamera()
+        end)
         local destination = toolDoor.destination.Value
-        localPlayer.Character.PrimaryPart.CFrame = destination + Vector3.new(0, 10, 0)
+        local density = toolDoor.density.Value
+        BindableEvents.densityEvent:Fire(density)
+        localPlayer.Character.PrimaryPart.CFrame = destination.CFrame + Vector3.new(0, 10, 0)
+        PlayerModule.Set2DCamera()
         return
     elseif toolDoor.Name == "door" then
         local axis = toolDoor.axis
@@ -62,6 +83,10 @@ end
 function ToolDoorModule.Reset(tDoor)
     tDoor.ClickDetector.MaxActivationDistance = 32
     if tDoor.Name == "xbox" then
+        tDoor.ClickDetector.CursorIcon = oldIcon
+        if xboxCon then
+            xboxCon:Disconnect()
+        end
         return
     elseif tDoor.Name == "door" then
         local axis = tDoor.axis

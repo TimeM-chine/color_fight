@@ -7,19 +7,22 @@ local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerC
 
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
+local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
 
 ---- variables ----
 local bucketModelInsList = {}
+local playerLevelTime = {}
 
 ---- enums ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+local rankListConfig = require(game.ReplicatedStorage.configs.RankList)
 
 ---- events -----
 local hideBucketEvent = game.ReplicatedStorage.RemoteEvents.hideBucketEvent
 local serverNotifyEvent = game.ReplicatedStorage.RemoteEvents.serverNotifyEvent
-
 
 local BucketModelServerClass = {}
 BucketModelServerClass.__index = BucketModelServerClass
@@ -37,8 +40,25 @@ function BucketModelServerClass.new(toolM:Part)
         playerIns:SetColor(self.toolModel.colorString.Value)
         hideBucketEvent:FireClient(playerWhoTriggered, self.toolModel)
         -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
-        if self.toolModel.colorString.Value == colorEnum.ColorName.white then
+        if self.toolModel.colorString.Value == "black" then
             serverNotifyEvent:FireClient(playerWhoTriggered, "Return to the main city and unlock the next level", "bottom")
+            playerIns:UpdatedOneData(dataKey.lv1Wins, 1)
+            playerIns:UpdatedOneData(dataKey.totalWins, 1)
+            playerIns:UpdatedOneData(dataKey.wins, 1)
+
+            local lv1Time = os.time() - playerLevelTime[playerWhoTriggered]
+            if lv1Time < playerIns:GetOneData(dataKey.lv1Time) then
+                playerIns:SetOneData(dataKey.lv1Time, lv1Time)
+                BillboardManager.savePlayerRankData(playerWhoTriggered.UserId, playerIns:GetOneData(dataKey.lv1Time), rankListConfig.listNames.lv1Time)
+            end
+
+            BillboardManager.savePlayerRankData(playerWhoTriggered.UserId, playerIns:GetOneData(dataKey.lv1Wins), rankListConfig.listNames.lv1Win)
+
+            playerWhoTriggered.leaderstats.Wins.Value = playerIns:GetOneData(dataKey.totalWins)
+            playerWhoTriggered.leaderstats.NowWins.Value = playerIns:GetOneData(dataKey.wins)
+
+            playerIns:SetColor("white")
+            playerLevelTime[playerWhoTriggered] = os.time()
         end
     end)
 	return self
@@ -62,6 +82,19 @@ function BucketModelServerClass.OnAdded(toolModel:Part)
 
     bucketModelInsList[toolM] = toolM
 end
+
+
+function SetPlayerStartTime(player)
+    playerLevelTime[player] = os.time()
+end
+
+for _, player in game.Players:GetPlayers() do
+    SetPlayerStartTime(player)
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    playerLevelTime[player] = os.time()
+end)
 
 
 return BucketModelServerClass

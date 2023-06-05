@@ -16,8 +16,8 @@ local rankDataByUserId = {}
 local rankTypeList = {
     config.listNames.lv1Time,
     config.listNames.lv1Win,
-    config.listNames.lv2Time,
-    config.listNames.lv2Win,
+    -- config.listNames.lv2Time,
+    -- config.listNames.lv2Win,
 }
 
 local rankPageList = {}

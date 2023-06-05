@@ -1,9 +1,9 @@
+
 return{
-    punchGun = "Break the glass panel with one punch",
-    keyRing = "Look for the locked iron gate",
-    ladder = "Climb up to the storage attic",
-    crank = "Shut down the leaking steam",
+    keys = "Look for the locked iron gate",
     shovel = "Shovel away the dirt in the basement",
     crowbar = "Pry open the ventilation duct",
-    cassette = "Not set yet."
+    cassette = "Not set yet.",
+    musicScore = "Not set yet.",
+    spanner = "Not set yet."
 }

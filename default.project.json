@@ -5,6 +5,7 @@
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
             "$path": "src/replicatedStorage",
+            "$ignoreUnknownInstances": true,
             "RemoteEvents": {
                 "$className": "Folder",
                 "UISEvent": {
@@ -95,6 +96,9 @@
                     "$className": "BindableEvent"
                 },
                 "teleportBindEvent":{
+                    "$className":"BindableEvent"
+                },
+                "densityEvent":{
                     "$className":"BindableEvent"
                 }
             },
@@ -213,6 +217,7 @@
             "$properties": {
                 "FilteringEnabled": true
             },
+            "$ignoreUnknownInstances": true,
             "walls": {
                 "$className": "Folder"
             },

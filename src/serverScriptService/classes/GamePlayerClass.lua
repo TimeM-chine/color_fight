@@ -60,10 +60,13 @@ function GamePlayerClass:SetColor(color)
         character = self.player.CharacterAdded:Wait()
     end
     character:WaitForChild("colorString").Value = color
-    
     if color == "empty" then
         character:WaitForChild("Highlight").FillColor = colorEnum.white
         self.paintCan.fluid.Transparency = 1
+    elseif color == "white" or color == "black" then
+        character:WaitForChild("Highlight").FillColor = colorEnum[color]
+        self.paintCan.fluid.Color = colorEnum[color]
+        self.paintCan.fluid.Transparency = 0
     else
         character:WaitForChild("Highlight").FillColor = colorValue[color]
         self.paintCan.fluid.Color = colorValue[color]
@@ -94,7 +97,7 @@ function GamePlayerClass:InitPlayer()
     end
     character.Humanoid.Health = hp
 
-    CreateModule.CreateValue("StringValue", "colorString", "nil", character)
+    CreateModule.CreateValue("StringValue", "colorString", "white", character)
     CreateModule.CreateValue("BoolValue", "isHiding", false, character)
     CreateModule.CreateValue("BoolValue", "beforeDeath", false, character)
 
@@ -106,7 +109,7 @@ function GamePlayerClass:InitPlayer()
     highlight.Parent = character
 
     local param = argsEnum.changeColorEvent
-    param.color = "empty"
+    param.color = "white"
     self:NotifyToClient(changeColorEvent, param)
 
     local animator:Animator = character.Humanoid:WaitForChild("Animator")

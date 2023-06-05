@@ -77,8 +77,8 @@ end)
 buyHeartBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
     print("player buy heart")
-    addHealthEvent:FireServer()
-    -- MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
+    -- addHealthEvent:FireServer()
+    MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.heart)
 end)
 
 hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
@@ -98,44 +98,44 @@ inviteBtn.MouseButton1Click:Connect(function()
 
 end)
 
--- workspace.roleSeller.Hologram.Base.Touched:Connect(function(part:Part)
---     if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
---         touching = true
---         uiController.PushScreen(screenEnum.shopFrame)
---         task.delay(2, function()
---             touching = false
---         end)
---     end
--- end)
+workspace.spawn.roleSeller.Hologram.Base.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        uiController.PushScreen(screenEnum.shopFrame)
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+end)
 
--- workspace.shoeShop.showPart.Touched:Connect(function(part:Part)
---     if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
---         touching = true
---         local frameIns = uiController.PushScreen(screenEnum.shopFrame)
---         frameIns:OpenShoeShop()
---         task.delay(2, function()
---             touching = false
---         end)
---     end
--- end)
+workspace.spawn.shoeShop.showPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        local frameIns = uiController.PushScreen(screenEnum.shopFrame)
+        frameIns:OpenShoeShop()
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+end)
 
--- workspace.signBox.touchPart.Touched:Connect(function(part:Part)
---     if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
---         touching = true
---         if LocalPlayer:IsInGroup(17008261) then
---             uiController.PushScreen(screenEnum.loginRewardsFrame)
---             GAModule:addDesignEvent({
---                 eventId = `pageCheck:loginPage:{LocalPlayer.UserId}`
---             })
---         elseif not PlayerGui.pushScreen.Enabled then
---             uiController.PushScreen(screenEnum.wantLikeFrame)
---         end
---         task.delay(2, function()
---             touching = false
---         end)
---     end
+workspace.spawn.signBox.touchPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        if LocalPlayer:IsInGroup(17008261) then
+            uiController.PushScreen(screenEnum.loginRewardsFrame)
+            GAModule:addDesignEvent({
+                eventId = `pageCheck:loginPage:{LocalPlayer.UserId}`
+            })
+        elseif not PlayerGui.pushScreen.Enabled then
+            uiController.PushScreen(screenEnum.wantLikeFrame)
+        end
+        task.delay(2, function()
+            touching = false
+        end)
+    end
 
--- end)
+end)
 ---------------------- hp -------------------------
 
 local hp = LocalPlayer.Character.Humanoid.Health

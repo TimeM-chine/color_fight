@@ -278,9 +278,9 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
 end
 
 ---- bill board ----
--- while task.wait(60) do
---     BillboardManager.initBillboard()
---     for _, player in game.Players:GetPlayers() do
---         CheckTempReward(player)
---     end
--- end
+while task.wait(60) do
+    BillboardManager.initBillboard()
+    for _, player in game.Players:GetPlayers() do
+        CheckTempReward(player)
+    end
+end

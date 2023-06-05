@@ -15,7 +15,7 @@ local toolModelInsList = {}
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
-local PickUpTips = require(game.ReplicatedStorage.configs.PickUpTips)
+local tipsConfig = require(game.ReplicatedStorage.configs.TipsConfig)
 
 ---- events -----
 local hideToolEvent = game.ReplicatedStorage.RemoteEvents.hideToolEvent
@@ -38,7 +38,7 @@ function ToolModelServerClass.new(toolM:Part)
         playerIns:EquipFakeTool(self.toolModel.Name)
         hideToolEvent:FireClient(playerWhoTriggered, self.toolModel)
         -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
-        serverNotifyEvent:FireClient(playerWhoTriggered, PickUpTips[self.toolModel.Name], "bottom")
+        serverNotifyEvent:FireClient(playerWhoTriggered, tipsConfig.getTool[self.toolModel.Name], "bottom")
     end)
 	return self
 end
