@@ -126,7 +126,7 @@ local function GetNextTarget()
         return lastPointPart, false
     end
     local character, dist = GetNearestCharacterAndDist()
-    if character and character.HumanoidRootPart and dist <= 100 then
+    if character and character.HumanoidRootPart and dist <= 150 then
         local player = game.Players:GetPlayerFromCharacter(character)
         if playerTargetTime[player] then
             playerTargetTime[player] += 1
@@ -163,7 +163,7 @@ while task.wait(0.1) do
     if (not path:Run(nextTarget)) and (not isPlayer) then
         targetTraceTime += 1
         if targetTraceTime >= 30 then
-            agent:PivotTo(nextTarget.CFrame)
+            agent:PivotTo(nextTarget.CFrame + Vector3.new(0, 4, 0))
             targetTraceTime = 0
         end
     else

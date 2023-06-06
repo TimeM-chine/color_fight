@@ -14,6 +14,7 @@ local purchaseHistoryStore = DataStoreService:GetDataStore("PurchaseHistory")
 ---- modules -----
 local ServerSystemClass = require(game.ServerScriptService.classes.ServerSystemClass)
 local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
+local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
 local TableModule = require(game.ReplicatedStorage.modules.TableModule)
 local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
@@ -54,16 +55,17 @@ end
 
 
 function AddHealth(receipt, player)
-    if player.Character.beforeDeath.Value then
-        local force = Instance.new("ForceField")
-        Debris:AddItem(force, 5)
-        force.Parent = player.Character
-        player.Character.beforeDeath.Value = false
-        RemoteEvents.playerLiveBackEvent:FireClient(player)
-        return true
-    end
     local playerIns = PlayerServerClass.GetIns(player)
     playerIns:AddHealth()
+    return true
+end
+
+function BackToGame(receipt, player)
+    local force = Instance.new("ForceField")
+    Debris:AddItem(force, 5)
+    force.Parent = player.Character
+    player.Character.beforeDeath.Value = false
+    RemoteEvents.playerLiveBackEvent:FireClient(player)
     return true
 end
 
@@ -103,6 +105,17 @@ function BuyCareers(receipt, player)
     return `there is no career product {receipt.ProductId}`
 end
 
+function Donate(receipt, player:Player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    for num, pid in productIdEnum.donate do
+        if receipt.ProductId == pid then
+            playerIns:UpdatedOneData(dataKey.donate, num)
+            BillboardManager.savePlayerRankData(player.UserId, playerIns:GetOneData(dataKey.donate), "donate")
+            return true
+        end
+    end
+end
+
 local productFunctions = {}
 for _, value in productIdEnum.career do
     productFunctions[value] = BuyCareers
@@ -111,7 +124,12 @@ end
 for _, value in productIdEnum.shoes do
     productFunctions[value] = BuyShoes
 end
+
+for _, value in productIdEnum.donate do
+    productFunctions[value] = Donate
+end
 productFunctions[productIdEnum.heart] = AddHealth
+productFunctions[productIdEnum.backGame] = BackToGame
 
 
 local function processReceipt(receiptInfo)

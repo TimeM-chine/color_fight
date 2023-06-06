@@ -20,6 +20,7 @@ local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local playerModule = require(script.Parent.modules.PlayerClientModule)
 local SkillModule = require(script.Parent.modules.SkillModule)
 local ToolDoorModule = require(script.Parent.modules.ToolDoorModule)
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -106,6 +107,20 @@ clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     lastColor = color
 end)
 
+---- test ----
+-- for _, wallModel in wallsFolder:GetChildren() do
+--     local wall:Part = wallModel.wall
+--     if not wall:FindFirstChild("colorString") then continue end
+--     -- handle with last color first
+--     wall.CanCollide = false
+--     wall.Transparency = 0.2
+-- end
+game.Players.PlayerRemoving:Connect(function(player)
+    GAModule:addDesignEvent({
+        eventId = "leaveWithColor",
+        value = lastColor or "noPlay"
+    })
+end)
 
 ---- event recalls ----
 RemoteEvents.destroyEvent.OnClientEvent:Connect(function(ins:Instance)
@@ -287,7 +302,7 @@ ContentProvider:PreloadAsync(imgs)
 print("Images loading finished.")
 
 ---- handle with parts ----
-local clsFolder = game.StarterPlayer.StarterPlayerScripts.classes
+local clsFolder = game.Players.LocalPlayer.PlayerScripts.classes
 local partsClsNames = {
     "KillingPart", "SizeChangePart", "TeleportPart", "TransChangePart", "MovingPart"
 }

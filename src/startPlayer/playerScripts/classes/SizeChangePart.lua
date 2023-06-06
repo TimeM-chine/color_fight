@@ -1,4 +1,4 @@
-local BasePartCls = require(game.StarterPlayer.StarterPlayerScripts.classes.BasePartCls)
+local BasePartCls = require(game.Players.LocalPlayer.PlayerScripts.classes.BasePartCls)
 local TS = game:GetService("TweenService")
 
 ---- main ----

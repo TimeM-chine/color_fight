@@ -4,5 +4,6 @@ return {
     onlineRewardsFrame = "onlineRewardsFrame",
     friendsRewards = "friendsRewards",
     cdKeyFrame = "cdKeyFrame",
-    wantLikeFrame = "wantLikeFrame"
+    wantLikeFrame = "wantLikeFrame",
+    donateFrame = "donateFrame"
 }

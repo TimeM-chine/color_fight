@@ -40,6 +40,7 @@ return {
     ----- currency -----
     money = 0, -- 货币
     consumptionSum = 0,  -- 总消费金额
+    donate = 0, -- 捐赠金额
 
     ----- rank list ----
     lv1Wins = 0,  -- 第一关通关次数

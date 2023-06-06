@@ -16,9 +16,9 @@ local tipsConfig = require(game.ReplicatedStorage.configs.TipsConfig)
 local uiController = require(script.Parent.uiScripts.uiController)
 local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
-local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
-local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
-local ToolDoorModule = require(game.StarterPlayer.StarterPlayerScripts.modules.ToolDoorModule)
+local playerModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
+local SkillModule = require(game.Players.LocalPlayer.PlayerScripts.modules.SkillModule)
+local ToolDoorModule = require(game.Players.LocalPlayer.PlayerScripts.modules.ToolDoorModule)
 
 ---- functions ----
 local BindableFunctions = game.ReplicatedStorage.BindableFunctions
@@ -116,7 +116,8 @@ DieRest()
 
 
 LocalPlayer.Character.Humanoid.Died:Once(function()
-    SkillModule.CancelAllSkill()
+	SkillModule.CancelAllSkill()
+	DieRest()
 end)
 
 BindableEvents.resetLevelEvent.Event:Connect(ResetLevel)

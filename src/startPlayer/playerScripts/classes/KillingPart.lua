@@ -1,6 +1,6 @@
 local localPlayer = game.Players.LocalPlayer
 local Replicated = game:GetService("ReplicatedStorage")
-local BasePartCls = require(game.StarterPlayer.StarterPlayerScripts.classes.BasePartCls)
+local BasePartCls = require(game.Players.LocalPlayer.PlayerScripts.classes.BasePartCls)
 local Stitches = require(Replicated.Stitches)
 
 local BaseSystem = require(Replicated.Systems.BaseSystem)

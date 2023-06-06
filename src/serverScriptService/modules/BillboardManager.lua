@@ -16,6 +16,7 @@ local rankDataByUserId = {}
 local rankTypeList = {
     config.listNames.lv1Time,
     config.listNames.lv1Win,
+    config.listNames.donate
     -- config.listNames.lv2Time,
     -- config.listNames.lv2Win,
 }
@@ -29,26 +30,48 @@ function createRankItem(rank, userId, score, rankType, RankFrame)
 	local rankFrame = RankFrame:FindFirstChild("Rank"..rank)
 	
 	if not rankFrame then
-		local rankRow = ServerStorage.listUnit
-		rankFrame = rankRow:Clone()
-		
-		rankFrame.Name = "Rank"..rank
-		rankFrame.LayoutOrder = rank
-		rankFrame.Parent = RankFrame
+        if rankType == config.listNames.donate then
+            local rankRow = ServerStorage.donateUnit
+            rankFrame = rankRow:Clone()
+            
+            rankFrame.Name = "Rank"..rank
+            rankFrame.LayoutOrder = rank
+            rankFrame.Parent = RankFrame
+        else
+            local rankRow = ServerStorage.listUnit
+            rankFrame = rankRow:Clone()
+            
+            rankFrame.Name = "Rank"..rank
+            rankFrame.LayoutOrder = rank
+            rankFrame.Parent = RankFrame
+        end
 	end
-	
-	local rankLabel = rankFrame:WaitForChild("rank")
-	rankLabel.Text = "#"..rank
-	
-	local playerName = rankFrame:WaitForChild("name")
-	playerName.Text =  userInfoCache["Player_"..userId]["DisplayName"]
-	
-	local Counts = rankFrame:WaitForChild("score")
-    if string.match(rankType, "Time") then
-        Counts.Text = Util.FormatPlayTime(score)
+
+    if rankType == config.listNames.donate then
+        local playerName = rankFrame:WaitForChild("name")
+        playerName.Text =  userInfoCache["Player_"..userId]["DisplayName"]
+
+        local avatar = rankFrame:WaitForChild("avatar")
+        local content, isReady = game.Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+        avatar.Image = (isReady and content) or "rbxassetid://0"
+
+        local Counts = rankFrame:WaitForChild("score")
+        Counts.Text = score
     else
-        Counts.Text = Util.FormatNumber(score)
+        local rankLabel = rankFrame:WaitForChild("rank")
+        rankLabel.Text = "#"..rank
+       
+        local playerName = rankFrame:WaitForChild("name")
+        playerName.Text =  userInfoCache["Player_"..userId]["DisplayName"]
+        
+        local Counts = rankFrame:WaitForChild("score")
+        if string.match(rankType, "Time") then
+            Counts.Text = Util.FormatPlayTime(score)
+        else
+            Counts.Text = Util.FormatNumber(score)
+        end
     end
+
 end
 
 
@@ -90,9 +113,9 @@ end
 	@param db dbname
 ]]
 function BillboardManager.savePlayerRankData(playerUserId, count, db)
-	if RunService:IsStudio() then
-		return
-	end
+	-- if RunService:IsStudio() then
+	-- 	return
+	-- end
 
 	if not count then
 		return

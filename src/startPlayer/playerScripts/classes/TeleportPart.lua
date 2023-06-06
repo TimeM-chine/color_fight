@@ -1,7 +1,7 @@
 local Lighting = game:GetService("Lighting")
 local localPlayer = game.Players.LocalPlayer
-local BasePartCls = require(game.StarterPlayer.StarterPlayerScripts.classes.BasePartCls)
-local pModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
+local BasePartCls = require(game.Players.LocalPlayer.PlayerScripts.classes.BasePartCls)
+local pModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
 local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 ---- main ----

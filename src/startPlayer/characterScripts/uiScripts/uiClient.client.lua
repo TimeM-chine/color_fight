@@ -18,6 +18,7 @@ local friendFrame = hudBgFrame.friendFrame
 local inviteBtn = speedFrame.inviteBtn
 local friendNum = 0
 local cdKeyBtn = hudBgFrame.cdKeyFrame.btn
+local donateBtn = hudBgFrame.donateFrame.btn
 local touching
 
 ---- events ----
@@ -34,7 +35,7 @@ local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- modules ----
 local uiController = require(script.Parent.uiController)
-local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
+local SkillModule = require(game.Players.LocalPlayer.PlayerScripts.modules.SkillModule)
 local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---------------------- events -------------------------
@@ -55,6 +56,10 @@ end)
 ---------------------- buttons -------------------------
 cdKeyBtn.MouseButton1Click:Connect(function()
     uiController.PushScreen(screenEnum.cdKeyFrame)
+end)
+
+donateBtn.MouseButton1Click:Connect(function()
+    uiController.PushScreen(screenEnum.donateFrame)
 end)
 
 if os.time() > gameConfig.onlineRewardsEnd then
@@ -130,6 +135,17 @@ workspace.spawn.signBox.touchPart.Touched:Connect(function(part:Part)
         elseif not PlayerGui.pushScreen.Enabled then
             uiController.PushScreen(screenEnum.wantLikeFrame)
         end
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+
+end)
+
+workspace.spawn.piggy.touchPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        uiController.PushScreen(screenEnum.donateFrame)
         task.delay(2, function()
             touching = false
         end)

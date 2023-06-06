@@ -6,7 +6,7 @@ local SocialService = game:GetService("SocialService")
 
 ---- modules ----
 local uiController = require(script.Parent.uiController)
-local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
+local playerModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
 local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- enums ----

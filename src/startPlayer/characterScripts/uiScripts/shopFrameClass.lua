@@ -10,8 +10,8 @@ local remoteEvents = game.ReplicatedStorage.RemoteEvents
 
 ---- modules ----
 local uiController = require(script.Parent.uiController)
-local playerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
-local SkillModule = require(game.StarterPlayer.StarterPlayerScripts.modules.SkillModule)
+local playerModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
+local SkillModule = require(game.Players.LocalPlayer.PlayerScripts.modules.SkillModule)
 
 ---- enums ----
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)

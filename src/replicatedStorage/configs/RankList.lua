@@ -10,6 +10,7 @@ RankList.listNames = {
     lv2Time = "lv2Time",
     lv1Win = "lv1Win",
     lv2Win = "lv2Win",
+    donate = "donate"
 }
 
 

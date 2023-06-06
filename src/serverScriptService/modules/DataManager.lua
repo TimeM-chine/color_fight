@@ -11,6 +11,7 @@ local ClientGetData = game.ReplicatedStorage.RemoteFunctions.ClientGetData
 
 ----- variables -----
 local DEFAULT_DATA = DefaultValue
+local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 
 local Players = game:GetService("Players")
 local ProfileStore = ProfileService.GetProfileStore("PlayerData", DEFAULT_DATA)
@@ -34,6 +35,9 @@ local function PlayerAdded(player)
 		if player:IsDescendantOf(Players) == true then
 			profiles[player] = profile
 			-- A profile has been successfully loaded:
+            if typeof(profile.Data[dataKey.receivedOnlineTime]) == "number" then
+                profile.Data[dataKey.receivedOnlineTime] = {false, false, false, false, false, false, false}
+            end
 		else
 			-- Player left before the profile loaded:
 			profile:Release()

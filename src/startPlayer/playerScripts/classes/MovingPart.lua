@@ -1,5 +1,5 @@
 local TS = game:GetService("TweenService")
-local BasePartCls = require(game.StarterPlayer.StarterPlayerScripts.classes.BasePartCls)
+local BasePartCls = require(game.Players.LocalPlayer.PlayerScripts.classes.BasePartCls)
 ---- main ----
 
 local MovingPart = setmetatable({

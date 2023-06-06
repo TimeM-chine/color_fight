@@ -36,6 +36,7 @@ return {
     ----- currency -----
     money = "money", -- 货币
     consumptionSum = "consumptionSum",  -- 总消费金额
+    donate = "donate", -- 捐赠金额
     ----- rank list ----
     lv1Wins = "lv1Wins",  -- 第一关通关次数
     lv2Wins = "lv2Wins",  -- 第二关通关次数

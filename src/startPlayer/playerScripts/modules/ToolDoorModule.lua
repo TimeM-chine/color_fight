@@ -5,7 +5,7 @@ local IsPhone = UIS.TouchEnabled
 
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
-local PlayerModule = require(game.StarterPlayer.StarterPlayerScripts.modules.PlayerClientModule)
+local PlayerModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
@@ -27,17 +27,19 @@ function ToolDoorModule.Set(toolDoor)
     local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild(toolDoor.Name)
     if music then
         music:Play()
-    end
+	end
+
     if toolDoor.Name == "xbox" then
         toolDoor.ClickDetector.MaxActivationDistance = 32
         toolDoor.ClickDetector.CursorIcon = ""
-        xboxCon = toolDoor.ClickDetector.MouseClick:Connect(function()
+		xboxCon = toolDoor.ClickDetector.MouseClick:Connect(function()
             local destination = toolDoor.destination.Value
             local density = toolDoor.density.Value
             BindableEvents.densityEvent:Fire(density)
             localPlayer.Character.PrimaryPart.CFrame = destination.CFrame + Vector3.new(0, 10, 0)
             PlayerModule.Set2DCamera()
-        end)
+		end)
+
         local destination = toolDoor.destination.Value
         local density = toolDoor.density.Value
         BindableEvents.densityEvent:Fire(density)
@@ -49,11 +51,11 @@ function ToolDoorModule.Set(toolDoor)
         local teleport = toolDoor.teleportPart
         teleport.CanTouch = true
 
-        if not toolDoor:FindFirstChild("originalCf") then
+		if not axis:FindFirstChild("originalCf") then
             CreateModule.CreateValue("CFrameValue", "originalCf", axis.CFrame, axis)
         end
 
-        if not toolDoor:FindFirstChild("endCf") then
+		if not axis:FindFirstChild("endCf") then
             CreateModule.CreateValue("CFrameValue", "endCf", axis.CFrame * CFrame.Angles(0, math.rad(90) , 0), axis)
         end
         local tweenInfo = TweenInfo.new(1)
@@ -89,18 +91,18 @@ function ToolDoorModule.Reset(tDoor)
     tDoor.ClickDetector.MaxActivationDistance = 32
     if IsPhone and tDoor:FindFirstChild("BillboardGui") then
         tDoor.BillboardGui.Enabled = true
-    end
+	end
     if tDoor.Name == "xbox" then
-        tDoor.ClickDetector.CursorIcon = oldIcon
+		tDoor.ClickDetector.CursorIcon = oldIcon
         if xboxCon then
-            xboxCon:Disconnect()
+			xboxCon:Disconnect()
         end
         return
     elseif tDoor.Name == "door" then
         local axis = tDoor.axis
         local teleport = tDoor.teleportPart
         teleport.CanTouch = false
-        if not tDoor:FindFirstChild("originalCf") then
+		if not axis:FindFirstChild("originalCf") then
             CreateModule.CreateValue("CFrameValue", "originalCf", axis.CFrame, axis)
         else
             axis.CFrame = axis.originalCf.Value
@@ -122,5 +124,6 @@ function ToolDoorModule.Reset(tDoor)
         end
     end
 end
+
 
 return ToolDoorModule
