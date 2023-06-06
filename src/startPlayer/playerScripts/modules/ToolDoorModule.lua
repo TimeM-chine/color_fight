@@ -1,5 +1,7 @@
 ---- services ----
 local TS = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local IsPhone = UIS.TouchEnabled
 
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
@@ -19,7 +21,10 @@ local ToolDoorModule  ={}
 
 function ToolDoorModule.Set(toolDoor)
     toolDoor.ClickDetector.MaxActivationDistance = 0
-    local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild(toolDoor)
+    if IsPhone and toolDoor:FindFirstChild("BillboardGui") then
+        toolDoor.BillboardGui.Enabled = false
+    end
+    local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild(toolDoor.Name)
     if music then
         music:Play()
     end
@@ -82,6 +87,9 @@ end
 
 function ToolDoorModule.Reset(tDoor)
     tDoor.ClickDetector.MaxActivationDistance = 32
+    if IsPhone and tDoor:FindFirstChild("BillboardGui") then
+        tDoor.BillboardGui.Enabled = true
+    end
     if tDoor.Name == "xbox" then
         tDoor.ClickDetector.CursorIcon = oldIcon
         if xboxCon then

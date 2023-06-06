@@ -126,7 +126,7 @@ local function GetNextTarget()
         return lastPointPart, false
     end
     local character, dist = GetNearestCharacterAndDist()
-    if character and character.HumanoidRootPart and dist <= 50 then
+    if character and character.HumanoidRootPart and dist <= 100 then
         local player = game.Players:GetPlayerFromCharacter(character)
         if playerTargetTime[player] then
             playerTargetTime[player] += 1
@@ -134,7 +134,7 @@ local function GetNextTarget()
             playerTargetTime[player] = 1
         end
         -- print(playerTargetTime[player])
-        if playerTargetTime[player] >= 60 then
+        if playerTargetTime[player] >= 40 then
             SetLastHurtPlayer(player)
             playerTargetTime[player] = 0
         end

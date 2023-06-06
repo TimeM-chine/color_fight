@@ -41,6 +41,10 @@ function TeleportPart:Init()
                 -- Lighting.Atmosphere.Density = self.folder.density.Value
             end
 
+            local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild("teleport")
+            if music then
+                music:Play()
+            end
             task.delay(1, function()
                 self.isTouching = false
             end)

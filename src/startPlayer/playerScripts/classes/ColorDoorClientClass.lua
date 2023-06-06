@@ -8,6 +8,8 @@ local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 local tipsConfig = require(game.ReplicatedStorage.configs.TipsConfig)
 
 ---- services ----
+local UIS = game:GetService("UserInputService")
+local IsPhone = UIS.TouchEnabled
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
@@ -35,6 +37,9 @@ function ColorDoorClientClass.new(door)
     self.door = door
     -- print(self.door.colorString.Value)
     self.door.ClickDetector.CursorIcon = TextureIds.cursor[self.door.colorString.Value]
+    if IsPhone and door:FindFirstChild("BillboardGui") then
+        door.BillboardGui.Enabled = true
+    end
     self.door.ClickDetector.MouseClick:Connect(function()
         self:Clicked()
     end)
@@ -80,6 +85,9 @@ end
 
 function ColorDoorClientClass:SetVisible(flag)
     if flag then
+        if IsPhone and self.door:FindFirstChild("BillboardGui") then
+            self.door.BillboardGui.Enabled = true
+        end
         self.door.Transparency = 0.35
         self.door.SurfaceGui.Enabled = true
         self.door.ClickDetector.MaxActivationDistance = 30
@@ -90,6 +98,9 @@ function ColorDoorClientClass:SetVisible(flag)
         self.door.SurfaceGui.Enabled = false
         self.door.ClickDetector.MaxActivationDistance = 0
         -- self.door.SurfaceGui.TextLabel.Text = ""
+        if IsPhone and self.door:FindFirstChild("BillboardGui") then
+            self.door.BillboardGui.Enabled = false
+        end
     end
     self.door.CanCollide = flag
 end

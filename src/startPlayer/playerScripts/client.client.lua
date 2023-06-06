@@ -8,6 +8,8 @@ local MarketplaceService = game:GetService"MarketplaceService"
 local ContentProvider = game:GetService("ContentProvider")
 local TS = game:GetService("TweenService")
 local Debris = game:GetService"Debris"
+local UIS = game:GetService("UserInputService")
+local IsPhone = UIS.TouchEnabled
 
 ---- classes ----
 local SystemClass = require(script.Parent:WaitForChild("classes").ClientSystemClass)
@@ -43,11 +45,16 @@ local PlayerGui = LocalPlayer.PlayerGui
 local nowLevel = 1 --- TODO still don't know how to change
 local hudBgFrame = PlayerGui:WaitForChild("hudScreen").bgFrame
 
+---- settings ----
+
 clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
     local color = args.color
 
     if color == "black" then
-        LocalPlayer.Character.HumanoidRootPart.win:Play()
+        local music:Sound = LocalPlayer.Character.HumanoidRootPart:FindFirstChild("win")
+        if music then
+            music:Play()
+        end
         game.Lighting.Atmosphere.Density = 0
         local door = workspace.colorWorld.getBackDoor
         door.Part.CanTouch = true
@@ -119,6 +126,11 @@ RemoteEvents.hideBucketEvent.OnClientEvent:Connect(function(toolModel:Part)
     toolModel.Transparency = 1
     toolModel.ProximityPrompt.Enabled = false
     toolModel.CanCollide = false
+
+    local music:Sound = LocalPlayer.Character.HumanoidRootPart:FindFirstChild("pickUpBucket")
+    if music then
+        music:Play()
+    end
 end)
 
 RemoteEvents.hideToolDoorEvent.OnClientEvent:Connect(function(door)
@@ -173,6 +185,7 @@ for _, part:Part in workspace.safeAreas:GetChildren() do
     part.CanCollide = false
 end
 
+
 for _, colorDoor in workspace.colorDoors:GetDescendants() do
     if colorDoor:IsA("Part") then
         ColorDoorClientClass.new(colorDoor)
@@ -223,6 +236,9 @@ end
 
 for _, model in workspace.toolDoors:GetChildren() do
     model.ClickDetector.CursorIcon = TextureIds.toolDoorCursor[model.Name]
+    if IsPhone then
+        model.BillboardGui.Enabled = true
+    end
 end
 
 RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempSkInfo)
@@ -243,14 +259,29 @@ palletNum = 0
 hudBgFrame.inGame.pallet.TextLabel.Text = "0/"..#workspace.pallets['level'..nowLevel]:GetChildren()
 
 ---- lobby music -----
--- local lobbyBGM = SoundService.lobby:Clone()
--- lobbyBGM.Parent = workspace.level0SpawnLocation
--- lobbyBGM:Play()
+local lobbyBGM = SoundService.lobby:Clone()
+lobbyBGM.Parent = workspace.spawn.mainCityLocation
+lobbyBGM:Play()
 
+
+local ScaredImg = require(game.ReplicatedStorage.configs.ScaredImg)
 local imgs = {}
 for _, img in TextureIds.wallPaints do
     table.insert(imgs, img)
 end
+
+for _, img in TextureIds.cursor do
+    table.insert(imgs, img)
+end
+
+for _, img in ScaredImg.scared do
+    table.insert(imgs, img)
+end
+
+for _, img in ScaredImg.died do
+    table.insert(imgs, img)
+end
+
 
 ContentProvider:PreloadAsync(imgs)
 print("Images loading finished.")
@@ -277,6 +308,9 @@ local agent:Model = workspace:WaitForChild("monster1")
 local footprint = ReplicatedStorage:WaitForChild("footprint")
 
 while task.wait(0.3) do
+    if game.StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.Health) then
+        game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
+    end
     local agentRootCf:CFrame = agent.HumanoidRootPart.CFrame
     local footCopy = footprint:Clone()
     agentRootCf = agentRootCf - Vector3.new(0, agentRootCf.Y - 1.6, 0)

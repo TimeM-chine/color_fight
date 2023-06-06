@@ -60,6 +60,7 @@ function GamePlayerClass:SetColor(color)
         character = self.player.CharacterAdded:Wait()
     end
     character:WaitForChild("colorString").Value = color
+    character:WaitForChild("paintCan").bottle.SurfaceGui.TextLabel.Text = color
     if color == "empty" then
         character:WaitForChild("Highlight").FillColor = colorEnum.white
         self.paintCan.fluid.Transparency = 1

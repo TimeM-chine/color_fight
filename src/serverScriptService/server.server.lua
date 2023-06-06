@@ -245,6 +245,8 @@ RemoteEvents.getFriendRewards.OnServerEvent:Connect(function(player, ind)
             playerIns:SetOneData(dataKey.tempSkInfo, {1, universalEnum.oneHour * 2})
         end
     end
+    local friendsRewards = playerIns:GetOneData(dataKey.friendsRewards)
+    friendsRewards[ind] = true
     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)

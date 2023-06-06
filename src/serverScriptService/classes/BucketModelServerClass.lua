@@ -51,7 +51,7 @@ function BucketModelServerClass.new(toolM:Part)
                 playerIns:SetOneData(dataKey.lv1Time, lv1Time)
                 BillboardManager.savePlayerRankData(playerWhoTriggered.UserId, playerIns:GetOneData(dataKey.lv1Time), rankListConfig.listNames.lv1Time)
             end
-
+            print(`{playerWhoTriggered.Name} passed in {lv1Time}`)
             BillboardManager.savePlayerRankData(playerWhoTriggered.UserId, playerIns:GetOneData(dataKey.lv1Wins), rankListConfig.listNames.lv1Win)
 
             playerWhoTriggered.leaderstats.Wins.Value = playerIns:GetOneData(dataKey.totalWins)
