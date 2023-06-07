@@ -117,6 +117,7 @@ workspace.spawn.shoeShop.showPart.Touched:Connect(function(part:Part)
     if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
         touching = true
         local frameIns = uiController.PushScreen(screenEnum.shopFrame)
+        frameIns:CheckShoes()
         frameIns:OpenShoeShop()
         task.delay(2, function()
             touching = false
@@ -127,14 +128,7 @@ end)
 workspace.spawn.signBox.touchPart.Touched:Connect(function(part:Part)
     if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
         touching = true
-        if LocalPlayer:IsInGroup(17008261) then
-            uiController.PushScreen(screenEnum.loginRewardsFrame)
-            GAModule:addDesignEvent({
-                eventId = `pageCheck:loginPage:{LocalPlayer.UserId}`
-            })
-        elseif not PlayerGui.pushScreen.Enabled then
-            uiController.PushScreen(screenEnum.wantLikeFrame)
-        end
+        uiController.PushScreen(screenEnum.loginRewardsFrame)
         task.delay(2, function()
             touching = false
         end)
@@ -174,6 +168,12 @@ LocalPlayer.Character.Humanoid.HealthChanged:Connect(function(health)
 
     for i= health + 1, 6 do
         hpFrame['hp'..i].full.Visible = false
+    end
+
+    if health < 6 then
+        hpFrame.buyHeartBtn.Visible = true
+    else
+        hpFrame.buyHeartBtn.Visible = false
     end
 end)
 

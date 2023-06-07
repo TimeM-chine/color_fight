@@ -144,6 +144,9 @@ function GamePlayerClass:OnChatted(message, recipient)
     elseif message == '/helmet' then
         local as = game.ServerStorage:FindFirstChild("helmet"):Clone()
         as.Parent = self.player.Character
+    elseif message == '/wins' then
+        self:UpdatedOneData(dataKey.wins, 2)
+        print("now wins", self:GetOneData(dataKey.wins))
     end
 end
 

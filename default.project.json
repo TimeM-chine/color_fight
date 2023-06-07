@@ -82,6 +82,9 @@
                 },
                 "playerLiveBackEvent": {
                     "$className": "RemoteEvent"
+                },
+                "palletLeaderNum":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -99,6 +102,9 @@
                     "$className":"BindableEvent"
                 },
                 "densityEvent":{
+                    "$className":"BindableEvent"
+                },
+                "putonShoesEvent":{
                     "$className":"BindableEvent"
                 }
             },
@@ -263,11 +269,6 @@
         },
         "Lighting": {
             "$properties": {
-                "Ambient": [
-                    255,
-                    255,
-                    255
-                ],
                 "Brightness": 1,
                 "GlobalShadows": true,
                 "Outlines": false,

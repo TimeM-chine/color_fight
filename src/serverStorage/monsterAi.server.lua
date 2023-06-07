@@ -1,6 +1,7 @@
 local ServerStorage = game:GetService("ServerStorage")
 
 ---- services ----
+local Debris = game:GetService("Debris")
 
 ---- modules -----
 local SimplePath = require(game.ServerScriptService.modules.SimplePath)
@@ -25,6 +26,9 @@ local aniTrack = animator:LoadAnimation(walkAnim)
 local playerTargetTime = {}
 local monsterSound:Sound = game.SoundService.monster:Clone()
 local targetTraceTime = 0
+local chasingPlayerSpeed = 35
+local normalSpeed = 22
+local coolDown = 6
 
 ---- events ----
 local remoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -38,7 +42,7 @@ local pathParam = table.clone(argsEnum.CreatePath)
 pathParam.AgentCanClimb = false
 pathParam.AgentCanJump = false
 pathParam.AgentRadius = 1
-pathParam.AgentHeight = 8
+pathParam.AgentHeight = 15
 pathParam.WaypointSpacing = 5
 -- local spParam = table.clone(argsEnum.SimplePath)
 -- spParam.TIME_VARIANCE = 0.3
@@ -64,8 +68,11 @@ function HurtPlayer(player)
         local human:Humanoid = player.Character.Humanoid
         if human.Health > 1 then
             human:TakeDamage(1)
+            local force = Instance.new("ForceField")
+            force.Parent = player.Character
+            Debris:AddItem(force, 10)
             print(`hurt {player}, last player {lastHurtPlayer}`)
-        else
+        elseif not player.Character:FindFirstChild("ForceField") then
             player.Character.beforeDeath.Value = true
             remoteEvents.beforeDeathEvent:FireClient(player)
         end
@@ -81,7 +88,7 @@ function SetLastHurtPlayer(player)
     lastHurtPlayer = player
 
     cor = coroutine.create(function()
-        task.wait(6)
+        task.wait(coolDown)
         lastHurtPlayer = nil
     end)
     coroutine.resume(cor)
@@ -127,6 +134,11 @@ local function GetNextTarget()
     end
     local character, dist = GetNearestCharacterAndDist()
     if character and character.HumanoidRootPart and dist <= 150 then
+
+        if dist < 50 then
+            agent.Humanoid.WalkSpeed = normalSpeed
+        end
+
         local player = game.Players:GetPlayerFromCharacter(character)
         if playerTargetTime[player] then
             playerTargetTime[player] += 1

@@ -67,7 +67,7 @@ function friendsRewardsClass:CheckFriends()
             self.scroll['Frame'..i].Frame.btn.Text = "received"
             self.scroll['Frame'..i].Frame.btn.BackgroundTransparency = 1
         end
-        print(self.scroll['Frame'..i].Frame.btn.Text)
+        -- print(self.scroll['Frame'..i].Frame.btn.Text)
         local con = self.scroll['Frame'..i].Frame.btn.MouseButton1Click:Connect(function()
             local txt = self.scroll['Frame'..i].Frame.btn.Text
             if txt == "invite" then

@@ -20,6 +20,7 @@ local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
+local BindableEvents = game.ReplicatedStorage.BindableEvents
 local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
 local getLoginRewardEvent = game.ReplicatedStorage.RemoteEvents.getLoginRewardEvent
 local playerHideSkill = game.ReplicatedStorage.RemoteEvents.playerHideSkill
@@ -71,9 +72,20 @@ PS.PlayerAdded:Connect(function(player)
     local pIns = PlayerServerClass.GetIns(player)
     local nowDay = math.floor(os.time()/universalEnum.oneDay)
     local lastLoginTimeStamp = pIns:GetOneData(dataKey.lastLoginTimeStamp)
+    local requestTime = 0
     while not lastLoginTimeStamp do
+        requestTime += 1
         task.wait(1)
         lastLoginTimeStamp = pIns:GetOneData(dataKey.lastLoginTimeStamp)
+        if requestTime > 15 then
+            for _, p in game.Players:GetPlayers() do
+                if p == player then
+                    player:Kick()
+                    break
+                end
+            end
+            return
+        end
     end
     local lastDay = math.floor(lastLoginTimeStamp/universalEnum.oneDay)
     if nowDay ~= lastDay then
@@ -86,14 +98,15 @@ PS.PlayerAdded:Connect(function(player)
     leaderstats.Name = "leaderstats"
     leaderstats.Parent = player
 
+    local Pallets = Instance.new("IntValue")
+    Pallets.Name = "Pallets"
+    Pallets.Value = 0
+    Pallets.Parent = leaderstats
+
     local wins = Instance.new("IntValue")
     wins.Name = "Wins"
     wins.Value = pIns:GetOneData(dataKey.totalWins)
     wins.Parent = leaderstats
-    local NowWins = Instance.new("IntValue")
-    NowWins.Name = "NowWins"
-    NowWins.Value = pIns:GetOneData(dataKey.wins)
-    NowWins.Parent = leaderstats
 end)
 
 
@@ -212,6 +225,34 @@ RemoteEvents.putonShoeEvent.OnServerEvent:Connect(function(player, lv, ind)
     shoeLeft.Parent = Character
 end)
 
+BindableEvents.putonShoesEvent.Event:Connect(function(player, lv, ind)
+    if lv == 0 then
+        return
+    end
+    local playerIns = PlayerServerClass.GetIns(player)
+    playerIns:SetOneData(dataKey.chosenShoeInd, {lv, ind})
+
+    local Character = player.Character
+    if Character:FindFirstChild("left") then
+        Character.left:Destroy()
+    end
+    if Character:FindFirstChild("right") then
+        Character.right:Destroy()
+    end
+
+    local shoeLeft:Accessory = game.ServerStorage.shoes[tostring(lv)].left:Clone()
+    local shoeRight:Accessory = game.ServerStorage.shoes[tostring(lv)].right:Clone()
+    for _, handle in shoeLeft:GetChildren() do
+        handle.Mesh.TextureId = TextureIds.shoeMeshTexture[lv][ind]
+    end
+    for _, handle in shoeRight:GetChildren() do
+        handle.Mesh.TextureId = TextureIds.shoeMeshTexture[lv][ind]
+    end
+
+    shoeRight.Parent = Character
+    shoeLeft.Parent = Character
+end)
+
 RemoteEvents.friendInEvent.OnServerEvent:Connect(function(player, friendId)
     local playerIns = PlayerServerClass.GetIns(player)
     local friendsInvited = playerIns:GetOneData(dataKey.friendsInvited)
@@ -253,6 +294,12 @@ RemoteEvents.getFriendRewards.OnServerEvent:Connect(function(player, ind)
 end)
 
 
+RemoteEvents.palletLeaderNum.OnServerEvent:Connect(function(player)
+    local leaderstats = player.leaderstats
+    leaderstats.Pallets.Value += 1
+end)
+
+
 function remoteFunctions.Redeem.OnServerInvoke(player, key)
     local playerIns = PlayerServerClass.GetIns(player)
 
@@ -270,7 +317,7 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
             local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
             RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
             return "success", TextureIds.skillImg[3][1], "Experience ParkourMan for 5 minutes!"
-        elseif key == "YOLDLDO" then
+        elseif key == "YOLDLO" then
             playerIns:AddHealth()
             return "success", TextureIds.heart, "You got a heart, HP +1!"
         else

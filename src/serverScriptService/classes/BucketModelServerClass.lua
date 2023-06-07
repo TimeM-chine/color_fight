@@ -55,7 +55,7 @@ function BucketModelServerClass.new(toolM:Part)
             BillboardManager.savePlayerRankData(playerWhoTriggered.UserId, playerIns:GetOneData(dataKey.lv1Wins), rankListConfig.listNames.lv1Win)
 
             playerWhoTriggered.leaderstats.Wins.Value = playerIns:GetOneData(dataKey.totalWins)
-            playerWhoTriggered.leaderstats.NowWins.Value = playerIns:GetOneData(dataKey.wins)
+            playerWhoTriggered.leaderstats.Pallets.Value = 0
 
             playerIns:SetColor("white")
             playerLevelTime[playerWhoTriggered] = os.time()

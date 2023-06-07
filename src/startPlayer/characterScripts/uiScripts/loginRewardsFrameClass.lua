@@ -15,6 +15,7 @@ local localPlayer = game.Players.LocalPlayer
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
 local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
+local screenEnum = require(game.ReplicatedStorage.enums.screenEnum)
 
 ---- events ----
 local getLoginRewardEvent = game.ReplicatedStorage.RemoteEvents.getLoginRewardEvent
@@ -60,20 +61,32 @@ function loginRewardsFrameClass:CheckLoginDay()
             receiveBtn.missed.Visible = true
             local con = receiveBtn.missed.MouseButton1Click:Connect(function()
                 localPlayer.Character.HumanoidRootPart.clickUI:Play()
-                self:ReSign(i)
+
+                if localPlayer:IsInGroup(17008261) then
+                    self:ReSign(i)
+                else
+                    uiController.PushScreen(screenEnum.wantLikeFrame)
+                end
+
             end)
             table.insert(self.connections, con)
         end
 
         local receiveCon = receiveBtn.MouseButton1Click:Connect(function()
             localPlayer.Character.HumanoidRootPart.clickUI:Play()
+            
+            if localPlayer:IsInGroup(17008261) then
+                receiveBtn.received.Visible = true
+                getLoginRewardEvent:FireServer(i)
+                GAModule:addDesignEvent({
+                    eventId = `rewardsCheck:loginRewards:day{i}:normal:{localPlayer.UserId}`
+                })
+                uiController.SetNotification("success", "bottom")
+            else
+                uiController.PushScreen(screenEnum.wantLikeFrame)
+            end
 
-            receiveBtn.received.Visible = true
-            getLoginRewardEvent:FireServer(i)
-            GAModule:addDesignEvent({
-                eventId = `rewardsCheck:loginRewards:day{i}:normal:{localPlayer.UserId}`
-            })
-            uiController.SetNotification("success", "bottom")
+
         end)
         table.insert(self.connections, receiveCon)
 
@@ -100,10 +113,12 @@ function loginRewardsFrameClass:ReSign(day)
     local confirmBtn:ImageButton = self.modalFrame.inner.confirmBtn
     local cancelBtn:ImageButton = self.modalFrame.inner.cancelBtn
 
-    local con1 = confirmBtn.MouseButton1Click:Connect(function()        
+    local con1 = confirmBtn.MouseButton1Click:Connect(function()   
         local wins = playerModule.GetPlayerOneData(dataKey.wins)
         if wins >= gameConfig.resignCost then
             self.innerFrame["day"..day].receiveBtn.received.Visible = true
+            self.innerFrame["day"..day].receiveBtn.missed.Visible = false
+            self.modalFrame.Visible = false
             getLoginRewardEvent:FireServer(day, true)
             GAModule:addDesignEvent({
                 eventId = `rewardsCheck:loginRewards:day{day}:resign:{localPlayer.UserId}`

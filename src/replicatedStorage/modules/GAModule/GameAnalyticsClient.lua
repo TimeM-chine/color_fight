@@ -50,7 +50,7 @@ end
 
 function module:addDesignEvent(param)
     myDesignEvent:FireServer(param)
-    print("send,", param)
+    -- print("send,", param)
 end
 
 return module

@@ -47,10 +47,16 @@ function PlayerClientModule.GetPlayerSpeed()
         shoeId = PlayerClientModule.GetPlayerOneData(dataKey.chosenShoeInd)
         task.wait(1)
     end
+    local shoeBuff = 0
     shoeId = shoeId[1]
+    if shoeId > 0 then
+        shoeBuff = shoeId*10 + 5
+    end
     local txt = LocalPlayer.PlayerGui.hudScreen.bgFrame.speedFrame.TextLabel.Text
     local speedBuff = tonumber(string.match(txt, "Speed buff: (%d+)%%"))
-    return math.ceil(universalEnum.normalSpeed * (shoeId*10 +5 + 100 + speedBuff + rewardSpeed)/ 100)
+    print("total speed buff", shoeBuff + 100 + speedBuff + rewardSpeed)
+    print(`shoeBuff :{shoeBuff}, speed buff:{speedBuff}, rewardSpeed:{rewardSpeed}`)
+    return math.ceil(universalEnum.normalSpeed * (shoeBuff + 100 + speedBuff + rewardSpeed)/ 100)
 end
 
 function PlayerClientModule.SetRewardSpeed(value)

@@ -67,7 +67,16 @@ LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = playerModule.GetPlaye
 
 
 BindableEvents.densityEvent.Event:Connect(function(value)
-    density = value
+    if value == "sk4" then
+        density = 0.6
+        task.delay(30, function()
+            if density == 0.6 then
+                density = 0.9
+            end
+        end)
+    else
+        density = value
+    end
 end)
 
 function DieRest()
@@ -164,7 +173,7 @@ while task.wait(0.5) do
         if density then
             game.Lighting.Atmosphere.Density = density
         else
-            game.Lighting.Atmosphere.Density = 0.8
+            game.Lighting.Atmosphere.Density = 0.9
         end
     end
 end

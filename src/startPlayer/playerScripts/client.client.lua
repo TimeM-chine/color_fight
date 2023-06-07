@@ -225,6 +225,8 @@ for _, pallet in workspace.pallets:GetDescendants() do
                 BindableEvents.notifyEvent:Fire(tipsConfig.pallets[palletNum])
             end
 
+            RemoteEvents.palletLeaderNum:FireServer()
+
             if palletNum == targetNum then
                 workspace.lastDoors['level'..ind].CanCollide = false
                 workspace.lastDoors['level'..ind].Transparency = 1

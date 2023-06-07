@@ -18,6 +18,7 @@ local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
 local playerHideSkill = game.ReplicatedStorage.RemoteEvents.playerHideSkill
 local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 local chooseSkillEvent = game.ReplicatedStorage.RemoteEvents.chooseSkillEvent
+local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 ---- modules ----
 local playerModule = require(script.Parent.PlayerClientModule)
@@ -75,16 +76,14 @@ function SkillModule.Sk3()
     notifyEvent:Fire("You will speed up for few seconds.")
 
     LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed() * 1.65
-    task.wait(10)
-    LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
+    task.delay(10, function()
+        LocalPlayer.Character.Humanoid.WalkSpeed = playerModule.GetPlayerSpeed()
+    end)
 end
 
 function SkillModule.Sk4()
     notifyEvent:Fire("Your vision will be larger for few seconds.")
-
-    game.Lighting.Atmosphere.Density = 0.6
-    task.wait(20)
-    game.Lighting.Atmosphere.Density = 0.7
+    BindableEvents.densityEvent:Fire("sk4")
 end
 
 function SkillModule.Sk5()
@@ -120,6 +119,9 @@ end
 
 function SkillModule.IntoCd()
     cdImg.Visible = true
+    if co then
+        coroutine.close(co)
+    end
     co = coroutine.create(runCd)
     coroutine.resume(co)
 end

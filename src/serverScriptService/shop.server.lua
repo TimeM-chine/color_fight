@@ -20,6 +20,7 @@ local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
+local BindableEvents = game.ReplicatedStorage.BindableEvents
 
 ---- enums ----
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
@@ -62,8 +63,8 @@ end
 
 function BackToGame(receipt, player)
     local force = Instance.new("ForceField")
-    Debris:AddItem(force, 5)
     force.Parent = player.Character
+    Debris:AddItem(force, 15)
     player.Character.beforeDeath.Value = false
     RemoteEvents.playerLiveBackEvent:FireClient(player)
     return true
@@ -85,6 +86,7 @@ function BuyShoes(receipt, player)
             local number = TableModule.Choices(shoeLeft)
             shoeList[shoeInd][number[1]] = true
             RemoteEvents.refreshScreenEvent:FireClient(player)
+            BindableEvents.putonShoesEvent:Fire(player,shoeInd, number[1])
             return true
         end
     end
