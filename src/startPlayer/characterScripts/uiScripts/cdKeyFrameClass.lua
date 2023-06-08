@@ -54,6 +54,8 @@ function cdKeyFrameClass.new(frame)
                 BindableEvents.notifyEvent:Fire("The key is used.", "top")
             elseif res == "wrong key" then
                 BindableEvents.notifyEvent:Fire("Wrong key.", "top")
+            elseif res == "expired" then
+                BindableEvents.notifyEvent:Fire("The key is expired.", "top")
             elseif res == "success" then
                 ins.confirmBtn.Text = "Confirm"
                 ins.textBox.Visible = false

@@ -2,6 +2,8 @@
 -- ui client
 -- ================================================================================
 ---- services ----
+local Debris = game:GetService("Debris")
+local Lighting = game:GetService("Lighting")
 local MarketplaceService = game:GetService"MarketplaceService"
 
 ---- variables ----
@@ -20,6 +22,12 @@ local friendNum = 0
 local cdKeyBtn = hudBgFrame.cdKeyFrame.btn
 local donateBtn = hudBgFrame.donateFrame.btn
 local touching
+--- navigation ---
+local navTimeLeft = 3
+local visionTime = 15
+local NavCD = 60
+local cd = 0
+local co
 
 ---- events ----
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
@@ -62,16 +70,16 @@ donateBtn.MouseButton1Click:Connect(function()
     uiController.PushScreen(screenEnum.donateFrame)
 end)
 
-if os.time() > gameConfig.onlineRewardsEnd then
-    onlineBtn.Visible = false
-else
-    onlineBtn.MouseButton1Click:Connect(function()
-        uiController.PushScreen(screenEnum.onlineRewardsFrame)
-        GAModule:addDesignEvent({
-            eventId = `pageCheck:onlineRewardsPage:{LocalPlayer.UserId}`
-        })
-    end)
-end
+-- if os.time() > gameConfig.onlineRewardsEnd then
+--     onlineBtn.Visible = false
+-- else
+onlineBtn.MouseButton1Click:Connect(function()
+    uiController.PushScreen(screenEnum.onlineRewardsFrame)
+    GAModule:addDesignEvent({
+        eventId = `pageCheck:onlineRewardsPage:{LocalPlayer.UserId}`
+    })
+end)
+-- end
 
 
 shopBtn.MouseButton1Click:Connect(function()
@@ -93,6 +101,116 @@ hudBgFrame.inGame.skillBtn.MouseButton1Click:Connect(function()
 end)
 
 
+--[[---- navigation btn ----]]--
+local toolAndDoor = {
+    keys = workspace.toolDoors.door,
+    shovel = workspace.toolDoors.mound,
+    crowbar = workspace.toolDoors.fence,
+    cassette = workspace.toolDoors.xbox,
+    musicScore = workspace.toolDoors.piano,
+    spanner = workspace.toolDoors.baffle
+}
+
+local cdImg = hudBgFrame.inGame.navigationBtn.cdImage
+cdImg.Visible = false
+function runCd()
+    if cd == 0 then
+        cd = NavCD
+    end
+    while cd >= 1 do
+        -- print("cd", cd)
+        cd -= 1
+        cdImg.TextLabel.Text = tostring(cd)
+        if cd == 0 then
+            cdImg.Visible = false
+        end
+        task.wait(1)
+    end
+end
+
+function IntoCd()
+    cdImg.Visible = true
+    if co then
+        coroutine.close(co)
+    end
+    co = coroutine.create(runCd)
+    coroutine.resume(co)
+end
+
+
+hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
+    if cd > 0 then
+        uiController.SetNotification("Skill is in CD.")
+        return
+    end
+
+    if Lighting.Atmosphere.Density == 0 then
+        uiController.SetNotification("Can not use here.")
+        return
+    end
+
+    if navTimeLeft <= 0 then
+        MarketplaceService:PromptProductPurchase(LocalPlayer, productIdEnum.navigation)
+        return
+    end
+
+    local lastDoor = workspace.lastDoors.level1
+    if lastDoor.CanCollide == false then
+        IntoCd()
+        navTimeLeft -= 1
+
+        local hl = Instance.new("Highlight")
+        lastDoor.Transparency = 0
+        task.delay(visionTime, function()
+            lastDoor.Transparency = 1
+        end)
+        hl.Parent = lastDoor
+        Debris:AddItem(hl, visionTime)
+    end
+
+    local colorString = LocalPlayer.Character:WaitForChild("colorString")
+    local char = LocalPlayer.Character
+    local tool = false
+    if colorString.Value == "empty" then
+        for toolName, door in toolAndDoor do
+            if char:FindFirstChild(toolName) then
+                tool = true
+                local hl = Instance.new("Highlight")
+                hl.Parent = door
+                Debris:AddItem(hl, visionTime)
+
+                IntoCd()
+                navTimeLeft -= 1
+                break
+            end
+        end
+
+        if not tool then
+            uiController.SetNotification("Find a bucket or a tool first.")
+        end
+    else
+
+        IntoCd()
+        navTimeLeft -= 1
+
+        local hl = Instance.new("Highlight")
+        local cDoor:Part = workspace.colorDoors[colorString.Value.."Door"]
+        cDoor.Transparency = 0
+        task.delay(visionTime, function()
+            cDoor.Transparency = 0.45
+        end)
+        hl.Parent = workspace.colorDoors[colorString.Value.."Door"]
+        Debris:AddItem(hl, visionTime)
+    end
+
+
+end)
+
+
+RemoteEvents.buyNavigation.OnClientEvent:Connect(function()
+    navTimeLeft = 1
+end)
+------ navigation btn ------
 
 inviteBtn.MouseButton1Click:Connect(function()
     LocalPlayer.Character.HumanoidRootPart.clickUI:Play()
@@ -177,7 +295,6 @@ LocalPlayer.Character.Humanoid.HealthChanged:Connect(function(health)
     end
 end)
 
-
 ---------------------- friends -------------------------
 local function onPlayerAdded(player:Player)
 	if LocalPlayer:IsFriendsWith(player.UserId) then
@@ -198,6 +315,10 @@ game.Players.PlayerAdded:Connect(onPlayerAdded)
 game.Players.PlayerRemoving:Connect(function(player)
     if LocalPlayer:IsFriendsWith(player.UserId) then
         friendNum -= 1
+    end
+    -- if player add friends in game, something would happen
+    if friendNum < 0 then
+        return
     end
     friendFrame.TextLabel.Text = `friend num: {friendNum}`
     speedFrame.TextLabel.Text = `Speed buff: {math.min(15, friendNum*5)}%`

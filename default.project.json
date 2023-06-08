@@ -85,6 +85,9 @@
                 },
                 "palletLeaderNum":{
                     "$className":"RemoteEvent"
+                },
+                "buyNavigation":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {

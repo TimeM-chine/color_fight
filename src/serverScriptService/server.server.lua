@@ -307,8 +307,8 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
     if table.find(cdKeyUsed, key) then
         return "used"
     else
-        table.insert(cdKeyUsed, key)
         if key == "KoiStudio" then
+            table.insert(cdKeyUsed, key)
             if not playerIns:GetOneData(dataKey.career)[3] then
                 playerIns:SetOneData(dataKey.tempSkStart, os.time())
                 playerIns:SetOneData(dataKey.tempSkInfo, {3, universalEnum.oneMinute * 5})
@@ -318,6 +318,18 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
             RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
             return "success", TextureIds.skillImg[3][1], "Experience ParkourMan for 5 minutes!"
         elseif key == "YOLDLO" then
+            if os.time() > gameConfig.cdkExpireTime.YOLDLO then
+                return "expired"
+            end
+            table.insert(cdKeyUsed, key)
+
+            playerIns:AddHealth()
+            return "success", TextureIds.heart, "You got a heart, HP +1!"
+        elseif key == "Flashbackjnr" then
+            if os.time() > gameConfig.cdkExpireTime.Flashbackjnr then
+                return "expired"
+            end
+            table.insert(cdKeyUsed, key)
             playerIns:AddHealth()
             return "success", TextureIds.heart, "You got a heart, HP +1!"
         else

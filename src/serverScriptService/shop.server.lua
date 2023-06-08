@@ -118,6 +118,10 @@ function Donate(receipt, player:Player)
     end
 end
 
+function Navigation(receipt, player:Player)
+    RemoteEvents.buyNavigation:FireClient(player)
+end
+
 local productFunctions = {}
 for _, value in productIdEnum.career do
     productFunctions[value] = BuyCareers
@@ -132,6 +136,7 @@ for _, value in productIdEnum.donate do
 end
 productFunctions[productIdEnum.heart] = AddHealth
 productFunctions[productIdEnum.backGame] = BackToGame
+productFunctions[productIdEnum.navigation] = Navigation
 
 
 local function processReceipt(receiptInfo)

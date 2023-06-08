@@ -3,6 +3,7 @@ local localPlayer = game.Players.LocalPlayer
 local BasePartCls = require(game.Players.LocalPlayer.PlayerScripts.classes.BasePartCls)
 local pModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
 local BindableEvents = game.ReplicatedStorage.BindableEvents
+local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 
 ---- main ----
 
@@ -40,6 +41,32 @@ function TeleportPart:Init()
                 BindableEvents.densityEvent:Fire(self.folder.density.Value)
                 -- Lighting.Atmosphere.Density = self.folder.density.Value
             end
+
+            ---- color world ----
+            if self.destination.Name == "mainCityLocation" then
+                for _, part:Part in workspace.colorWorld:GetDescendants() do
+                    if not part:IsA("BasePart") then continue end
+                    if math.random(0, 1) > 0 then
+                        part.Color = colorEnum.white
+                    else
+                        part.Color = colorEnum.black
+                    end
+                end
+
+                local door = workspace.colorWorld.getBackDoor
+                door.Part.CanTouch = false
+                for _, part in door:GetChildren() do
+                    part.CanCollide = false
+                    part.Transparency = 1
+                end
+
+                local BlackBucket = workspace.bucketModels.BlackBucket
+                BlackBucket.ProximityPrompt.Enabled = true
+                BlackBucket.CanCollide = true
+                BlackBucket.Transparency = 0
+
+            end
+
 
             local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild("teleport")
             if music then

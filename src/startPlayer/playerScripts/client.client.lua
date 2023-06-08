@@ -58,7 +58,10 @@ clientSys:ListenForEvent(RemoteEvents.changeColorEvent, function(args)
         end
         game.Lighting.Atmosphere.Density = 0
         local door = workspace.colorWorld.getBackDoor
-        door.Part.CanTouch = true
+
+        task.delay(2.5, function()
+            door.Part.CanTouch = true
+        end)
         local tweenInfo = TweenInfo.new(2)
         local final = {
             Transparency = 0
