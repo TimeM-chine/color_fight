@@ -26,7 +26,7 @@ local http_api = {
 	},
 }
 
-local banStudio = false  -- if true, game will send data to website even in studio
+local banStudio = false
 local HTTP = game:GetService("HttpService")
 local logger = require(script.Parent.Logger)
 

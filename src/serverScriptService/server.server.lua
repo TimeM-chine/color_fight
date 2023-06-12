@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 ---- modules ----
 local SystemClass = require(game.ServerScriptService.classes.ServerSystemClass)
 local KeyboardRecall = require(game.ReplicatedStorage.modules.KeyboardRecall)
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
 local ModelModule = require(game.ReplicatedStorage.modules.ModelModule)
 local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
@@ -323,6 +324,9 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
             table.insert(cdKeyUsed, key)
 
             playerIns:AddHealth()
+            GAModule:addDesignEvent(player.UserId, {
+                eventId = `cdk:{key}`
+            })
             return "success", TextureIds.heart, "You got a heart, HP +1!"
         elseif key == "Flashbackjnr" then
             if os.time() > gameConfig.cdkExpireTime.Flashbackjnr then
@@ -330,6 +334,9 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
             end
             table.insert(cdKeyUsed, key)
             playerIns:AddHealth()
+            GAModule:addDesignEvent(player.UserId, {
+                eventId = `cdk:{key}`
+            })
             return "success", TextureIds.heart, "You got a heart, HP +1!"
         else
             return "wrong key"

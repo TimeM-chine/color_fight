@@ -27,6 +27,7 @@ local navTimeLeft = 3
 local visionTime = 15
 local NavCD = 60
 local cd = 0
+local free = true
 local co
 
 ---- events ----
@@ -137,6 +138,18 @@ function IntoCd()
     coroutine.resume(co)
 end
 
+function CheckFree()
+    if free then
+        GAModule:addDesignEvent({
+            eventId = `useSkill:findDoor:free`
+        })
+    else
+        GAModule:addDesignEvent({
+            eventId = `useSkill:findDoor:payed`
+        })
+    end
+end
+
 
 hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
     if cd > 0 then
@@ -158,6 +171,7 @@ hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
     if lastDoor.CanCollide == false then
         IntoCd()
         navTimeLeft -= 1
+        CheckFree()
 
         local hl = Instance.new("Highlight")
         lastDoor.Transparency = 0
@@ -181,6 +195,7 @@ hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
 
                 IntoCd()
                 navTimeLeft -= 1
+                CheckFree()
                 break
             end
         end
@@ -192,6 +207,7 @@ hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
 
         IntoCd()
         navTimeLeft -= 1
+        CheckFree()
 
         local hl = Instance.new("Highlight")
         local cDoor:Part = workspace.colorDoors[colorString.Value.."Door"]
@@ -209,6 +225,7 @@ end)
 
 RemoteEvents.buyNavigation.OnClientEvent:Connect(function()
     navTimeLeft = 1
+    free = false
 end)
 ------ navigation btn ------
 

@@ -120,6 +120,7 @@ end
 
 function Navigation(receipt, player:Player)
     RemoteEvents.buyNavigation:FireClient(player)
+    return true
 end
 
 local productFunctions = {}
