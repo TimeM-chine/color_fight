@@ -68,12 +68,12 @@ local toolDoorsFolder = workspace.toolDoors
 for _, toolDoor in toolDoorsFolder:GetChildren() do
     toolDoor.ClickDetector.MouseClick:Connect(function(player)
         local hasTool = player.Character:FindFirstChild(toolDoor.require.Value)
-        print(player, hasTool, toolDoor.require.Value)
+        -- print(player, hasTool, toolDoor.require.Value)
         if hasTool then
             hasTool:Destroy()
             hideToolDoorEvent:FireClient(player, toolDoor)
         else
-            print("wrong tool")
+            -- print("wrong tool")
         end
         task.delay(0.5, function()
             local checkTool = player.Character:FindFirstChild(toolDoor.require.Value)

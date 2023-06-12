@@ -70,7 +70,7 @@ function HurtPlayer(player)
             local force = Instance.new("ForceField")
             force.Parent = player.Character
             Debris:AddItem(force, 10)
-            print(`hurt {player}, last player {lastHurtPlayer}`)
+            -- print(`hurt {player}, last player {lastHurtPlayer}`)
         elseif not player.Character:FindFirstChild("ForceField") then
             player.Character.beforeDeath.Value = true
             remoteEvents.beforeDeathEvent:FireClient(player)

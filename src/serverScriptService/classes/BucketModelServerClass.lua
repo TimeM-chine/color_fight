@@ -8,6 +8,7 @@ local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerC
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- variables ----
 local bucketModelInsList = {}
@@ -39,7 +40,9 @@ function BucketModelServerClass.new(toolM:Part)
         local playerIns = PlayerServerClass.GetIns(playerWhoTriggered)
         playerIns:SetColor(self.toolModel.colorString.Value)
         hideBucketEvent:FireClient(playerWhoTriggered, self.toolModel)
-        -- destroyEvent:FireClient(playerWhoTriggered, self.toolModel)
+        GAModule:addDesignEvent(playerWhoTriggered.UserId, {
+            eventId = `pickUpBucket:{playerWhoTriggered.UserId}:{self.toolModel.colorString.Value}`
+        })
         if self.toolModel.colorString.Value == "black" then
             serverNotifyEvent:FireClient(playerWhoTriggered, "Return to the main city and unlock the next level", "bottom")
             playerIns:UpdatedOneData(dataKey.lv1Wins, 1)

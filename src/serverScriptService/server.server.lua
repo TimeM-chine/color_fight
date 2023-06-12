@@ -121,7 +121,6 @@ getLoginRewardEvent.OnServerEvent:Connect(function(player, day, isResign)
     local playerIns = PlayerServerClass.GetIns(player)
     if isResign then
         playerIns:UpdatedOneData(dataKey.wins, -gameConfig.resignCost)
-        player.leaderstats.NowWins.Value = playerIns:GetOneData(dataKey.wins)
     end
     if day == 1 then
         playerIns:AddHealth()

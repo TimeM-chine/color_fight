@@ -119,9 +119,9 @@ end)
 --     wall.Transparency = 0.2
 -- end
 game.Players.PlayerRemoving:Connect(function(player)
+    local color = lastColor or "noPlay"
     GAModule:addDesignEvent({
-        eventId = "leaveWithColor",
-        value = lastColor or "noPlay"
+        eventId = `leaveWithColor:{player.UserId}:{color}`,
     })
 end)
 
