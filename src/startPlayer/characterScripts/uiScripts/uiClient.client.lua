@@ -23,7 +23,7 @@ local cdKeyBtn = hudBgFrame.cdKeyFrame.btn
 local donateBtn = hudBgFrame.donateFrame.btn
 local touching
 --- navigation ---
-local navTimeLeft = 3
+local navTimeLeft = 4
 local visionTime = 15
 local NavCD = 60
 local cd = 0

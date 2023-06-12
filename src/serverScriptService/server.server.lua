@@ -153,6 +153,9 @@ RemoteEvents.getOnlineRewardEvent.OnServerEvent:Connect(function(player, ind)
     local playerIns = PlayerServerClass.GetIns(player)
     local receivedOnlineTime = playerIns:GetOneData(dataKey.receivedOnlineTime)
     receivedOnlineTime[ind] = true
+    GAModule:addDesignEvent(player.UserId, {
+        `rewardsCheck:onlineRewards:ind{ind}`
+    })
     playerIns:AddHealth()
     -- if ind >=3 then
     --     playerIns:AddHealth()
@@ -291,6 +294,9 @@ RemoteEvents.getFriendRewards.OnServerEvent:Connect(function(player, ind)
     local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
     RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+    GAModule:addDesignEvent(player.UserId, {
+        `rewardsCheck:friendRewards:number{ind}`
+    })
 end)
 
 
