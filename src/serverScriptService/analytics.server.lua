@@ -2,7 +2,7 @@
 local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- classes ----
-local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
+-- local PlayerServerClass = require(game.ServerScriptService.classes.PlayerServerClass)
 
 ---- events ----
 local myDesignEvent = game.ReplicatedStorage.RemoteEvents.myDesignEvent

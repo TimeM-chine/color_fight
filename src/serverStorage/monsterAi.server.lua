@@ -26,7 +26,7 @@ local aniTrack = animator:LoadAnimation(walkAnim)
 local playerTargetTime = {}
 local monsterSound:Sound = game.SoundService.monster:Clone()
 local targetTraceTime = 0
-local normalSpeed = 19
+local normalSpeed = 18
 local coolDown = 6
 
 ---- events ----

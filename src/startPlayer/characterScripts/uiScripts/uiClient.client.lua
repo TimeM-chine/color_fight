@@ -23,9 +23,9 @@ local cdKeyBtn = hudBgFrame.cdKeyFrame.btn
 local donateBtn = hudBgFrame.donateFrame.btn
 local touching
 --- navigation ---
-local navTimeLeft = 4
+local navTimeLeft = 999
 local visionTime = 15
-local NavCD = 60
+local NavCD = 90
 local cd = 0
 local free = true
 local co
@@ -34,13 +34,13 @@ local co
 local RemoteEvents = game.ReplicatedStorage.RemoteEvents
 local notifyEvent = game.ReplicatedStorage.BindableEvents.notifyEvent
 local perTipEvent = game.ReplicatedStorage.BindableEvents.perTipEvent
-local addHealthEvent = game.ReplicatedStorage.RemoteEvents.addHealthEvent
+-- local addHealthEvent = game.ReplicatedStorage.RemoteEvents.addHealthEvent
 local serverNotifyEvent = game.ReplicatedStorage.RemoteEvents.serverNotifyEvent
 
 ---- enums ----
 local screenEnum = require(game.ReplicatedStorage.enums.screenEnum)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
-local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
+-- local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- modules ----
 local uiController = require(script.Parent.uiController)

@@ -5,5 +5,8 @@ return {
     cdkExpireTime = {
         YOLDLO = 1687449600,
         Flashbackjnr = 1687449600
+    },
+    careerWinPrice = {
+        3, 5, 7, 9
     }
 }

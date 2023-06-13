@@ -12,12 +12,14 @@ local remoteEvents = game.ReplicatedStorage.RemoteEvents
 local uiController = require(script.Parent.uiController)
 local playerModule = require(game.Players.LocalPlayer.PlayerScripts.modules.PlayerClientModule)
 local SkillModule = require(game.Players.LocalPlayer.PlayerScripts.modules.SkillModule)
+local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
 ---- enums ----
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
+local GameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
@@ -82,6 +84,9 @@ end
 
 function shopFrameClass:RefreshCareer()
     local career = playerModule.GetPlayerOneData(dataKey.career)
+    local nowWins = playerModule.GetPlayerOneData(dataKey.wins)
+    local winTxt = self.frame.careerShopFrame.win.win.wins
+    winTxt.Text = nowWins
     for i = 1, #career do
         local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career" .. i]
         local confirmBtn = careerFrame.Frame.Frame.confirm
@@ -103,6 +108,9 @@ function shopFrameClass:CheckCareer()
     local career = playerModule.GetPlayerOneData(dataKey.career)
     local tempSkInfo = playerModule.GetPlayerOneData(dataKey.tempSkInfo)
     local tempSkStart = playerModule.GetPlayerOneData(dataKey.tempSkStart)
+    local nowWins = playerModule.GetPlayerOneData(dataKey.wins)
+    local winTxt = self.frame.careerShopFrame.win.win.wins
+    winTxt.Text = nowWins
 
     for i=1, #career do
         local careerFrame = self.frame.careerShopFrame.ScrollingFrame["career"..i]
@@ -134,7 +142,22 @@ function shopFrameClass:CheckCareer()
 
         con = confirmBtn.MouseButton1Click:Connect(function()
             if confirmBtn.Text == "Buy" then
-                MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.career["sk"..i])
+                GAModule:addDesignEvent({
+                    eventId = `buttonCheck:buyBtn:career{i}`
+                })
+                if i == 5 then
+                    MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.career["sk"..i])
+                else
+                    nowWins = playerModule.GetPlayerOneData(dataKey.wins)
+                    uiController.ShowModalFrame(`This role cost {GameConfig.careerWinPrice[i]} wins, you have {nowWins} wins, sure to buy?`, function(args)
+                        if nowWins < GameConfig.careerWinPrice[i] then
+                            MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.career["sk"..i])
+                            uiController.SetNotification("not enough wins", "top")
+                        else
+                            remoteEvents.buyCareerByWin:FireServer(i)
+                        end
+                    end)
+                end
                 -- confirmBtn.Text = "Equip"
             elseif confirmBtn.Text == "Equip" then
                 uiController.SetNotification("success", "top")
@@ -244,11 +267,17 @@ function shopFrameClass:DestroyIns()
 end
 
 function shopFrameClass:OpenShoeShop()
+    GAModule:addDesignEvent({
+        eventId = `pageCheck:shopPage:shoeShop`
+    })
     self.frame.careerShopFrame.Visible = false
     self.frame.shoeShopFrame.Visible = true
 end
 
 function shopFrameClass:OpenCareerShop()
+    GAModule:addDesignEvent({
+        eventId = `pageCheck:shopPage:careerShop`
+    })
     self.frame.careerShopFrame.Visible = true
     self.frame.shoeShopFrame.Visible = false
 end

@@ -11,18 +11,18 @@ local CS = game:GetService("CollectionService")
 local ServerStorage = game:GetService("ServerStorage")
 
 ---- modules ----
-local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
-local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
+-- local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
+-- local BillboardManager = require(game.ServerScriptService.modules.BillboardManager)
 
 ---- enums ----
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
-local colorList = colorEnum.ColorList
-local colorValue = colorEnum.ColorValue
-local dataKey = require(game.ReplicatedStorage.enums.dataKey)
-local rankListConfig = require(game.ReplicatedStorage.configs.RankList)
+-- local colorList = colorEnum.ColorList
+-- local colorValue = colorEnum.ColorValue
+-- local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+-- local rankListConfig = require(game.ReplicatedStorage.configs.RankList)
 
 ---- events ----
-local remoteEvents = game.ReplicatedStorage.RemoteEvents
+-- local remoteEvents = game.ReplicatedStorage.RemoteEvents
 local teleportBindEvent = game.ReplicatedStorage.BindableEvents.teleportBindEvent
 local hideToolDoorEvent = game.ReplicatedStorage.RemoteEvents.hideToolDoorEvent
 

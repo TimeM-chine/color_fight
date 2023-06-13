@@ -26,6 +26,7 @@ local BindableEvents = game.ReplicatedStorage.BindableEvents
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
+local GameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 local shopServer = ServerSystemClass.new()
 
@@ -106,6 +107,17 @@ function BuyCareers(receipt, player)
     end
     return `there is no career product {receipt.ProductId}`
 end
+
+RemoteEvents.buyCareerByWin.OnServerEvent:Connect(function(player, ind)
+    local playerIns = PlayerServerClass.GetIns(player)
+    local careerList = playerIns:GetOneData(dataKey.career)
+    playerIns:UpdatedOneData(dataKey.wins, -GameConfig.careerWinPrice[ind])
+    careerList[ind] = true
+    GAModule:addDesignEvent(player.UserId, {
+        eventId = `buyCareerByWin:career{ind}`
+    })
+    RemoteEvents.refreshScreenEvent:FireClient(player)
+end)
 
 function Donate(receipt, player:Player)
     local playerIns = PlayerServerClass.GetIns(player)

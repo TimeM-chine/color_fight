@@ -18,7 +18,7 @@ local ColorDoorClientClass = require(script.Parent.classes.ColorDoorClientClass)
 ---- modules ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 local playerModule = require(script.Parent.modules.PlayerClientModule)
-local SkillModule = require(script.Parent.modules.SkillModule)
+-- local SkillModule = require(script.Parent.modules.SkillModule)
 local ToolDoorModule = require(script.Parent.modules.ToolDoorModule)
 local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 
@@ -29,8 +29,8 @@ local BindableFunctions = game.ReplicatedStorage.BindableFunctions
 
 ---- enums ----
 local keyCode = Enum.KeyCode
-local dataKey = require(game.ReplicatedStorage.enums.dataKey)
-local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
+-- local dataKey = require(game.ReplicatedStorage.enums.dataKey)
+-- local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local colorEnum = require(game.ReplicatedStorage.enums.colorEnum)
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)

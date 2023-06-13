@@ -88,6 +88,9 @@
                 },
                 "buyNavigation":{
                     "$className":"RemoteEvent"
+                },
+                "buyCareerByWin":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -172,6 +175,7 @@
             }
         },
         "StarterGui": {
+            "$ignoreUnknownInstances": true,
             "$className": "StarterGui",
             "hudScreen": {
                 "$className": "ScreenGui",
@@ -210,6 +214,9 @@
                     "persistentTip": {
                         "$className": "TextLabel"
                     }
+                },
+                "modalFrame":{
+                    "$className": "Frame"
                 }
             },
             "screens": {

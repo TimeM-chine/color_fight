@@ -21,7 +21,6 @@ local tweenArgs = table.clone(argsEnum.TweenArgs)
 
 -- close shut dawn hud, and only show the screen
 function controller.PushScreen(screenName)
-    pushScreenGui.bgFrame:ClearAllChildren()
     local screenIns = PlayerGui.screens:FindFirstChild(screenName)
     if not screenIns then
         warn(`There is no screen named {screenName}`)
@@ -37,6 +36,7 @@ function controller.PushScreen(screenName)
     else
         warn(`There is no screen class named {screenName.."Class"}`)
     end
+    pushScreenGui.bgFrame:ClearAllChildren()
     frame.Parent = pushScreenGui.bgFrame
     hudScreenGui.Enabled = false
     pushScreenGui.Enabled = true
@@ -108,6 +108,32 @@ function controller.SetPersistentTip(tip)
         noteLabel.Text = tip
     end
 
+end
+
+function controller.ShowModalFrame(content, confirmRecall, args)
+    local modalFrame = notificationScreen.modalFrame
+    local cons = {}
+    modalFrame.Visible = true
+    modalFrame.inner.textFrame.TextLabel.Text = content
+
+    local confirm:TextButton = modalFrame.inner.confirmBtn
+    local cancel:TextButton = modalFrame.inner.cancelBtn
+    local con = confirm.MouseButton1Click:Connect(function()
+        confirmRecall(args)
+        modalFrame.Visible = false
+        for _, c in cons do
+            c:Disconnect()
+        end
+    end)
+    table.insert(cons, con)
+    con = cancel.MouseButton1Click:Connect(function()
+        modalFrame.Visible = false
+        for _, c in cons do
+            c:Disconnect()
+        end
+    end)
+
+    table.insert(cons, con)
 end
 
 
