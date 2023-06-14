@@ -107,6 +107,7 @@ local function GetNearestCharacterAndDist()
         if not player.Character then continue end
         if not player.Character:FindFirstChild("isHiding") then continue end
         if not player.Character:FindFirstChild("beforeDeath") then continue end
+        if not player.Character:FindFirstChild("HumanoidRootPart") then continue end
         -- print(player.Character.beforeDeath.Value, lastHurtPlayer)
         if player.Character.beforeDeath.Value then continue end
 

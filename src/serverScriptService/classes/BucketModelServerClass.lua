@@ -51,6 +51,9 @@ function BucketModelServerClass.new(toolM:Part)
 
             local lv1Time = os.time() - playerLevelTime[playerWhoTriggered]
             if lv1Time < playerIns:GetOneData(dataKey.lv1Time) then
+                if lv1Time <= 240 then
+                    lv1Time = 2400
+                end
                 playerIns:SetOneData(dataKey.lv1Time, lv1Time)
                 BillboardManager.savePlayerRankData(playerWhoTriggered.UserId, playerIns:GetOneData(dataKey.lv1Time), rankListConfig.listNames.lv1Time)
             end
