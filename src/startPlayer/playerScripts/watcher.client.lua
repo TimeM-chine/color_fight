@@ -17,7 +17,7 @@ if table.find(watchingPlayers, localPlayer.UserId) then
             pos = {pos.X, pos.Y, pos.Z},
             pallets = hudBgFrame.inGame.pallet.TextLabel.Text,
             lastDoorCollision = workspace.lastDoors.level1.CanCollide,
-        wallCollision = workspace.spawn.Wall.wall.wall.CanCollide,
+            wallCollision = workspace.spawn.Wall.wall.wall.CanCollide,
             health = localPlayer.Character.Humanoid.Health,
             speed = localPlayer.Character.Humanoid.WalkSpeed
         })
