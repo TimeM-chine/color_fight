@@ -91,6 +91,9 @@
                 },
                 "buyCareerByWin":{
                     "$className":"RemoteEvent"
+                },
+                "trackingPlayer":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
