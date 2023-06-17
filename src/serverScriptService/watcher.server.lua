@@ -14,7 +14,7 @@ local watchingPlayers = {3148115551}
 
 ---- events ----
 PS.PlayerAdded:Connect(function(player)
-    print(player.UserId, table.find(watchingPlayers, player.UserId))
+    -- print(player.UserId, table.find(watchingPlayers, player.UserId))
     if table.find(watchingPlayers, player.UserId) then
         while not DataMgr:GetPlayerAllData(player) do
             task.wait(1)

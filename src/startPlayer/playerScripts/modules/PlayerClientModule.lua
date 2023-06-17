@@ -81,7 +81,7 @@ end
 
 function PlayerClientModule.Cancel2DCamera()
     camera.CameraType = Enum.CameraType.Custom
-    if cameraStep then 
+    if cameraStep then
         cameraStep:Disconnect()
     end
 end

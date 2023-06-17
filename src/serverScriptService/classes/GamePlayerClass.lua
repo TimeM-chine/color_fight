@@ -92,7 +92,13 @@ function GamePlayerClass:InitPlayer()
 
     character.Humanoid.MaxHealth = universalEnum.maxHealth
     local hp = self:GetOneData(dataKey.hp)
+    local tryTime = 0
     while not hp do
+        tryTime += 1
+        if tryTime == 11 then
+            self.player:Kick()
+            return
+        end
         hp = self:GetOneData(dataKey.hp)
         task.wait(0.5)
     end

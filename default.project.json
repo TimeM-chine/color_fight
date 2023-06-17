@@ -83,17 +83,17 @@
                 "playerLiveBackEvent": {
                     "$className": "RemoteEvent"
                 },
-                "palletLeaderNum":{
-                    "$className":"RemoteEvent"
+                "palletLeaderNum": {
+                    "$className": "RemoteEvent"
                 },
-                "buyNavigation":{
-                    "$className":"RemoteEvent"
+                "buyNavigation": {
+                    "$className": "RemoteEvent"
                 },
-                "buyCareerByWin":{
-                    "$className":"RemoteEvent"
+                "buyCareerByWin": {
+                    "$className": "RemoteEvent"
                 },
-                "trackingPlayer":{
-                    "$className":"RemoteEvent"
+                "trackingPlayer": {
+                    "$className": "RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -107,14 +107,14 @@
                 "resetLevelEvent": {
                     "$className": "BindableEvent"
                 },
-                "teleportBindEvent":{
-                    "$className":"BindableEvent"
+                "teleportBindEvent": {
+                    "$className": "BindableEvent"
                 },
-                "densityEvent":{
-                    "$className":"BindableEvent"
+                "densityEvent": {
+                    "$className": "BindableEvent"
                 },
-                "putonShoesEvent":{
-                    "$className":"BindableEvent"
+                "putonShoesEvent": {
+                    "$className": "BindableEvent"
                 }
             },
             "RemoteFunctions": {
@@ -218,7 +218,7 @@
                         "$className": "TextLabel"
                     }
                 },
-                "modalFrame":{
+                "modalFrame": {
                     "$className": "Frame"
                 }
             },
@@ -276,8 +276,8 @@
             "keys": {
                 "$className": "Folder"
             },
-            "rankLists":{
-                "$className":"Folder"
+            "rankLists": {
+                "$className": "Folder"
             }
         },
         "Lighting": {

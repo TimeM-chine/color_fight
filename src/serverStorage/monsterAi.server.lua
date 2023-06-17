@@ -27,6 +27,7 @@ local playerTargetTime = {}
 local monsterSound:Sound = game.SoundService.monster:Clone()
 local targetTraceTime = 0
 local normalSpeed = 18
+local highSpeed = 35
 local coolDown = 6
 
 ---- events ----
@@ -135,8 +136,10 @@ local function GetNextTarget()
     local character, dist = GetNearestCharacterAndDist()
     if character and character.HumanoidRootPart and dist <= 150 then
 
-        if dist < 50 then
+        if dist < 75 then
             agent.Humanoid.WalkSpeed = normalSpeed
+        else
+            agent.Humanoid.WalkSpeed = highSpeed
         end
 
         local player = game.Players:GetPlayerFromCharacter(character)
@@ -171,6 +174,9 @@ end
 while task.wait(0.1) do
     local nextTarget, isPlayer  = GetNextTarget()
     -- print(`{agent.Name} nextTarget: {nextTarget}`)
+    if not isPlayer then
+        agent.Humanoid.WalkSpeed = highSpeed
+    end
 
     if (not path:Run(nextTarget)) and (not isPlayer) then
         targetTraceTime += 1

@@ -5,6 +5,7 @@
 local Debris = game:GetService("Debris")
 local Lighting = game:GetService("Lighting")
 local MarketplaceService = game:GetService"MarketplaceService"
+local UIS = game:GetService("UserInputService")
 
 ---- variables ----
 local LocalPlayer = game.Players.LocalPlayer
@@ -150,8 +151,7 @@ function CheckFree()
     end
 end
 
-
-hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
+function Navigation()
     if cd > 0 then
         uiController.SetNotification("Skill is in CD.")
         return
@@ -219,8 +219,28 @@ hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(function()
         Debris:AddItem(hl, visionTime)
     end
 
+end
 
-end)
+hudBgFrame.inGame.navigationBtn.MouseButton1Click:Connect(Navigation)
+
+if UIS.GamepadEnabled then
+	hudBgFrame.inGame.navigationBtn.TextLabel.Visible = true
+	hudBgFrame.inGame.skillBtn.TextLabel.Visible = true
+	UIS.InputEnded:Connect(function(input, gameProcessedEvent)
+		if input.UserInputType == Enum.UserInputType.Gamepad1 then
+			if input.KeyCode == Enum.KeyCode.ButtonR1 then
+				Navigation()
+			elseif input.KeyCode == Enum.KeyCode.ButtonY then
+				if hudBgFrame.inGame.skillBtn.Visible then
+					SkillModule.UseSkill()
+				end
+			end
+		end
+	end)
+else
+	hudBgFrame.inGame.navigationBtn.TextLabel.Visible = false
+	hudBgFrame.inGame.skillBtn.TextLabel.Visible = false
+end
 
 
 RemoteEvents.buyNavigation.OnClientEvent:Connect(function()

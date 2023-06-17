@@ -64,6 +64,8 @@ game.SoundService.win:Clone().Parent = LocalPlayer.Character.HumanoidRootPart
 
 remoteEvents.putonShoeEvent:FireServer(chosenShoe[1], chosenShoe[2])
 LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = playerModule.GetPlayerSpeed()
+playerModule.Cancel2DCamera()
+workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
 
 
 BindableEvents.densityEvent.Event:Connect(function(value)
