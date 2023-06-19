@@ -23,6 +23,8 @@ local cor = nil
 local walkAnim = agent.Animation
 local animator:Animator = myH.Animator
 local aniTrack = animator:LoadAnimation(walkAnim)
+local nearAnim = agent.NearAnimation
+local nearAniTrack = animator:LoadAnimation(nearAnim)
 local playerTargetTime = {}
 local monsterSound:Sound = game.SoundService.monster:Clone()
 local targetTraceTime = 0
@@ -138,6 +140,9 @@ local function GetNextTarget()
 
         if dist < 75 then
             agent.Humanoid.WalkSpeed = normalSpeed
+            if not nearAniTrack.IsPlaying then
+                nearAniTrack:Play()
+            end
         else
             agent.Humanoid.WalkSpeed = highSpeed
         end
