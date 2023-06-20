@@ -65,6 +65,9 @@ function TeleportPart:Init()
                 BlackBucket.CanCollide = true
                 BlackBucket.Transparency = 0
 
+                local music:Sound = localPlayer.Character.HumanoidRootPart:FindFirstChild("win")
+                music:Stop()
+
             end
 
 
