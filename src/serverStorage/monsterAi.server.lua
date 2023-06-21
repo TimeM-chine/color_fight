@@ -154,7 +154,7 @@ local function GetNextTarget()
             playerTargetTime[player] = 1
         end
         -- print(playerTargetTime[player])
-        if playerTargetTime[player] >= 40 then
+        if playerTargetTime[player] >= 80 then
             SetLastHurtPlayer(player)
             playerTargetTime[player] = 0
         end
