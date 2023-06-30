@@ -134,6 +134,10 @@ end)
 BindableEvents.resetLevelEvent.Event:Connect(ResetLevel)
 
 
+local chosenTail = playerModule.GetPlayerOneData(dataKey.chosenTail)
+if chosenTail > 0 then
+    remoteEvents.operateTail:FireServer("Equip", chosenTail)
+end
 -- for _, part:Part in workspace.safeAreas:GetChildren() do
 --     part.CanTouch = true
 --     part.Touched:Connect(function(otherPart)
@@ -180,38 +184,3 @@ while task.wait(0.5) do
     end
 end
 
-
--- local character = script.Parent
-
--- local filter = workspace.walls:GetDescendants()
--- for _, part in workspace.safeAreas:GetChildren() do
---     table.insert(filter, part)
--- end
-
--- param = OverlapParams.new()
--- param.FilterDescendantsInstances = filter
--- param.FilterType = Enum.RaycastFilterType.Include
-
--- character:WaitForChild("Highlight")
-
--- local function checkHide()
---     local cf, size = script.Parent:GetBoundingBox()
---     local playerContact = workspace:GetPartBoundsInBox(cf, size, param)
---     for _, conPart in playerContact do
---         if conPart.Parent.Name == "safeAreas" then
---             return true
---         end
---         if conPart.colorString.Value == character.colorString.Value then
---             return true
---         end
---     end
---     return false
--- end
-
--- while task.wait(0.05) do
---     if checkHide() then
---         character.Highlight.Enabled = true
---     else
---         character.Highlight.Enabled = false
---     end
--- end

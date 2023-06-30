@@ -13,13 +13,16 @@ local colorValue = colorEnum.ColorValue
 local argsEnum = require(game.ReplicatedStorage.enums.argsEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
+local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
+local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
+
 
 ---- services ----
 local CreateModule = require(game.ReplicatedStorage.modules.CreateModule)
 
 ---- events ----
-local changeColorEvent = game.ReplicatedStorage.RemoteEvents.changeColorEvent
-local addHealthEvent = game.ReplicatedStorage.RemoteEvents.addHealthEvent
+local RemoteEvents = game.ReplicatedStorage.RemoteEvents
+local changeColorEvent = RemoteEvents.changeColorEvent
 
 ---- animations ----
 local crawAnim = game.ServerStorage.animations.craw
@@ -99,8 +102,8 @@ function GamePlayerClass:InitPlayer()
             self.player:Kick()
             return
         end
-        hp = self:GetOneData(dataKey.hp)
         task.wait(0.5)
+        hp = self:GetOneData(dataKey.hp)
     end
     character.Humanoid.Health = hp
 
@@ -118,6 +121,19 @@ function GamePlayerClass:InitPlayer()
     local param = argsEnum.changeColorEvent
     param.color = "white"
     self:NotifyToClient(changeColorEvent, param)
+
+    local tail = Instance.new("Trail")
+    tail.Enabled = false
+    tail.Lifetime = 0.5
+    tail.WidthScale = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 1),
+        NumberSequenceKeypoint.new(0.5, 0.5),
+        NumberSequenceKeypoint.new(1, 0)
+    })
+    tail.Transparency = NumberSequence.new(0)
+    tail.Attachment0 = self.player.Character.Head.NeckRigAttachment
+    tail.Attachment1 = self.player.Character.LowerTorso.WaistRigAttachment
+    tail.Parent = self.player.Character.HumanoidRootPart
 
     local animator:Animator = character.Humanoid:WaitForChild("Animator")
     -- local crawTrack = animator:LoadAnimation(crawAnim)
@@ -194,6 +210,20 @@ function GamePlayerClass:TurnOffTopLight()
     local cone = hrp:FindFirstChild('Cone')
     if cone then
         cone:Destroy()
+    end
+end
+
+function GamePlayerClass:EquipTail(ind)
+    local tail = self.player.Character.HumanoidRootPart:WaitForChild("Trail")
+    if ind then
+        tail.Enabled = true
+        if gameConfig.tailConfig[ind].type == "color" then
+            tail.Color = gameConfig.tailConfig[ind].color
+        else
+            tail.Texture = TextureIds.tails[ind]
+        end
+    else
+        tail.Enabled = false
     end
 end
 

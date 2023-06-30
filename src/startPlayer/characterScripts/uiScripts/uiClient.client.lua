@@ -301,6 +301,28 @@ workspace.spawn.piggy.touchPart.Touched:Connect(function(part:Part)
     end
 
 end)
+
+workspace.spawn.SpinNPC.touchPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        uiController.PushScreen(screenEnum.spinFrame)
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+
+end)
+
+workspace.spawn.TailNPC.touchPart.Touched:Connect(function(part:Part)
+    if part:IsDescendantOf(LocalPlayer.Character) and not touching and (not PlayerGui.pushScreen.Enabled) then
+        touching = true
+        uiController.PushScreen(screenEnum.tailFrame)
+        task.delay(2, function()
+            touching = false
+        end)
+    end
+
+end)
 ---------------------- hp -------------------------
 
 local hp = LocalPlayer.Character.Humanoid.Health

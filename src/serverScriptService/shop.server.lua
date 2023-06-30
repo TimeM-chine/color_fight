@@ -135,6 +135,31 @@ function Navigation(receipt, player:Player)
     return true
 end
 
+function BuyTails(receipt, player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    local ownedTails = playerIns:GetOneData(dataKey.ownedTails)
+    local tailInd
+    for key, value in productIdEnum.tails do
+        if value == receipt.ProductId then
+            tailInd = key
+            ownedTails[tailInd] = true
+            -- ownedTails[4] = true
+            RemoteEvents.refreshScreenEvent:FireClient(player)
+            return true
+        end
+    end
+    return `there is no career product {receipt.ProductId}`
+end
+
+RemoteEvents.buyTailByWin.OnServerEvent:Connect(function(player, ind)
+    local playerIns = PlayerServerClass.GetIns(player)
+    playerIns:UpdatedOneData(dataKey.wins, -GameConfig.tailConfig[ind].winPrice)
+    local ownedTails = playerIns:GetOneData(dataKey.ownedTails)
+    ownedTails[ind] = true
+    RemoteEvents.refreshScreenEvent:FireClient(player)
+end)
+
+
 local productFunctions = {}
 for _, value in productIdEnum.career do
     productFunctions[value] = BuyCareers
@@ -147,6 +172,11 @@ end
 for _, value in productIdEnum.donate do
     productFunctions[value] = Donate
 end
+
+for _, value in productIdEnum.tails do
+    productFunctions[value] = BuyTails
+end
+
 productFunctions[productIdEnum.heart] = AddHealth
 productFunctions[productIdEnum.backGame] = BackToGame
 productFunctions[productIdEnum.navigation] = Navigation

@@ -85,7 +85,7 @@ function DataManager:GetPlayerOneData(player, key)
         warn(`Asking for key: {key}, but data is not ready.`)
         return
     end
-	assert(profile.Data[key], `Can't find key {key} in {player.Name}'s data`)
+	assert(profile.Data[key] ~= nil, `Can't find key {key} in {player.Name}'s data`)
 	return profile.Data[key]
 end
 
@@ -105,7 +105,7 @@ function DataManager:SetPlayerOneData(player, key, value)
 		return
 	end
 	local profile = DataManager:GetPlayerAllData(player)
-	assert(profile.Data[key], `Can't find key {key} in {player.Name}'s data`)
+	assert(profile.Data[key] ~= nil, `Can't find key {key} in {player.Name}'s data`)
 	assert(type(profile.Data[key]) == type(value), `data types don't match, param key:{key}, param value:{value} `)
 	profile.Data[key] = value
 end

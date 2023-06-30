@@ -1,4 +1,4 @@
-return {
+local defaultValue = {
     ---- attributes -----
     hp = 1,  -- 血量
     wins = 0, -- win 的数量， 会被消耗
@@ -15,6 +15,8 @@ return {
     chosenSkInd = 0, -- 选择的技能
     chosenShoeInd = {0, 0}, -- 选择的鞋子
     levelUnlock = {true, false, false, false, false}, -- 关卡解锁情况
+    chosenTail = 0, -- 装备的尾迹
+    ownedTails = {}, -- 拥有的尾迹
 
     ---- rewards ----
     tempSpeedStart = 0,  -- 临时的速度
@@ -47,5 +49,11 @@ return {
     lv2Wins = 0,  -- 第二关通关次数
     lv1Time = 999999, -- 第一关通关时间
     lv2Time = 999999, -- 第二关通关时间
-
 }
+
+for i = 1, 12 do
+    defaultValue.ownedTails[i] = false
+end
+
+
+return defaultValue

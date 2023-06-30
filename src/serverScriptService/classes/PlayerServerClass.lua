@@ -80,8 +80,33 @@ function PlayerServerClass:NotifyToClient(event:RemoteEvent, args)
     event:FireClient(self.player, args)
 end
 
-function PlayerServerClass:AddItem(itemId, itemNum)
-    
+local BadgeService = game:GetService("BadgeService")
+function PlayerServerClass:AwardBadge(badgeId)
+    local player = self.player
+    -- Fetch badge information
+	local success, badgeInfo = pcall(function()
+		return BadgeService:GetBadgeInfoAsync(badgeId)
+	end)
+
+	if success then
+		-- Confirm that badge can be awarded
+		if badgeInfo.IsEnabled then
+			-- Award badge
+			local awardSuccess, result = pcall(function()
+				return BadgeService:AwardBadge(player.UserId, badgeId)
+			end)
+
+			if not awardSuccess then
+				-- the AwardBadge function threw an error
+				warn("Error while awarding badge:", result)
+			elseif not result then
+				-- the AwardBadge function did not award a badge
+				warn("Failed to award badge.")
+			end
+		end
+	else
+		warn("Error while fetching badge info: " .. badgeInfo)
+	end
 end
 
 return PlayerServerClass

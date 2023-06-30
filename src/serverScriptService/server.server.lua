@@ -1,3 +1,4 @@
+local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 ---- modules ----
@@ -17,6 +18,7 @@ local keyCode = Enum.KeyCode
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
 local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
+local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- events ----
@@ -88,6 +90,26 @@ PS.PlayerAdded:Connect(function(player)
             return
         end
     end
+
+    ---- special id ----
+    if player.UserId == 1718985510 or player.UserId == 2261946959 or player.UserId == 3623697024 then
+        local career = pIns:GetOneData(dataKey.career)
+        for i = 1, #career do
+            career[i] = true
+        end
+
+        task.spawn(function()
+            if player.Character then
+                player.Character.Humanoid.Health = 6
+                pIns:SetOneData(dataKey.hp, 6)
+            else
+                player.CharacterAdded:Wait()
+                player.Character.Humanoid.Health = 6
+                pIns:SetOneData(dataKey.hp, 6)
+            end
+        end)
+    end
+
     local lastDay = math.floor(lastLoginTimeStamp/universalEnum.oneDay)
     if nowDay ~= lastDay then
         pIns:SetOneData(dataKey.dailyOnlineTime, 0)
@@ -108,6 +130,13 @@ PS.PlayerAdded:Connect(function(player)
     wins.Name = "Wins"
     wins.Value = pIns:GetOneData(dataKey.totalWins)
     wins.Parent = leaderstats
+
+    ---- badges ----
+    local firstPlay = pIns:GetOneData(dataKey.firstPlay)
+    if firstPlay then
+        pIns:AwardBadge(gameConfig.badges.firstPlay)
+        pIns:SetOneData(dataKey.firstPlay, false)
+    end
 end)
 
 
@@ -306,6 +335,18 @@ RemoteEvents.palletLeaderNum.OnServerEvent:Connect(function(player)
 end)
 
 
+RemoteEvents.operateTail.OnServerEvent:Connect(function(player, operation, ind)
+    local playerIns = PlayerServerClass.GetIns(player)
+    if operation == "Equip" then
+        playerIns:EquipTail(ind)
+        playerIns:SetOneData(dataKey.chosenTail, ind)
+    else
+        playerIns:EquipTail(nil)
+        playerIns:SetOneData(dataKey.chosenTail, 0)
+    end
+    RemoteEvents.refreshScreenEvent:FireClient(player)
+end)
+
 function remoteFunctions.Redeem.OnServerInvoke(player, key)
     local playerIns = PlayerServerClass.GetIns(player)
 
@@ -344,10 +385,71 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
                 eventId = `cdk:{key}`
             })
             return "success", TextureIds.heart, "You got a heart, HP +1!"
+        elseif key == "Froosting" then
+            if os.time() > gameConfig.cdkExpireTime.Froosting then
+                return "expired"
+            end
+            table.insert(cdKeyUsed, key)
+
+            GAModule:addDesignEvent(player.UserId, {
+                eventId = `cdk:{key}`
+            })
+
+            if not playerIns:GetOneData(dataKey.career)[2] then
+                playerIns:SetOneData(dataKey.tempSkStart, os.time())
+                playerIns:SetOneData(dataKey.tempSkInfo, {2, universalEnum.oneHour})
+            end
+            local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+            local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+            RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+            return "success", TextureIds.skillImg[2][1], "Experience R&D Personnel for 60 minutes!"
         else
             return "wrong key"
         end
     end
+end
+
+
+function remoteFunctions.Spin.OnServerInvoke(player)
+    local playerIns = PlayerServerClass.GetIns(player)
+    local nowWins = playerIns:GetOneData(dataKey.wins)
+    if nowWins >= 2 then
+        playerIns:UpdatedOneData(dataKey.wins, -2)
+    else
+        RemoteEvents.serverNotifyEvent:FireClient(player, "Not enough Wins.", "top")
+        MarketplaceService:PromptProductPurchase(player, productIdEnum.tenWins)
+        return
+    end
+    local r = math.random()
+    local spinConfig = gameConfig.spinConfig
+    local totalWeight = 0
+    local giftIndex
+    for i, gift in ipairs(spinConfig) do
+        totalWeight += gift.weight
+    end
+
+    local nowWeight = 0
+    for i, gift in ipairs(spinConfig) do
+        nowWeight += gift.weight
+        if r <= nowWeight / totalWeight then
+            giftIndex = i
+            break
+        end
+    end
+
+    local giftItem = spinConfig[giftIndex].item
+
+    if giftItem == "career" then
+        local career = playerIns:GetOneData(dataKey.career)
+        career[3] = true
+    elseif giftItem == "win" then
+        playerIns:UpdatedOneData(dataKey.wins, spinConfig[giftIndex].count)
+    elseif giftItem == "tail" then
+        local ownedTails = playerIns:GetOneData(dataKey.ownedTails)
+        ownedTails[1] = true
+    end
+
+    return r, giftIndex
 end
 
 ---- bill board ----

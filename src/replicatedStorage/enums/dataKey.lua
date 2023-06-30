@@ -13,6 +13,9 @@ return {
     chosenSkInd = "chosenSkInd", -- 选择的技能
     chosenShoeInd = "chosenShoeInd", -- 选择的鞋子
     levelUnlock = "levelUnlock", -- 关卡解锁情况
+    chosenTail = "chosenTail", -- 装备的尾迹
+    ownedTails = "ownedTails", -- 拥有的尾迹
+
     ---- rewards ----
     tempSpeedStart = "tempSpeedStart",  -- 临时的速度
     tempSkStart = "tempSkStart",  -- 临时的职业

@@ -94,6 +94,12 @@
                 },
                 "trackingPlayer": {
                     "$className": "RemoteEvent"
+                },
+                "buyTailByWin":{
+                    "$className":"RemoteEvent"
+                },
+                "operateTail":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {
@@ -124,6 +130,9 @@
                 },
                 "Redeem": {
                     "$className": "RemoteFunction"
+                },
+                "Spin":{
+                    "$className":"RemoteFunction"
                 }
             },
             "BindableFunctions": {

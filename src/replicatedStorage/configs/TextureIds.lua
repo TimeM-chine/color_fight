@@ -158,4 +158,13 @@ TextureIds.toolDoorCursor = {
     xbox = "rbxassetid://13634776411",
     baffle = "rbxassetid://13634783130"
 }
+
+TextureIds.tails = {
+    [1] = "rbxassetid://13495989092",
+    [2] = "rbxassetid://13495989092",
+    [3] = "rbxassetid://13495989092",
+    [4] = "rbxassetid://13495989092",
+    [5] = "rbxassetid://13495989092",
+    [6] = "rbxassetid://13495989092",
+}
 return TextureIds

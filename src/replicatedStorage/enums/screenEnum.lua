@@ -5,5 +5,7 @@ return {
     friendsRewards = "friendsRewards",
     cdKeyFrame = "cdKeyFrame",
     wantLikeFrame = "wantLikeFrame",
-    donateFrame = "donateFrame"
+    donateFrame = "donateFrame",
+    tailFrame = "tailFrame",
+    spinFrame = "spinFrame"
 }

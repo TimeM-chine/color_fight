@@ -20,6 +20,7 @@ local colorList = colorEnum.ColorList
 local colorValue = colorEnum.ColorValue
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
 local rankListConfig = require(game.ReplicatedStorage.configs.RankList)
+local gameConfig = require(game.ReplicatedStorage.configs.GameConfig)
 
 ---- events -----
 local hideBucketEvent = game.ReplicatedStorage.RemoteEvents.hideBucketEvent
@@ -49,6 +50,10 @@ function BucketModelServerClass.new(toolM:Part)
             playerIns:UpdatedOneData(dataKey.totalWins, 1)
             playerIns:UpdatedOneData(dataKey.wins, 1)
 
+            if playerIns:GetOneData(dataKey.totalWins) == 1 then
+                playerIns:AwardBadge(gameConfig.badges.firstWinLv1)
+            end
+
             local lv1Time = os.time() - playerLevelTime[playerWhoTriggered]
             if lv1Time < playerIns:GetOneData(dataKey.lv1Time) then
                 if lv1Time <= 240 then
@@ -65,6 +70,8 @@ function BucketModelServerClass.new(toolM:Part)
 
             playerIns:SetColor("white")
             playerLevelTime[playerWhoTriggered] = os.time()
+        elseif self.toolModel.colorString.Value == "purple" then
+            playerIns:AwardBadge(gameConfig.badges.firstBucket)
         end
     end)
 	return self
