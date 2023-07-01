@@ -100,6 +100,9 @@
                 },
                 "operateTail":{
                     "$className":"RemoteEvent"
+                },
+                "teleportToLv2":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {

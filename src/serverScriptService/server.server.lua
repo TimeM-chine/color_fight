@@ -33,6 +33,7 @@ local remoteFunctions = game.ReplicatedStorage.RemoteFunctions
 ---- services ----
 local PS = game:GetService("Players")
 local PhysicsService = game:GetService("PhysicsService")
+local TeleportService = game:GetService("TeleportService")
 
 PhysicsService:RegisterCollisionGroup("player")
 PhysicsService:CollisionGroupSetCollidable("player", "player", false)
@@ -347,6 +348,10 @@ RemoteEvents.operateTail.OnServerEvent:Connect(function(player, operation, ind)
     RemoteEvents.refreshScreenEvent:FireClient(player)
 end)
 
+RemoteEvents.teleportToLv2.OnServerEvent:Connect(function(player)
+    TeleportService:TeleportAsync(13921717039, {player})
+end)
+
 function remoteFunctions.Redeem.OnServerInvoke(player, key)
     local playerIns = PlayerServerClass.GetIns(player)
 
@@ -417,7 +422,7 @@ function remoteFunctions.Spin.OnServerInvoke(player)
         playerIns:UpdatedOneData(dataKey.wins, -2)
     else
         RemoteEvents.serverNotifyEvent:FireClient(player, "Not enough Wins.", "top")
-        MarketplaceService:PromptProductPurchase(player, productIdEnum.tenWins)
+        MarketplaceService:PromptProductPurchase(player, productIdEnum.win10)
         return
     end
     local r = math.random()

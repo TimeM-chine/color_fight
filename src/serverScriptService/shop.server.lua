@@ -142,13 +142,29 @@ function BuyTails(receipt, player)
     for key, value in productIdEnum.tails do
         if value == receipt.ProductId then
             tailInd = key
-            ownedTails[tailInd] = true
+            ownedTails[12] = true
             -- ownedTails[4] = true
             RemoteEvents.refreshScreenEvent:FireClient(player)
             return true
         end
     end
     return `there is no career product {receipt.ProductId}`
+end
+
+function BuyWins(receipt, player)
+    local playerIns = PlayerServerClass.GetIns(player)
+
+    if receipt.ProductId == productIdEnum.win10 then
+        playerIns:UpdatedOneData(dataKey.wins, 10)
+    elseif receipt.ProductId == productIdEnum.win28 then
+        playerIns:UpdatedOneData(dataKey.wins, 28)
+    elseif receipt.ProductId == productIdEnum.win68 then
+        playerIns:UpdatedOneData(dataKey.wins, 68)
+    elseif receipt.ProductId == productIdEnum.win128 then
+        playerIns:UpdatedOneData(dataKey.wins, 128)
+    end
+    RemoteEvents.refreshScreenEvent:FireClient(player)
+    return `there is no wins product {receipt.ProductId}`
 end
 
 RemoteEvents.buyTailByWin.OnServerEvent:Connect(function(player, ind)

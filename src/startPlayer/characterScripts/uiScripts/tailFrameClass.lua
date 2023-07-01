@@ -107,14 +107,22 @@ function tailFrameClass:Init()
         if showCase.confirmBtn.Text == "Buy" then
             local i = GetNowTailId()
             if not GameConfig.tailConfig[i].winPrice then
-                MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.tenWins)
+                MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.tails[1])
                 return
             end
 
             nowWins = playerModule.GetPlayerOneData(dataKey.wins)
             uiController.ShowModalFrame(`This Tail cost {GameConfig.tailConfig[i].winPrice} wins, you have {nowWins} wins, sure to buy?`, function(args)
                 if nowWins < GameConfig.tailConfig[i].winPrice then
-                    MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.tenWins)
+                    if GameConfig.tailConfig[i].winPrice - nowWins < 10 then
+                        MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.win10)
+                    elseif GameConfig.tailConfig[i].winPrice - nowWins < 28 then
+                        MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.win28)
+                    elseif GameConfig.tailConfig[i].winPrice - nowWins < 68 then
+                        MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.win68)
+                    else
+                        MarketplaceService:PromptProductPurchase(localPlayer, productIdEnum.win128)
+                    end
                     uiController.SetNotification("not enough wins", "top")
                 else
                     remoteEvents.buyTailByWin:FireServer(nowTailId)

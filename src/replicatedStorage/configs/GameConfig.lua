@@ -12,10 +12,10 @@ config.careerWinPrice = {
     3, 5, 7, 9
 }
 config.badges = {
-    firstPlay = 0,
-    firstBucket = 1,
-    firstWinLv1 = 1,
-    firstWinLv2 = 1,
+    firstPlay = 2147976617,
+    firstBucket = 2147976680,
+    firstWinLv1 = 2147976804,
+    firstWinLv2 = 2147977688,
 }
 config.tailConfig = {
     [1] = {

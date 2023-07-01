@@ -323,6 +323,21 @@ for _, folder in workspace:GetDescendants() do
     end
 end
 
+local lv2Door:Part = workspace.spawn.level2Door
+lv2Door.Touched:Connect(function(otherPart)
+    lv2Door.CanTouch = false
+    if otherPart:IsDescendantOf(LocalPlayer.Character) then
+        RemoteEvents.teleportToLv2:FireServer()
+        task.spawn(function()
+            local leftTime = 10
+            while task.wait(1) and leftTime > 0 do
+                BindableEvents.notifyEvent:Fire(tostring(leftTime), "middle")
+                leftTime -= 1
+            end
+        end)
+    end
+end)
+
 ---- monster foot print -----
 local agent:Model = workspace:WaitForChild("monster1")
 local footprint = ReplicatedStorage:WaitForChild("footprint")
