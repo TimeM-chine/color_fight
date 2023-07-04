@@ -7,6 +7,7 @@ config.cdkExpireTime = {
     YOLDLO = 1687449600,
     Flashbackjnr = 1687449600,
     Froosting = 1690732800,
+    robloxhorrorreview = 1689696000
 }
 config.careerWinPrice = {
     3, 5, 7, 9

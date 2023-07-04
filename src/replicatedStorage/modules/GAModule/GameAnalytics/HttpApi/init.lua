@@ -26,12 +26,12 @@ local http_api = {
 	},
 }
 
-local banStudio = false
+local banStudio = true
 local HTTP = game:GetService("HttpService")
 local logger = require(script.Parent.Logger)
 
-local baseUrl = "https://" .. (banStudio and "sandbox-" or "") .. http_api.hostName .. "/" .. http_api.version
-local remoteConfigsBaseUrl = "https://" .. (banStudio and "sandbox-" or "") .. http_api.hostName .. "/remote_configs/" .. http_api.remoteConfigsVersion
+local baseUrl = "https://" .. (banStudio and RunService:IsStudio() and "sandbox-" or "") .. http_api.hostName .. "/" .. http_api.version
+local remoteConfigsBaseUrl = "https://" .. (banStudio and RunService:IsStudio() and "sandbox-" or "") .. http_api.hostName .. "/remote_configs/" .. http_api.remoteConfigsVersion
 
 local function getInitAnnotations(build, playerData, playerId)
 	local initAnnotations = {
@@ -57,7 +57,7 @@ local function encode(payload, secretKey)
 	--Encode
 	local payloadHmac = HashLib.hmac(
 		HashLib.sha256,
-		banStudio and "16813a12f718bc5c620f56944e1abc3ea13ccbac" or secretKey,
+		banStudio and RunService:IsStudio() and "16813a12f718bc5c620f56944e1abc3ea13ccbac" or secretKey,
 		payload,
 		true
 	)
@@ -94,7 +94,7 @@ end
 
 function http_api:initRequest(gameKey, secretKey, build, playerData, playerId)
 	local url = remoteConfigsBaseUrl .. "/" .. http_api.initializeUrlPath .. "?game_key=" .. gameKey .. "&interval_seconds=0&configs_hash=" .. (playerData.ConfigsHash or "")
-	if banStudio then
+	if banStudio and RunService:IsStudio() then
 		url = baseUrl .. "/5c6bcb5402204249437fb5a7a80a4959/" .. self.initializeUrlPath
 	end
 
@@ -187,7 +187,7 @@ function http_api:sendEventsInArray(gameKey, secretKey, eventArray)
 
 	-- Generate URL
 	local url = baseUrl .. "/" .. gameKey .. "/" .. self.eventsUrlPath
-	if banStudio then
+	if banStudio and RunService:IsStudio() then
 		url = baseUrl .. "/5c6bcb5402204249437fb5a7a80a4959/" .. self.eventsUrlPath
 	end
 

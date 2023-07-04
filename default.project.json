@@ -103,6 +103,9 @@
                 },
                 "teleportToOtherLevel":{
                     "$className":"RemoteEvent"
+                },
+                "hideSkillBtn":{
+                    "$className":"RemoteEvent"
                 }
             },
             "BindableEvents": {

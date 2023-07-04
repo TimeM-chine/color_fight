@@ -47,10 +47,11 @@ function CheckTempReward(player)
     local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
 
     if os.time() - tempSkStart > tempSkInfo[2] then
-        tempSkInfo = {0, 0}
         if playerIns:GetOneData(dataKey.chosenSkInd) == tempSkInfo[1] then
             playerIns:SetOneData(dataKey.chosenSkInd, 0)
+            RemoteEvents.hideSkillBtn:FireClient(player)
         end
+        tempSkInfo = {0, 0}
     end
 
     if os.time() - tempSpeedStart > tempSpeedInfo[2] then
@@ -418,6 +419,24 @@ function remoteFunctions.Redeem.OnServerInvoke(player, key)
             local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
             RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
             return "success", TextureIds.skillImg[2][1], "Experience R&D Personnel for 60 minutes!"
+        elseif key == "robloxhorrorreview" then
+            if os.time() > gameConfig.cdkExpireTime.robloxhorrorreview then
+                return "expired"
+            end
+            table.insert(cdKeyUsed, key)
+
+            GAModule:addDesignEvent(player.UserId, {
+                eventId = `cdk:{key}`
+            })
+
+            if not playerIns:GetOneData(dataKey.career)[3] then
+                playerIns:SetOneData(dataKey.tempSkStart, os.time())
+                playerIns:SetOneData(dataKey.tempSkInfo, {3, universalEnum.oneHour*2})
+            end
+            local tempSpeedInfo = playerIns:GetOneData(dataKey.tempSpeedInfo)
+            local tempSkInfo = playerIns:GetOneData(dataKey.tempSkInfo)
+            RemoteEvents.tempRewardEvent:FireClient(player, tempSpeedInfo, tempSkInfo)
+            return "success", TextureIds.skillImg[3][1], "Experience ParkourMan for 2 hour!"
         else
             return "wrong key"
         end

@@ -63,6 +63,10 @@ perTipEvent.Event:Connect(function(msg)
     uiController.SetPersistentTip(msg)
 end)
 
+
+RemoteEvents.hideSkillBtn.OnClientEvent:Connect(function()
+    hudBgFrame.inGame.skillBtn.Visible = false
+end)
 ---------------------- buttons -------------------------
 cdKeyBtn.MouseButton1Click:Connect(function()
     uiController.PushScreen(screenEnum.cdKeyFrame)

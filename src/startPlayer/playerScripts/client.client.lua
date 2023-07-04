@@ -262,11 +262,7 @@ for _, model in workspace.toolDoors:GetChildren() do
 end
 
 RemoteEvents.tempRewardEvent.OnClientEvent:Connect(function(tempSpeedInfo, tempSkInfo)
-    if tempSpeedInfo[1] ~= 0 then
-        playerModule.SetRewardSpeed(tempSpeedInfo[1])
-        task.wait(tempSpeedInfo[2])
-        playerModule.SetRewardSpeed(0)
-    end
+    playerModule.SetRewardSpeed(tempSpeedInfo[1])
 end)
 
 LocalPlayer.Character:WaitForChild("HumanoidRootPart")
