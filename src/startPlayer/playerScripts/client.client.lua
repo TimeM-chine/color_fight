@@ -327,7 +327,7 @@ local lv2Door:Part = workspace.spawn.level2Door
 lv2Door.Touched:Connect(function(otherPart)
     lv2Door.CanTouch = false
     if otherPart:IsDescendantOf(LocalPlayer.Character) then
-        RemoteEvents.teleportToLv2:FireServer()
+        RemoteEvents.teleportToOtherLevel:FireServer()
         task.spawn(function()
             local leftTime = 10
             while task.wait(1) and leftTime > 0 do

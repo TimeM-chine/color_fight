@@ -88,16 +88,16 @@ config.spinConfig = {
 
     [1] = {
         item = "career",
-        weight = 10
+        weight = 0.5
     },
     [2] = {
         item = "win",
         count = 10,
-        weight = 10,
+        weight = 5,
     },
     [3] = {
         item = "nothing",
-        weight = 10
+        weight = 83.5
     },
     [4] = {
         item = "win",
@@ -106,9 +106,16 @@ config.spinConfig = {
     },
     [5] = {
         item = "tail",
-        weight = 10,
+        weight = 1,
     },
 
 }
+
+
+config.testPlace1Id = 13542969609
+config.testPlace2Id = 13805481134
+
+config.officialPlace1Id = 13360219692
+config.officialPlace2Id = 13921717039
 
 return config

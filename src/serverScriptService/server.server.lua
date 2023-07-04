@@ -348,8 +348,18 @@ RemoteEvents.operateTail.OnServerEvent:Connect(function(player, operation, ind)
     RemoteEvents.refreshScreenEvent:FireClient(player)
 end)
 
-RemoteEvents.teleportToLv2.OnServerEvent:Connect(function(player)
-    TeleportService:TeleportAsync(13921717039, {player})
+RemoteEvents.teleportToOtherLevel.OnServerEvent:Connect(function(player)
+    if game.PlaceId == gameConfig.testPlace2Id then
+        TeleportService:TeleportAsync(gameConfig.testPlace1Id, {player})
+    elseif game.PlaceId == gameConfig.testPlace1Id then
+        TeleportService:TeleportAsync(gameConfig.testPlace2Id, {player})
+    elseif game.PlaceId == gameConfig.officialPlace1Id then
+        TeleportService:TeleportAsync(gameConfig.officialPlace2Id, {player})
+    elseif game.PlaceId == gameConfig.officialPlace2Id then
+        TeleportService:TeleportAsync(gameConfig.officialPlace1Id, {player})
+    else
+        warn("Wrong place id, now place id is", game.PlaceId)
+    end
 end)
 
 function remoteFunctions.Redeem.OnServerInvoke(player, key)
@@ -451,10 +461,10 @@ function remoteFunctions.Spin.OnServerInvoke(player)
         playerIns:UpdatedOneData(dataKey.wins, spinConfig[giftIndex].count)
     elseif giftItem == "tail" then
         local ownedTails = playerIns:GetOneData(dataKey.ownedTails)
-        ownedTails[1] = true
+        ownedTails[11] = true
     end
 
-    return r, giftIndex
+    return giftIndex
 end
 
 ---- bill board ----

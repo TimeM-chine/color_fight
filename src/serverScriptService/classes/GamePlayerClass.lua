@@ -122,6 +122,14 @@ function GamePlayerClass:InitPlayer()
     param.color = "white"
     self:NotifyToClient(changeColorEvent, param)
 
+    local animator:Animator = character.Humanoid:WaitForChild("Animator")
+    -- local crawTrack = animator:LoadAnimation(crawAnim)
+    task.wait(1)
+    local gunTrack = animator:LoadAnimation(gunPosAnim)
+    gunTrack.Looped = true
+    gunTrack.Priority = Enum.AnimationPriority.Movement
+    gunTrack:Play()
+
     local tail = Instance.new("Trail")
     tail.Enabled = false
     tail.Lifetime = 0.5
@@ -134,14 +142,6 @@ function GamePlayerClass:InitPlayer()
     tail.Attachment0 = self.player.Character.Head.NeckRigAttachment
     tail.Attachment1 = self.player.Character.LowerTorso.WaistRigAttachment
     tail.Parent = self.player.Character.HumanoidRootPart
-
-    local animator:Animator = character.Humanoid:WaitForChild("Animator")
-    -- local crawTrack = animator:LoadAnimation(crawAnim)
-    task.wait(1)
-    local gunTrack = animator:LoadAnimation(gunPosAnim)
-    gunTrack.Looped = true
-    gunTrack.Priority = Enum.AnimationPriority.Movement
-    gunTrack:Play()
 end
 
 function GamePlayerClass:OnChatted(message, recipient)

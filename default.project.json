@@ -101,7 +101,7 @@
                 "operateTail":{
                     "$className":"RemoteEvent"
                 },
-                "teleportToLv2":{
+                "teleportToOtherLevel":{
                     "$className":"RemoteEvent"
                 }
             },

@@ -18,15 +18,11 @@ local GAModule = require(game.ReplicatedStorage.modules.GAModule)
 ---- enums ----
 local productIdEnum = require(game.ReplicatedStorage.enums.productIdEnum)
 local dataKey = require(game.ReplicatedStorage.enums.dataKey)
-local universalEnum = require(game.ReplicatedStorage.enums.universalEnum)
 local GameConfig = require(game.ReplicatedStorage.configs.GameConfig)
-local TextureIds = require(game.ReplicatedStorage.configs.TextureIds)
-
 
 ---- variables ----
 local localPlayer = game.Players.LocalPlayer
-local unitsFolder = localPlayer.PlayerGui.units
-local nowTailId = 1
+local canSpin = true
 
 local spinFrameClass = {}
 spinFrameClass.__index = spinFrameClass
@@ -35,7 +31,6 @@ spinFrameClass.connections = {}
 
 function spinFrameClass.new(frame)
     local ins = setmetatable({}, spinFrameClass)
-    -- print("init frame,", frame)
     ins.frame = frame
     ins.closeBtn = frame.closeBtn
     ins.connections = {}
@@ -59,12 +54,17 @@ function spinFrameClass:Init()
     local winTxt = self.frame.confirmBtn.win.win.wins
     winTxt.Text = nowWins
     local con = self.frame.confirmBtn.MouseButton1Click:Connect(function()
+        if not canSpin then return end
+        canSpin = false
         self.frame.spinImage.Rotation = 0
-        local r, giftIndex = remoteFunctions.Spin:InvokeServer()
-        if not r then return end
+        local giftIndex = remoteFunctions.Spin:InvokeServer()
+        if not giftIndex then
+            canSpin = true
+            return
+        end
         winTxt.Text = tonumber(winTxt.Text) - 2
         task.spawn(function()
-            local angle = 360 * r
+            local angle = 72 * (giftIndex - 1) + math.random(0, 72)
             local spinTime = math.random(3, 6)
             local tweenInfo = TweenInfo.new(spinTime, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
             local target = {
@@ -75,16 +75,18 @@ function spinFrameClass:Init()
 
             local finalAngle = (giftIndex - 1) * 360 / #GameConfig.spinConfig + 36
             task.delay(spinTime + 0.1, function()
-                self.frame.spinImage.Rotation = finalAngle
-
-                nowWins = playerModule.GetPlayerOneData(dataKey.wins)
-                winTxt.Text = nowWins
+                if self.frame and self.frame.Visible then
+                    self.frame.spinImage.Rotation = finalAngle
+                    nowWins = playerModule.GetPlayerOneData(dataKey.wins)
+                    winTxt.Text = nowWins
+                end
                 local giftItem = GameConfig.spinConfig[giftIndex].item
                 if giftItem == "nothing" then
                     uiController.SetNotification("Got nothing this time.", "top")
                 else
                     uiController.SetNotification(`🎇 Congratulations! You got {giftItem}`, "top")
                 end
+                canSpin = true
             end)
 
         end)
